@@ -13,7 +13,7 @@ import * as React from 'react';
 
 function Header() {
     const [open, setOpen] = React.useState(false);
-    const [email, setEmail] = React.useState(false);
+    const [email, setEmail] = React.useState("");
 
     const handleClickOpen = () => {
       setOpen(true);
@@ -31,7 +31,6 @@ function Header() {
             <IconButton aria-label="Account" size="small" onClick={handleClickOpen}> 
                 <ManageAccountsIcon fontSize="inherit" /> 
             </IconButton>
-            Hello!
       </header>
 
       <div class="Dialog">
