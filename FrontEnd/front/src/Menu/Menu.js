@@ -10,7 +10,7 @@ function Menu() {
   return (
     <div className="App">
       <header className="App-header">
-          <Avatar alt="Elor" src="/static/images/avatar/1.jpg" />
+          <Avatar title="Profile" />
 
           <div class="Menu-Button">
             <IconButton aria-label="delete" size="small"> 
