@@ -1,8 +1,6 @@
 .Header {
     text-align: center;
     border-bottom: solid 3px gray;
-    border-right: solid 3px gray;
-    border-left: solid 3px gray;
     /* flex-direction: column; */
     font-size: 12px;
   }

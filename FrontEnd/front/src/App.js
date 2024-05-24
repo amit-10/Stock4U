@@ -11,11 +11,11 @@ function App() {
         <div class="Menu">
             <Menu></Menu>
         </div>
-      {/* <header className="App-header">
+      <header className="App-header">
         <div class="Header">
           <Header></Header>
         </div>
-      </header> */}
+      </header>
         <div class="SidePanel">
           <SidePanel></SidePanel>
         </div>
