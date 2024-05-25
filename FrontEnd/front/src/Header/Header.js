@@ -187,7 +187,7 @@ function Header() {
 
               <Box sx={{ flexGrow: 1 }} />
               <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              <Search>
+              <Search sx={{ border: '1px gray solid'}}>
                 <SearchIconWrapper>
                   <SearchIcon />
                 </SearchIconWrapper>
