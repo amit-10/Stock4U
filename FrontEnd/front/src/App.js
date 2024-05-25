@@ -15,13 +15,13 @@ function App() {
         <div class="Header">
           <Header></Header>
         </div>
+        <div class="Pages">
+          <Profile></Profile>
+        </div>
       </header>
         <div class="SidePanel">
           <SidePanel></SidePanel>
         </div>
-      </div>
-      <div class="Pages">
-        <Profile></Profile>
       </div>
     </div>
   );
