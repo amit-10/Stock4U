@@ -69,6 +69,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 function Header() {
     const [open, setOpen] = React.useState(false);
     const [email, setEmail] = React.useState("");
+    const [password, setPassword] = React.useState("");
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
@@ -237,8 +238,11 @@ function Header() {
                 const formData = new FormData(event.currentTarget);
                 const formJson = Object.fromEntries((formData).entries());
                 const email = formJson.email;
+                const password = formJson.password;
                 console.log(email);
+                console.log(password);
                 setEmail(email);
+                setPassword(email);
                 handleClose();
             },
             }}

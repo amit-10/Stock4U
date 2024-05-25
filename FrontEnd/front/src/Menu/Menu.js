@@ -10,7 +10,10 @@ function Menu() {
   return (
     <div className="App">
       <header className="App-header">
-          <Avatar title="Profile" />
+
+          <div class="Menu-Button">
+            <Avatar title="Profile" />
+          </div>
 
           <div class="Menu-Button">
             <IconButton aria-label="delete" size="small"> 
