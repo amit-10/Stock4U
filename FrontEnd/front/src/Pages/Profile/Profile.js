@@ -43,18 +43,16 @@ function Profile() {
 
     return (
         <div className="App">
-            <header class="Profile-Header">
-                Profile \ Elor Sulimani
-            </header>
+            <Typography color="#545f71" variant="h6" gutterBottom> Profile \ Elor Sulimani </Typography>
             <div class="Card-Section">
                 <div class="Card">
-                    <Card sx={{ display: 'flex', backgroundColor: 'darkGray', color: 'black' }}>
+                    <Card sx={{ display: 'flex', backgroundColor: '#dadada', color: '#545f71', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ flex: '1 0 auto' }}>
                             <Typography component="div" variant="h5">
                                 Begginner Investor
                             </Typography>
-                            <Typography variant="subtitle1" color="text.secondary" component="div">
+                            <Typography variant="subtitle1" color="#545f71" component="div">
                                 Low Risk / High Risk Behavior
                             </Typography>
                             </CardContent>
@@ -65,13 +63,13 @@ function Profile() {
                 </div>
 
                 <div class="Card">
-                    <Card sx={{ display: 'flex', backgroundColor: 'darkGray', color: 'black' }}>
+                    <Card sx={{ display: 'flex', backgroundColor: '#dadada', color: '#545f71', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ flex: '1 0 auto' }}>
                             <Typography component="div" variant="h5">
                                 Bank
                             </Typography>
-                            <Typography variant="subtitle1" color="text.secondary" component="div">
+                            <Typography variant="subtitle1" color="#545f71" component="div">
                                 10K
                             </Typography>
                             </CardContent>
@@ -82,14 +80,14 @@ function Profile() {
                 </div>
               
                 <div class="Card">
-                    <Card sx={{ display: 'flex', backgroundColor: 'darkGray', color: 'black' }}>
+                    <Card sx={{ display: 'flex', backgroundColor: '#dadada', color: '#545f71', minWidth: '250px',  justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ flex: '1 0 auto' }}>
                             <Typography component="div" variant="h5">
                                 Shares Profit
                             </Typography>
-                            <Typography variant="subtitle1" color="text.secondary" component="div">
-                                10K
+                            <Typography variant="subtitle1" color="#545f71" component="div">
+                                7K
                             </Typography>
                             </CardContent>
                             <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
