@@ -1,6 +1,9 @@
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace Backend.Common.Models;
 
-public class UserInvestmentStatus
+[BsonIgnoreExtraElements]
+public class UserPositions
 {
     public string UserId { get; set; } = null!;
     
