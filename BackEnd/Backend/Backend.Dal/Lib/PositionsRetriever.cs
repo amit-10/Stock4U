@@ -3,6 +3,7 @@ using Backend.Common.Models;
 using Backend.Dal.Configuration;
 using Backend.Dal.Interfaces;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace Backend.Dal.Lib;
 
@@ -11,8 +12,9 @@ public class PositionsRetriever(IMongoHandler mongoHandler, MongoConfiguration m
     private readonly IMongoCollection<UserPositions> _userInvestmentStatusCollection =
         mongoHandler.GetCollection<UserPositions>(mongoConfiguration.UserPositionsCollectionName);
     
-    public UserPositions GetUserInvestmentStatusById(string userId)
+    public async Task<UserPositions> GetUserInvestmentStatusByIdAsync(string userId)
     {
-        return _userInvestmentStatusCollection.AsQueryable().Single(userPositions => userPositions.UserId == userId);
+        return await _userInvestmentStatusCollection.AsQueryable()
+            .SingleOrDefaultAsync(userPositions => userPositions.UserId == userId);
     }
 }

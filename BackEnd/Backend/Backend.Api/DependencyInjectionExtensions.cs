@@ -13,6 +13,7 @@ public static class DependencyInjectionExtensions
         serviceCollection
             .AddSingleton<IPositionsHandler, PositionsHandler>()
             .AddSingleton<IPositionsRetriever, PositionsRetriever>()
+            .AddSingleton<IPositionsUpdater, PositionsUpdater>()
             .AddSingleton<IMongoHandler, MongoHandler>();
 
         return serviceCollection;
