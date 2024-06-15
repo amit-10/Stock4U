@@ -5,14 +5,14 @@ namespace Backend.Api.Controllers;
 
 [ApiController]
 [Route("[action]")]
-public class StocksController(IUserDataHandler userDataHandler) : ControllerBase
+public class PositionsController(IPositionsHandler positionsHandler) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetUserInvestmentStatus(string userId)
     {
         try
         {
-            var userInvestmentStatus = userDataHandler.GetUserInvestmentStatusById(userId);
+            var userInvestmentStatus = positionsHandler.GetUserInvestmentStatusById(userId);
             return StatusCode(StatusCodes.Status200OK, userInvestmentStatus);
         }
         catch (Exception e)
