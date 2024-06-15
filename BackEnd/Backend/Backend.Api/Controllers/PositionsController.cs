@@ -1,4 +1,5 @@
 using Backend.Common.Interfaces;
+using Backend.Common.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Api.Controllers;
@@ -8,17 +9,44 @@ namespace Backend.Api.Controllers;
 public class PositionsController(IPositionsHandler positionsHandler) : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> GetUserInvestmentStatus(string userId)
+    public async Task<IActionResult> GetUserInvestmentStatusAsync(string userId)
     {
         try
         {
-            var userInvestmentStatus = positionsHandler.GetUserInvestmentStatusById(userId);
+            var userInvestmentStatus = await positionsHandler.GetUserInvestmentStatusByIdAsync(userId);
             return StatusCode(StatusCodes.Status200OK, userInvestmentStatus);
         }
-        catch (Exception e)
+        catch (Exception exception)
         {
-            Console.WriteLine(e);
-            return new BadRequestResult();
+            return StatusCode(StatusCodes.Status500InternalServerError, exception.Message);
+        }
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> EnterPositionAsync(EnterPositionRequest enterPositionRequest)
+    {
+        try
+        {
+            await positionsHandler.EnterPositionAsync(enterPositionRequest);
+            return StatusCode(StatusCodes.Status200OK);
+        }
+        catch (Exception exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, exception.Message);
+        }
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> ClosePositionAsync(ClosePositionRequest closePositionRequest)
+    {
+        try
+        {
+            await positionsHandler.ClosePositionAsync(closePositionRequest);
+            return StatusCode(StatusCodes.Status200OK);
+        }
+        catch (Exception exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, exception.Message);
         }
     }
 }
