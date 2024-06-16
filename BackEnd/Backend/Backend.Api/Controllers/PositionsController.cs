@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Backend.Api.Controllers;
 
 [ApiController]
-[Route("[action]")]
+[Route("[controller]/[action]")]
 public class PositionsController(IPositionsHandler positionsHandler) : ControllerBase
 {
     [HttpGet]
