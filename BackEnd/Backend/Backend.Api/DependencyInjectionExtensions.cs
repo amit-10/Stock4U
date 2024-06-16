@@ -14,7 +14,9 @@ public static class DependencyInjectionExtensions
             .AddSingleton<IPositionsHandler, PositionsHandler>()
             .AddSingleton<IPositionsRetriever, PositionsRetriever>()
             .AddSingleton<IPositionsUpdater, PositionsUpdater>()
-            .AddSingleton<IMongoHandler, MongoHandler>();
+            .AddSingleton<IMongoHandler, MongoHandler>()
+            .AddSingleton<IStocksHandler, StocksHandler>()
+            .AddSingleton<IStockPriceRetriever, StocksPriceRetriever>();
 
         return serviceCollection;
     }
@@ -23,7 +25,8 @@ public static class DependencyInjectionExtensions
         IConfiguration configuration)
     {
         serviceCollection
-            .AddConfiguration<MongoConfiguration>(configuration, "MongoDb");
+            .AddConfiguration<MongoConfiguration>(configuration, "MongoDb")
+            .AddConfiguration<StocksApiConfiguration>(configuration, "StocksApi");
         
         return serviceCollection;
     }
