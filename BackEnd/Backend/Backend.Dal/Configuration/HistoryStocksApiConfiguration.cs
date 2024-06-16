@@ -1,6 +1,6 @@
 namespace Backend.Dal.Configuration;
 
-public class StocksApiConfiguration
+public class HistoryStocksApiConfiguration
 {
     public string BaseUrl { get; set; } = null!;
     
