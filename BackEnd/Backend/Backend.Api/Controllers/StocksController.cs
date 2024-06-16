@@ -20,4 +20,18 @@ public class StocksController(IStocksHandler stocksHandler) : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, exception.Message);
         }
     }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetStockHistoryAsync(string symbol)
+    {
+        try
+        {
+            var realTimeStock = await stocksHandler.GetStockHistoryBySymbolAsync(symbol);
+            return StatusCode(StatusCodes.Status200OK, realTimeStock);
+        }
+        catch (Exception exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, exception.Message);
+        }
+    }
 }

@@ -9,4 +9,9 @@ public class StocksHandler(IStockPriceRetriever stockPriceRetriever) : IStocksHa
     {
         return await stockPriceRetriever.GetRealTimeStockAsync(symbol);
     }
+
+    public async Task<Dictionary<string, StockDailyDataDouble>> GetStockHistoryBySymbolAsync(string symbol)
+    {
+        return await stockPriceRetriever.GetStockHistoryAsync(symbol);
+    }
 }

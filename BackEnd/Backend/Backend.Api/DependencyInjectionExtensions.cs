@@ -26,7 +26,8 @@ public static class DependencyInjectionExtensions
     {
         serviceCollection
             .AddConfiguration<MongoConfiguration>(configuration, "MongoDb")
-            .AddConfiguration<StocksApiConfiguration>(configuration, "StocksApi");
+            .AddConfiguration<RealTimeStocksApiConfiguration>(configuration, "RealTimeStocksApi")
+            .AddConfiguration<HistoryStocksApiConfiguration>(configuration, "HistoryStocksApi");
         
         return serviceCollection;
     }

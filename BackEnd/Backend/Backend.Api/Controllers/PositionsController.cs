@@ -22,6 +22,7 @@ public class PositionsController(IPositionsHandler positionsHandler) : Controlle
         }
     }
     
+    // todo: add stop limit to enter and close position
     [HttpPost]
     public async Task<IActionResult> EnterPositionAsync(EnterPositionRequest enterPositionRequest)
     {

@@ -13,6 +13,7 @@
     <ItemGroup>
       <PackageReference Include="Flurl" Version="4.0.0" />
       <PackageReference Include="Flurl.Http" Version="4.0.2" />
+      <PackageReference Include="Mapster" Version="7.4.0" />
       <PackageReference Include="MongoDB.Driver" Version="2.26.0" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     </ItemGroup>
