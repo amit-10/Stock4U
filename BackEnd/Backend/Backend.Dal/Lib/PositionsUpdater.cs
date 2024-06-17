@@ -2,15 +2,20 @@ using Backend.Common.Interfaces;
 using Backend.Common.Models;
 using Backend.Dal.Configuration;
 using Backend.Dal.Interfaces;
+using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
 namespace Backend.Dal.Lib;
 
-public class PositionsUpdater(IMongoHandler mongoHandler, MongoConfiguration mongoConfiguration) : IPositionsUpdater
+public class PositionsUpdater(
+    IMongoHandler mongoHandler,
+    MongoConfiguration mongoConfiguration,
+    ILogger<PositionsUpdater> logger) : IPositionsUpdater
 {
     private readonly IMongoCollection<UserPositions> _userPositionsCollection =
         mongoHandler.GetCollection<UserPositions>(mongoConfiguration.UserPositionsCollectionName);
+
     private readonly IMongoCollection<UserPositionHistory> _userPositionsHistoryCollection =
         mongoHandler.GetCollection<UserPositionHistory>(mongoConfiguration.UserPositionsHistoryCollectionName);
 
@@ -22,17 +27,26 @@ public class PositionsUpdater(IMongoHandler mongoHandler, MongoConfiguration mon
             .Push(up => up.Positions, position)
             .Inc(up => up.AccountBalance, -totalPrice);
 
-        await _userPositionsCollection.UpdateOneAsync(filter, update);
+        try
+        {
+            await _userPositionsCollection.UpdateOneAsync(filter, update);
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Error entering position {@position} for user {userId}", position, userId);
+            throw;
+        }
     }
 
-    public async Task ClosePositionAsync(string userId, string positionId, double closePrice, DateTime closeTime, double sharesCountToClose)
+    public async Task ClosePositionAsync(string userId, string positionId, double closePrice, DateTime closeTime,
+        double sharesCountToClose)
     {
         var filter = Builders<UserPositions>.Filter.Eq(up => up.UserId, userId);
         var totalPrice = sharesCountToClose * closePrice;
         var currentUser = await _userPositionsCollection.AsQueryable().SingleAsync(user => user.UserId == userId);
         var currentPosition = currentUser.Positions.Single(position => position.PositionId == positionId);
-        var update = Builders<UserPositions>.Update
-            .Inc(up => up.AccountBalance, totalPrice);
+        var update = Builders<UserPositions>.Update.Inc(up => up.AccountBalance, totalPrice);
+
         if (currentPosition.SharesCount == sharesCountToClose)
         {
             update = update
@@ -44,10 +58,17 @@ public class PositionsUpdater(IMongoHandler mongoHandler, MongoConfiguration mon
                 Builders<UserPositions>.Filter.ElemMatch(up => up.Positions, pos => pos.PositionId == positionId));
             update = update.Set("Positions.$.SharesCount", currentPosition.SharesCount - sharesCountToClose);
         }
-        
-        await _userPositionsCollection.UpdateOneAsync(filter, update);
-        
-        
+
+        try
+        {
+            await _userPositionsCollection.UpdateOneAsync(filter, update);
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Error closing position {position} for user {userId}", positionId, userId);
+            throw;
+        }
+
         var positionHistory = new UserPositionHistory
         {
             UserId = userId,
@@ -65,7 +86,15 @@ public class PositionsUpdater(IMongoHandler mongoHandler, MongoConfiguration mon
             }
         };
 
-        await _userPositionsHistoryCollection.InsertOneAsync(positionHistory);
-
+        try
+        {
+            await _userPositionsHistoryCollection.InsertOneAsync(positionHistory);
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Error inserting position {positionId} history for user {userId}", positionId,
+                userId);
+            throw;
+        }
     }
 }

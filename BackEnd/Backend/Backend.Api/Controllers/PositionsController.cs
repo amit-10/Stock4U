@@ -6,7 +6,8 @@ namespace Backend.Api.Controllers;
 
 [ApiController]
 [Route("[controller]/[action]")]
-public class PositionsController(IPositionsHandler positionsHandler) : ControllerBase
+public class PositionsController(IPositionsHandler positionsHandler, ILogger<PositionsController> logger)
+    : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetUserInvestmentStatusAsync(string userId)
@@ -18,10 +19,11 @@ public class PositionsController(IPositionsHandler positionsHandler) : Controlle
         }
         catch (Exception exception)
         {
+            logger.LogError(exception, "Error getting user investment status {userId}", userId);
             return StatusCode(StatusCodes.Status500InternalServerError, exception.Message);
         }
     }
-    
+
     // todo: add stop limit to enter and close position
     [HttpPost]
     public async Task<IActionResult> EnterPositionAsync(EnterPositionRequest enterPositionRequest)
@@ -33,10 +35,11 @@ public class PositionsController(IPositionsHandler positionsHandler) : Controlle
         }
         catch (Exception exception)
         {
+            logger.LogError(exception, "Error entering position {@position}", enterPositionRequest);
             return StatusCode(StatusCodes.Status500InternalServerError, exception.Message);
         }
     }
-    
+
     [HttpPost]
     public async Task<IActionResult> ClosePositionAsync(ClosePositionRequest closePositionRequest)
     {
@@ -47,6 +50,7 @@ public class PositionsController(IPositionsHandler positionsHandler) : Controlle
         }
         catch (Exception exception)
         {
+            logger.LogError(exception, "Error closing position {@position}", closePositionRequest);
             return StatusCode(StatusCodes.Status500InternalServerError, exception.Message);
         }
     }

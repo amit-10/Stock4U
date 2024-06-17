@@ -4,13 +4,14 @@ using Backend.Dal.Configuration;
 using Flurl;
 using Flurl.Http;
 using Mapster;
-using Newtonsoft.Json.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace Backend.Dal.Lib;
 
 public class StocksPriceRetriever(
     RealTimeStocksApiConfiguration realTimeStocksApiConfiguration,
-    HistoryStocksApiConfiguration historyStocksApiConfiguration) : IStockPriceRetriever
+    HistoryStocksApiConfiguration historyStocksApiConfiguration,
+    ILogger<StocksPriceRetriever> logger) : IStockPriceRetriever
 {
     // This Api is limited by 60 calls per minute
     private readonly Url _realTimeStocksApiUrl =
@@ -25,7 +26,18 @@ public class StocksPriceRetriever(
     public async Task<RealTimeStock> GetRealTimeStockAsync(string symbol)
     {
         var fullUrl = _realTimeStocksApiUrl.SetQueryParam("symbol", symbol);
-        var response = await fullUrl.GetJsonAsync<RealTimeStock>();
+
+        RealTimeStock response;
+        try
+        {
+            response = await fullUrl.GetJsonAsync<RealTimeStock>();
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Error getting real time stock {symbol}", symbol);
+            throw;
+        }
+        
         return response;
     }
 
@@ -38,9 +50,9 @@ public class StocksPriceRetriever(
         {
             response = await fullUrl.GetJsonAsync<StockHistory>();
         }
-        catch (Exception e)
+        catch (Exception exception)
         {
-            Console.WriteLine(e);
+            logger.LogError(exception, "Error getting stock history {symbol}", symbol);
             throw;
         }
 
