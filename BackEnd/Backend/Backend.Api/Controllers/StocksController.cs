@@ -5,7 +5,7 @@ namespace Backend.Api.Controllers;
 
 [ApiController]
 [Route("[controller]/[action]")]
-public class StocksController(IStocksHandler stocksHandler) : ControllerBase
+public class StocksController(IStocksHandler stocksHandler, ILogger<StocksController> logger) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetRealTimeStockAsync(string symbol)
@@ -17,6 +17,7 @@ public class StocksController(IStocksHandler stocksHandler) : ControllerBase
         }
         catch (Exception exception)
         {
+            logger.LogError(exception, "Error getting real time stock {symbol}", symbol);
             return StatusCode(StatusCodes.Status500InternalServerError, exception.Message);
         }
     }
@@ -31,6 +32,7 @@ public class StocksController(IStocksHandler stocksHandler) : ControllerBase
         }
         catch (Exception exception)
         {
+            logger.LogError(exception, "Error getting stock history {symbol} {daysBack} days back", symbol, daysBack);
             return StatusCode(StatusCodes.Status500InternalServerError, exception.Message);
         }
     }
