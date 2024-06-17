@@ -5,7 +5,7 @@ namespace Backend.Bl.Lib;
 
 public class PositionsHandler(IPositionsRetriever positionsRetriever, IPositionsUpdater positionsUpdater) : IPositionsHandler
 {
-    public async Task<UserPositions> GetUserInvestmentStatusByIdAsync(string userId)
+    public async Task<UserPositions> GetUserInvestmentStatusAsync(string userId)
     {
         return await positionsRetriever.GetUserInvestmentStatusByIdAsync(userId);
     }

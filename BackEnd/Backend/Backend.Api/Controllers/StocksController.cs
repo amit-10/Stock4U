@@ -12,7 +12,7 @@ public class StocksController(IStocksHandler stocksHandler) : ControllerBase
     {
         try
         {
-            var realTimeStock = await stocksHandler.GetRealTimeStockBySymbolAsync(symbol);
+            var realTimeStock = await stocksHandler.GetRealTimeStockAsync(symbol);
             return StatusCode(StatusCodes.Status200OK, realTimeStock);
         }
         catch (Exception exception)
@@ -22,12 +22,12 @@ public class StocksController(IStocksHandler stocksHandler) : ControllerBase
     }
     
     [HttpGet]
-    public async Task<IActionResult> GetStockHistoryAsync(string symbol)
+    public async Task<IActionResult> GetStockHistoryAsync(string symbol, int daysBack)
     {
         try
         {
-            var realTimeStock = await stocksHandler.GetStockHistoryBySymbolAsync(symbol);
-            return StatusCode(StatusCodes.Status200OK, realTimeStock);
+            var stockHistory = await stocksHandler.GetStockHistoryAsync(symbol, daysBack);
+            return StatusCode(StatusCodes.Status200OK, stockHistory);
         }
         catch (Exception exception)
         {

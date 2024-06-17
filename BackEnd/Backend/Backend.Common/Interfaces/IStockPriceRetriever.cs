@@ -6,5 +6,5 @@ public interface IStockPriceRetriever
 {
     Task<RealTimeStock> GetRealTimeStockAsync(string symbol);
 
-    Task<Dictionary<string, StockDailyDataDouble>> GetStockHistoryAsync(string symbol);
+    Task<Dictionary<string, StockDailyData>> GetStockHistoryAsync(string symbol, int daysBack);
 }
