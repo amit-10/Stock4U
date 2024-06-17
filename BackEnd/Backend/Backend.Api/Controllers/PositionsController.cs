@@ -13,7 +13,7 @@ public class PositionsController(IPositionsHandler positionsHandler) : Controlle
     {
         try
         {
-            var userInvestmentStatus = await positionsHandler.GetUserInvestmentStatusByIdAsync(userId);
+            var userInvestmentStatus = await positionsHandler.GetUserInvestmentStatusAsync(userId);
             return StatusCode(StatusCodes.Status200OK, userInvestmentStatus);
         }
         catch (Exception exception)

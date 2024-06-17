@@ -4,7 +4,7 @@ namespace Backend.Common.Interfaces;
 
 public interface IPositionsHandler
 {
-    Task<UserPositions> GetUserInvestmentStatusByIdAsync(string userId);
+    Task<UserPositions> GetUserInvestmentStatusAsync(string userId);
 
     Task EnterPositionAsync(EnterPositionRequest enterPositionRequest);
 

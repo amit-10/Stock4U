@@ -29,7 +29,8 @@ public class StocksPriceRetriever(
         return response;
     }
 
-    public async Task<Dictionary<string, StockDailyDataDouble>> GetStockHistoryAsync(string symbol)
+    // todo: check last refreshed time
+    public async Task<Dictionary<string, StockDailyData>> GetStockHistoryAsync(string symbol, int daysBack)
     {
         var fullUrl = _historyStocksApiUrl.SetQueryParam("symbol", symbol);
         StockHistory response;
@@ -43,35 +44,8 @@ public class StocksPriceRetriever(
             throw;
         }
 
-        return response.DateToStockData.Take(100).ToDictionary().Adapt<Dictionary<string, StockDailyDataDouble>>();
-        // JObject response;
-        // try
-        // {
-        //     response = await fullUrl.GetJsonAsync<JObject>();
-        // }
-        // catch (Exception e)
-        // {
-        //     Console.WriteLine(e);
-        //     throw;
-        // }
-        // var timeSeries = response["Time Series (Daily)"];
-        // var stockDataDictionary = new Dictionary<string, StockDailyData>();;
-        // if (timeSeries != null)
-        // {
-        //     var oneYearAgo = DateTime.Now.AddYears(-1);
-        //
-        //     foreach (var item in timeSeries)
-        //     {
-        //         var dateProperty = (JProperty)item;
-        //         var date = DateTime.Parse(dateProperty.Name);
-        //         if (date >= oneYearAgo)
-        //         {
-        //             var stockData = dateProperty.Value.ToObject<StockDailyData>();
-        //             stockDataDictionary.Add(dateProperty.Name, stockData);
-        //         }
-        //     }
-        // }
-        //
-        // return stockDataDictionary;
+        var formattedResponse = response.DateToStockData.Take(daysBack).ToDictionary()
+            .Adapt<Dictionary<string, StockDailyData>>();
+        return formattedResponse;
     }
 }

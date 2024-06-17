@@ -4,7 +4,7 @@ namespace Backend.Common.Interfaces;
 
 public interface IStocksHandler
 {
-    Task<RealTimeStock> GetRealTimeStockBySymbolAsync(string symbol);
+    Task<RealTimeStock> GetRealTimeStockAsync(string symbol);
     
-    Task<Dictionary<string, StockDailyDataDouble>> GetStockHistoryBySymbolAsync(string symbol);
+    Task<Dictionary<string, StockDailyData>> GetStockHistoryAsync(string symbol, int daysBack);
 }
