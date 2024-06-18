@@ -1,5 +1,4 @@
 using Backend.Common.Interfaces;
-using Backend.Common.Models;
 using Backend.Common.Models.Stocks;
 using Backend.Dal.Configuration;
 using Flurl;
