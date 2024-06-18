@@ -1,6 +1,6 @@
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Backend.Common.Models;
+namespace Backend.Common.Models.Positions;
 
 [BsonIgnoreExtraElements]
 public class UserPositions

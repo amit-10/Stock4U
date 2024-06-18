@@ -1,4 +1,4 @@
-namespace Backend.Common.Models;
+namespace Backend.Common.Models.Stocks;
 
 public class StockDailyData
 {

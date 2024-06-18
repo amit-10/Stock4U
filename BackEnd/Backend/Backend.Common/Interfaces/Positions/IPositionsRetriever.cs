@@ -1,4 +1,5 @@
 using Backend.Common.Models;
+using Backend.Common.Models.Positions;
 
 namespace Backend.Common.Interfaces;
 

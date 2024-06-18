@@ -1,5 +1,6 @@
 using Backend.Common.Interfaces;
 using Backend.Common.Models;
+using Backend.Common.Models.Stocks;
 using Backend.Dal.Configuration;
 using Flurl;
 using Flurl.Http;
@@ -19,9 +20,7 @@ public class StocksPriceRetriever(
 
     private readonly Url _historyStocksApiUrl =
         historyStocksApiConfiguration.BaseUrl
-            .SetQueryParam("apikey", historyStocksApiConfiguration.ApiKey)
-            .SetQueryParam("function", "TIME_SERIES_DAILY")
-            .SetQueryParam("outputsize", "full");
+            .SetQueryParam("apikey", historyStocksApiConfiguration.ApiKey);
 
     public async Task<RealTimeStock> GetRealTimeStockAsync(string symbol)
     {
@@ -44,7 +43,11 @@ public class StocksPriceRetriever(
     // todo: check last refreshed time
     public async Task<Dictionary<string, StockDailyData>> GetStockHistoryAsync(string symbol, int daysBack)
     {
-        var fullUrl = _historyStocksApiUrl.SetQueryParam("symbol", symbol);
+        var fullUrl = _historyStocksApiUrl
+            .SetQueryParam("symbol", symbol)
+            .SetQueryParam("function", "TIME_SERIES_DAILY")
+            .SetQueryParam("outputsize", "full");
+        
         StockHistory response;
         try
         {
@@ -59,5 +62,25 @@ public class StocksPriceRetriever(
         var formattedResponse = response.DateToStockData.Take(daysBack).ToDictionary()
             .Adapt<Dictionary<string, StockDailyData>>();
         return formattedResponse;
+    }
+
+    public async Task<FinancialOverview?> GetStockFinancialOverviewAsync(string symbol)
+    {
+        var fullUrl = _historyStocksApiUrl
+            .SetQueryParam("symbol", symbol)
+            .SetQueryParam("function", "OVERVIEW");
+        
+        FinancialOverview response;
+        try
+        {
+            response = await fullUrl.GetJsonAsync<FinancialOverview>();
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Error getting stock financial overview {symbol}", symbol);
+            throw;
+        }
+
+        return response;
     }
 }

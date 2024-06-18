@@ -1,5 +1,6 @@
 using Backend.Common.Interfaces;
 using Backend.Common.Models;
+using Backend.Common.Models.Stocks;
 
 namespace Backend.Bl.Lib;
 
