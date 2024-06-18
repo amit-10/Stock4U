@@ -3,6 +3,8 @@ using Backend.Common.Interfaces;
 using Backend.Dal.Configuration;
 using Backend.Dal.Interfaces;
 using Backend.Dal.Lib;
+using Backend.InvestingAdvisor.Interfaces;
+using Backend.InvestingAdvisor.Lib;
 
 namespace Backend.Api;
 
@@ -16,8 +18,18 @@ public static class DependencyInjectionExtensions
             .AddSingleton<IPositionsUpdater, PositionsUpdater>()
             .AddSingleton<IMongoHandler, MongoHandler>()
             .AddSingleton<IStocksHandler, StocksHandler>()
-            .AddSingleton<IStockPriceRetriever, StocksPriceRetriever>();
+            .AddSingleton<IStockPriceRetriever, StocksPriceRetriever>()
+            .AddSingleton<IInvestingAdvisorHandler, InvestingAdvisorHandler>()
+            .AddSingleton<IStockRiskClassifier, StockRiskClassifier>();
 
+        return serviceCollection;
+    }
+
+    public static IServiceCollection AddMapping(this IServiceCollection serviceCollection)
+    {
+        var mapping = FinancialOverviewToStockClassificationDataMapper.GetMapping();
+        serviceCollection.AddSingleton(mapping);
+        
         return serviceCollection;
     }
 

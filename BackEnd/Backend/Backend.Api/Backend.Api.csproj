@@ -15,6 +15,7 @@
       <ProjectReference Include="..\Backend.Bl\Backend.Bl.csproj" />
       <ProjectReference Include="..\Backend.Common\Backend.Common.csproj" />
       <ProjectReference Include="..\Backend.Dal\Backend.Dal.csproj" />
+      <ProjectReference Include="..\Backend.InvestingAdvisor\Backend.InvestingAdvisor.csproj" />
     </ItemGroup>
 
     <ItemGroup>

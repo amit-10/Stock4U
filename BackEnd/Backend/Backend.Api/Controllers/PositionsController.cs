@@ -1,5 +1,6 @@
 using Backend.Common.Interfaces;
 using Backend.Common.Models;
+using Backend.Common.Models.Positions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Api.Controllers;

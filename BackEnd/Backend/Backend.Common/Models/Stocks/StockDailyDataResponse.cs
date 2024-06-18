@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Backend.Common.Models;
+namespace Backend.Common.Models.Stocks;
 
 public class StockDailyDataResponse
 {

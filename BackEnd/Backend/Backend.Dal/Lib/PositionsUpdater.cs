@@ -1,5 +1,6 @@
 using Backend.Common.Interfaces;
 using Backend.Common.Models;
+using Backend.Common.Models.Positions;
 using Backend.Dal.Configuration;
 using Backend.Dal.Interfaces;
 using Microsoft.Extensions.Logging;
