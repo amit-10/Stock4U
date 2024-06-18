@@ -1,6 +1,5 @@
 using Backend.Common.Interfaces;
 using Backend.Common.Models.InvestingAdvisor;
-using Backend.Common.Models.Stocks;
 using Backend.InvestingAdvisor.Interfaces;
 using Backend.InvestingAdvisor.Models;
 using Mapster;
