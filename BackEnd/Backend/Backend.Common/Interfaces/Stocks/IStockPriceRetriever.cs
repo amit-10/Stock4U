@@ -1,6 +1,6 @@
 using Backend.Common.Models.Stocks;
 
-namespace Backend.Common.Interfaces;
+namespace Backend.Common.Interfaces.Stocks;
 
 public interface IStockPriceRetriever
 {

@@ -1,6 +1,6 @@
 using Backend.Common.Models.Positions;
 
-namespace Backend.Common.Interfaces;
+namespace Backend.Common.Interfaces.Positions;
 
 public interface IPositionsUpdater
 {

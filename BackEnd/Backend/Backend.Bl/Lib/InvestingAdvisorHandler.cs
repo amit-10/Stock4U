@@ -1,6 +1,6 @@
 using Backend.Common.Interfaces;
+using Backend.Common.Interfaces.InvestingAdvisor;
 using Backend.Common.Models.InvestingAdvisor;
-using Backend.InvestingAdvisor.Interfaces;
 
 namespace Backend.Bl.Lib;
 

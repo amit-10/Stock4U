@@ -1,6 +1,6 @@
 using Backend.Common.Models.InvestingAdvisor;
 
-namespace Backend.InvestingAdvisor.Interfaces;
+namespace Backend.Common.Interfaces.InvestingAdvisor;
 
 public interface IStockRiskClassifier
 {
