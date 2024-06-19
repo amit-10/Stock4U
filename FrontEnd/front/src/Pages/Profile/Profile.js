@@ -13,6 +13,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import axios from 'axios';
 
     const StyledTableCell = styled(TableCell)(({ theme }) => ({}));
   
@@ -38,8 +39,18 @@ import Paper from '@mui/material/Paper';
     createData('#5', 'Meta', 800, "LONG", 0.91, 'You shouldnt have entered this position')
   ];
 
-function Profile() {
+async function Profile() {
     const theme = useTheme();
+
+    // const positionsHistoryResposne = await axios.get('http://localhost:5266/Positions/GetUserPositionsHistory?userId=aaa', {headers: {
+    //     'Access-Control-Allow-Origin': '*',
+    //     'Content-Type': 'application/json',
+    //   }, withCredentials: false});
+    // const positionsHistory = positionsHistoryResposne.data;
+    // const positionsHistoryRows = positionsHistory.map(( {positionId, shareSymbol, sharesCount, positionType, entrancePrice, closePrice }) => {
+    //     return createData(positionId, shareSymbol, sharesCount, positionType, closePrice - entrancePrice);
+    // })
+    const positionsHistoryRows = [];
 
     return (
         <div className="App">
