@@ -8,7 +8,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import * as React from 'react';
+import{ useContext, useState } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -68,16 +68,16 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 
 function Header() {
-    const [open, setOpen] = React.useState(false);
-    const [email, setEmail] = React.useState();
-    const [password, setPassword] = React.useState();
+    const [open, setOpen] = useState(false);
+    const [email, setEmail] = useState();
+    const [password, setPassword] = useState();
 
     console.log(AppContext);
-    const data = React.useContext(AppContext);
+    const user = useContext(AppContext);
 
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [anchorEl, setAnchorEl] = useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
-    React.useState(null);
+    useState(null);
   
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -248,9 +248,8 @@ function Header() {
                 console.log(email);
                 console.log(password);
 
-                console.log('data.user', data.user);
-                data.setUser({ email, password });
-                data.setUser({ email, password });
+                user.email = email;
+                user.password = password;
 
                 setPassword(email);
                 handleClose();

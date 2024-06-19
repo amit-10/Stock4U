@@ -11,7 +11,7 @@ function App() {
   const [user,setUser] = useState({ email: 'etst', password: 'asdasd' });
 
   return (
-    <AppContext.Provider value={user, setUser}>
+    <AppContext.Provider value={user}>
       <div className="App">
           <div class="Panels">
             <div class="Menu">
