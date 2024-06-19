@@ -14,29 +14,29 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-    const StyledTableCell = styled(TableCell)(({ theme }) => ({}));
+const StyledTableCell = styled(TableCell)(({ theme }) => ({}));
   
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover,
+        backgroundColor: theme.palette.action.hover,
     },
     // hide last border
     '&:last-child td, &:last-child th': {
-      border: 0,
+        border: 0,
     },
-  }));
-  
-  function createData(id, company, shares, type, profit, note ) {
-    return { id, company, shares, type, profit, note };
-  }
-  
-  const rows = [
-    createData('#1', 'Tesla', 500, "LONG", -1.02, 'You shouldnt have entered this position'),
-    createData('#2', 'Amazon', 450, "LONG", 2.16, 'Congratulations! good choice'),
-    createData('#3', 'Google', 700, "SHORT", 1.13, 'Youve exisited the position too early'),
-    createData('#4', 'Microsoft', 630, "LONG", -2.04, 'You shouldnt have entered this position'),
-    createData('#5', 'Meta', 800, "LONG", 0.91, 'You shouldnt have entered this position')
-  ];
+}));
+
+function createData(id, company, shares, type, profit, note ) {
+return { id, company, shares, type, profit, note };
+}
+
+const rows = [
+createData('#1', 'Tesla', 500, "LONG", -1.02, 'You shouldnt have entered this position'),
+createData('#2', 'Amazon', 450, "LONG", 2.16, 'Congratulations! good choice'),
+createData('#3', 'Google', 700, "SHORT", 1.13, 'Youve exisited the position too early'),
+createData('#4', 'Microsoft', 630, "LONG", -2.04, 'You shouldnt have entered this position'),
+createData('#5', 'Meta', 800, "LONG", 0.91, 'You shouldnt have entered this position')
+];
 
 function Profile() {
     const theme = useTheme();

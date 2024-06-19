@@ -1,5 +1,5 @@
 function Statistics() {
-    return <></>;
+    return <>Statistics page</>;
 }
 
 export default Statistics;
