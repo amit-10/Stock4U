@@ -14,6 +14,7 @@
 
 
 .Positions-History {
+    margin-top: 60px;
     display: flex;
     display: grid;
     justify-content: center

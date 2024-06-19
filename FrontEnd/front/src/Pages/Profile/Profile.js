@@ -13,6 +13,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { AppContext } from '../../AppContext';
 
     const StyledTableCell = styled(TableCell)(({ theme }) => ({}));
   
@@ -40,10 +41,11 @@ import Paper from '@mui/material/Paper';
 
 function Profile() {
     const theme = useTheme();
+    const user = React.useContext(AppContext);
 
     return (
         <div className="App">
-            <Typography color="#545f71" variant="h6" gutterBottom> Profile \ Elor Sulimani </Typography>
+            <Typography color="#545f71" variant="h6" gutterBottom> Profile \ {user.user} </Typography>
             <div class="Card-Section">
                 <div class="Card">
                     <Card sx={{ display: 'flex', backgroundColor: '#dadada', color: '#545f71', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
@@ -98,9 +100,7 @@ function Profile() {
 
             </div>
             <div class="Positions-History">
-                <div class="Positions-History-Title">
-                    Positions History
-                </div>
+                <Typography color="#545f71" variant="h6" gutterBottom> Positions History </Typography>
                 <TableContainer component={Paper}>
                     <Table aria-label="customized table">
                         <TableHead>

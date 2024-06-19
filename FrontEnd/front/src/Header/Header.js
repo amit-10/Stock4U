@@ -24,6 +24,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import { AppContext } from '../AppContext';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -68,12 +69,15 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 function Header() {
     const [open, setOpen] = React.useState(false);
-    const [email, setEmail] = React.useState("");
-    const [password, setPassword] = React.useState("");
+    const [email, setEmail] = React.useState();
+    const [password, setPassword] = React.useState();
+
+    console.log(AppContext);
+    const data = React.useContext(AppContext);
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
-      React.useState(null);
+    React.useState(null);
   
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -237,11 +241,17 @@ function Header() {
                 event.preventDefault();
                 const formData = new FormData(event.currentTarget);
                 const formJson = Object.fromEntries((formData).entries());
+
                 const email = formJson.email;
                 const password = formJson.password;
+
                 console.log(email);
                 console.log(password);
-                setEmail(email);
+
+                console.log('data.user', data.user);
+                data.setUser({ email, password });
+                data.setUser({ email, password });
+
                 setPassword(email);
                 handleClose();
             },
