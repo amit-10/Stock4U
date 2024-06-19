@@ -1,4 +1,5 @@
 using Backend.Common.Interfaces;
+using Backend.Common.Interfaces.Positions;
 using Backend.Common.Models.Positions;
 
 namespace Backend.Bl.Lib;
@@ -8,6 +9,12 @@ public class PositionsHandler(IPositionsRetriever positionsRetriever, IPositions
     public async Task<UserPositions> GetUserInvestmentStatusAsync(string userId)
     {
         return await positionsRetriever.GetUserInvestmentStatusByIdAsync(userId);
+    }
+
+    public async Task<IEnumerable<ClosedPosition>> GetUserPositionsHistoryAsync(string userId)
+    {
+        var userPositionsHistory = await positionsRetriever.GetUserPositionsHistoryAsync(userId);
+        return userPositionsHistory.Select(position => position.ClosedPosition);
     }
 
     public async Task EnterPositionAsync(EnterPositionRequest enterPositionRequest)

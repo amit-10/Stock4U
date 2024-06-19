@@ -1,4 +1,5 @@
 using Backend.Common.Interfaces;
+using Backend.Common.Interfaces.Positions;
 using Backend.Common.Models.Positions;
 using Backend.Dal.Configuration;
 using Backend.Dal.Interfaces;
@@ -16,6 +17,9 @@ public class PositionsRetriever(
     private readonly IMongoCollection<UserPositions> _userInvestmentStatusCollection =
         mongoHandler.GetCollection<UserPositions>(mongoConfiguration.UserPositionsCollectionName);
 
+    private readonly IMongoCollection<UserPositionHistory> _userPositionsHistoryCollection =
+        mongoHandler.GetCollection<UserPositionHistory>(mongoConfiguration.UserPositionsHistoryCollectionName);
+
     public async Task<UserPositions> GetUserInvestmentStatusByIdAsync(string userId)
     {
         UserPositions userInvestmentStatus;
@@ -31,5 +35,22 @@ public class PositionsRetriever(
         }
 
         return userInvestmentStatus;
+    }
+
+    public async Task<List<UserPositionHistory>> GetUserPositionsHistoryAsync(string userId)
+    {
+        List<UserPositionHistory> userPositionsHistory;
+        try
+        {
+            userPositionsHistory = await _userPositionsHistoryCollection.AsQueryable()
+                .Where(position => position.UserId == userId).ToListAsync();
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Error getting user {userId} positions history", userId);
+            throw;
+        }
+
+        return userPositionsHistory;
     }
 }

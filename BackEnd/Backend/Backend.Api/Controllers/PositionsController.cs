@@ -1,4 +1,5 @@
 using Backend.Common.Interfaces;
+using Backend.Common.Interfaces.Positions;
 using Backend.Common.Models.Positions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,6 +21,21 @@ public class PositionsController(IPositionsHandler positionsHandler, ILogger<Pos
         catch (Exception exception)
         {
             logger.LogError(exception, "Error getting user investment status {userId}", userId);
+            return StatusCode(StatusCodes.Status500InternalServerError, exception.Message);
+        }
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetUserPositionsHistoryAsync(string userId)
+    {
+        try
+        {
+            var userInvestmentStatus = await positionsHandler.GetUserPositionsHistoryAsync(userId);
+            return StatusCode(StatusCodes.Status200OK, userInvestmentStatus);
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Error getting user positions history {userId}", userId);
             return StatusCode(StatusCodes.Status500InternalServerError, exception.Message);
         }
     }

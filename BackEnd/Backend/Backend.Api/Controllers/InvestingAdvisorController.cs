@@ -1,4 +1,5 @@
 using Backend.Common.Interfaces;
+using Backend.Common.Interfaces.InvestingAdvisor;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Api.Controllers;

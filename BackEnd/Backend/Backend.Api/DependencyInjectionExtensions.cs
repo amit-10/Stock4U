@@ -1,9 +1,11 @@
 using Backend.Bl.Lib;
 using Backend.Common.Interfaces;
+using Backend.Common.Interfaces.InvestingAdvisor;
+using Backend.Common.Interfaces.Positions;
+using Backend.Common.Interfaces.Stocks;
 using Backend.Dal.Configuration;
 using Backend.Dal.Interfaces;
 using Backend.Dal.Lib;
-using Backend.InvestingAdvisor.Interfaces;
 using Backend.InvestingAdvisor.Lib;
 
 namespace Backend.Api;
