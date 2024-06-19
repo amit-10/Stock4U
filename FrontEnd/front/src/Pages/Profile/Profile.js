@@ -14,6 +14,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import axios from 'axios';
+import { useState, useEffect } from 'react';
 
     const StyledTableCell = styled(TableCell)(({ theme }) => ({}));
   
@@ -30,27 +31,28 @@ import axios from 'axios';
   function createData(id, company, shares, type, profit, note ) {
     return { id, company, shares, type, profit, note };
   }
-  
-  const rows = [
-    createData('#1', 'Tesla', 500, "LONG", -1.02, 'You shouldnt have entered this position'),
-    createData('#2', 'Amazon', 450, "LONG", 2.16, 'Congratulations! good choice'),
-    createData('#3', 'Google', 700, "SHORT", 1.13, 'Youve exisited the position too early'),
-    createData('#4', 'Microsoft', 630, "LONG", -2.04, 'You shouldnt have entered this position'),
-    createData('#5', 'Meta', 800, "LONG", 0.91, 'You shouldnt have entered this position')
-  ];
 
-async function Profile() {
+function Profile() {
     const theme = useTheme();
+    const [rows, setRows] = useState([]);
 
-    // const positionsHistoryResposne = await axios.get('http://localhost:5266/Positions/GetUserPositionsHistory?userId=aaa', {headers: {
-    //     'Access-Control-Allow-Origin': '*',
-    //     'Content-Type': 'application/json',
-    //   }, withCredentials: false});
-    // const positionsHistory = positionsHistoryResposne.data;
-    // const positionsHistoryRows = positionsHistory.map(( {positionId, shareSymbol, sharesCount, positionType, entrancePrice, closePrice }) => {
-    //     return createData(positionId, shareSymbol, sharesCount, positionType, closePrice - entrancePrice);
-    // })
-    const positionsHistoryRows = [];
+
+    useEffect(() => {
+        async function getRows() {
+            const positionsHistoryResposne = await axios.get('http://localhost:5266/Positions/GetUserPositionsHistory?userId=aaa');
+            const positionsHistory = positionsHistoryResposne.data;
+            const positionsHistoryRows = positionsHistory.map(( {positionId, shareSymbol, sharesCount, positionType, entrancePrice, closePrice }) => {
+                return createData(positionId, shareSymbol, sharesCount, positionType, closePrice - entrancePrice);
+            })
+
+            setRows(positionsHistoryRows);
+        };
+    
+        if (!rows.length)
+        {
+            getRows();
+        }
+      }, []);
 
     return (
         <div className="App">
