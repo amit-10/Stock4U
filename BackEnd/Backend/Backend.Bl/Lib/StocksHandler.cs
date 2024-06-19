@@ -1,4 +1,3 @@
-using Backend.Common.Interfaces;
 using Backend.Common.Interfaces.Stocks;
 using Backend.Common.Models.Stocks;
 
