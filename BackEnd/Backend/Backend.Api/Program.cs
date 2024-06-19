@@ -7,10 +7,21 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services
     .AddServices()
+    .AddCors(options =>
+    {
+        options.AddPolicy("CorsPolicy", builder =>
+        {
+            builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+    })
     .AddConfiguration(builder.Configuration)
     .AddMapping();
 
 var app = builder.Build();
+
+app.UseCors("CorsPolicy");
 
 if (app.Environment.IsDevelopment())
 {
