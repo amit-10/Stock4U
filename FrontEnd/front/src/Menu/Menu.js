@@ -4,6 +4,7 @@ import SignalCellularAltRoundedIcon from '@mui/icons-material/SignalCellularAltR
 import PaidOutlinedIcon from '@mui/icons-material/PaidOutlined';
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 import Avatar from '@mui/material/Avatar';
+import { Link } from 'react-router-dom';
 
 
 function Menu() {
@@ -12,26 +13,26 @@ function Menu() {
       <header className="App-header">
 
           <div class="Menu-Button">
-            <Avatar title="Profile" />
+            <Avatar sx={{cursor: 'pointer'}} title="Profile" component={Link} to="/profile"/>
           </div>
 
           <div class="Menu-Button">
-            <IconButton aria-label="delete" size="small"> 
-                <SignalCellularAltRoundedIcon fontSize="inherit" /> 
+            <IconButton component={Link} to="/"> 
+                <SignalCellularAltRoundedIcon/> 
             </IconButton>
             Statistics
           </div>
 
           <div class="Menu-Button">
-            <IconButton aria-label="delete" size="small"> 
-                <PaidOutlinedIcon fontSize="inherit" /> 
+            <IconButton component={Link} to="/investments"> 
+                <PaidOutlinedIcon/> 
             </IconButton>
             Investments
           </div>
 
           <div class="Menu-Button">
-            <IconButton aria-label="delete" size="small"> 
-                <AssignmentOutlinedIcon fontSize="inherit" /> 
+            <IconButton component={Link} to="/investments"> 
+                <AssignmentOutlinedIcon/> 
             </IconButton>
             Leaderboard
           </div>
