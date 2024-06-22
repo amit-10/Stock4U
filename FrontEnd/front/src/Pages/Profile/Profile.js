@@ -35,17 +35,35 @@ import { useState, useEffect } from 'react';
 function Profile() {
     const theme = useTheme();
     const [rows, setRows] = useState([]);
+    const [bank, setBank] = useState(0);
+    const [profit, setProfit] = useState(0);
 
 
     useEffect(() => {
         async function getRows() {
-            const positionsHistoryResposne = await axios.get('http://localhost:5266/Positions/GetUserPositionsHistory?userId=aaa');
-            const positionsHistory = positionsHistoryResposne.data;
-            const positionsHistoryRows = positionsHistory.map(( {positionId, shareSymbol, sharesCount, positionType, entrancePrice, closePrice }) => {
-                return createData(positionId, shareSymbol, sharesCount, positionType, closePrice - entrancePrice);
-            })
-
-            setRows(positionsHistoryRows);
+            try {
+                const positionsHistoryResposne = await axios.get('http://localhost:5266/Positions/GetUserPositionsHistory?userId=aaa');
+           
+                const positionsHistory = positionsHistoryResposne.data;
+                const positionsHistoryRows = positionsHistory.map(( {positionId, shareSymbol, sharesCount, positionType, entrancePrice, closePrice }) => {
+                    return createData(positionId, shareSymbol, sharesCount, positionType, closePrice - entrancePrice);
+                })
+    
+                setRows(positionsHistoryRows);
+    
+                // const userInvestmentStatusResponse = await axios.get('http://localhost:5266/Positions/GetUserInvestmentStatus?userId=aaa');
+                // const userInvestmentStatus = userInvestmentStatusResponse.data;
+                // const currentBalance = userInvestmentStatus.AccountBalance;
+                // let totalPrices = 0;
+                // const entryPrices = userInvestmentStatus.Positions.foreach(position => totalPrices += position.EntryPrice);
+    
+                // const profit = currentBalance - totalPrices;
+                // setBank(currentBalance);
+                // setProfit(profit);
+            } catch (e) {
+                console.log(e);
+            }
+          
         };
     
         if (!rows.length)
@@ -83,7 +101,7 @@ function Profile() {
                                 Bank
                             </Typography>
                             <Typography variant="subtitle1" color="#545f71" component="div">
-                                10K
+                                {bank}
                             </Typography>
                             </CardContent>
                             <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
@@ -100,7 +118,7 @@ function Profile() {
                                 Shares Profit
                             </Typography>
                             <Typography variant="subtitle1" color="#545f71" component="div">
-                                7K
+                                {profit}
                             </Typography>
                             </CardContent>
                             <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
