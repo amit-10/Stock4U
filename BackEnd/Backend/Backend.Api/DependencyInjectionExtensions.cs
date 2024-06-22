@@ -5,7 +5,9 @@ using Backend.Common.Interfaces.Stocks;
 using Backend.Dal.Configuration;
 using Backend.Dal.Interfaces;
 using Backend.Dal.Lib;
-using Backend.InvestingAdvisor.Lib;
+using Backend.InvestingAdvisor.Configuration;
+using Backend.InvestingAdvisor.Lib.PositionsFeedback;
+using Backend.InvestingAdvisor.Lib.StocksRiskClassification;
 
 namespace Backend.Api;
 
@@ -21,7 +23,9 @@ public static class DependencyInjectionExtensions
             .AddSingleton<IStocksHandler, StocksHandler>()
             .AddSingleton<IStockPriceRetriever, StocksPriceRetriever>()
             .AddSingleton<IInvestingAdvisorHandler, InvestingAdvisorHandler>()
-            .AddSingleton<IStockRiskClassifier, StockRiskClassifier>();
+            .AddSingleton<IStockRiskClassifier, StockRiskClassifier>()
+            .AddSingleton<IPositionFeedbackClassifier, PositionFeedbackClassifier>()
+            .AddHostedService<ClassifyPositionsService>();
 
         return serviceCollection;
     }
@@ -40,7 +44,8 @@ public static class DependencyInjectionExtensions
         serviceCollection
             .AddConfiguration<MongoConfiguration>(configuration, "MongoDb")
             .AddConfiguration<RealTimeStocksApiConfiguration>(configuration, "RealTimeStocksApi")
-            .AddConfiguration<HistoryStocksApiConfiguration>(configuration, "HistoryStocksApi");
+            .AddConfiguration<HistoryStocksApiConfiguration>(configuration, "HistoryStocksApi")
+            .AddConfiguration<PositionsFeedbackConfiguration>(configuration, "PositionsFeedback");
         
         return serviceCollection;
     }

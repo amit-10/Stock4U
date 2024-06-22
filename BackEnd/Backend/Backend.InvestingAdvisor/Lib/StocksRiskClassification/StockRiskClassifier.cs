@@ -1,10 +1,11 @@
 using Backend.Common.Interfaces.InvestingAdvisor;
 using Backend.Common.Interfaces.Stocks;
 using Backend.Common.Models.InvestingAdvisor;
+using Backend.InvestingAdvisor.Lib.Utils;
 using Backend.InvestingAdvisor.Models;
 using Mapster;
 
-namespace Backend.InvestingAdvisor.Lib;
+namespace Backend.InvestingAdvisor.Lib.StocksRiskClassification;
 
 public class StockRiskClassifier(IStockPriceRetriever stockPriceRetriever) : IStockRiskClassifier
 {
@@ -13,8 +14,7 @@ public class StockRiskClassifier(IStockPriceRetriever stockPriceRetriever) : ISt
         var historyData = await stockPriceRetriever.GetStockHistoryAsync(symbol, daysBack);
         var financialOverview = await stockPriceRetriever.GetStockFinancialOverviewAsync(symbol);
 
-        var closePriceHistory = historyData.ToDictionary(dailyData =>
-            DateTime.Parse(dailyData.Key), dailyData => dailyData.Value.ClosePrice);
+        var closePriceHistory = ConversionUtils.GetClosePricesDictionary(historyData);
 
         var volatility = StatisticsCalculator.CalculateVolatility(closePriceHistory);
         var averageReturn = StatisticsCalculator.CalculateAverageReturn(closePriceHistory);
@@ -34,14 +34,14 @@ public class StockRiskClassifier(IStockPriceRetriever stockPriceRetriever) : ISt
         return riskLevel;
     }
 
-    private static RiskLevel ClassifyEtf(double volatility, double averageReturn, double maxDrawdown)
+    private static RiskLevel ClassifyEtf(decimal volatility, decimal averageReturn, decimal maxDrawdown)
     {
-        if (volatility > 0.3 || maxDrawdown > 0.4)
+        if (volatility > 0.3m || maxDrawdown > 0.4m)
         {
             return RiskLevel.High;
         }
 
-        if (volatility > 0.2 || maxDrawdown > 0.3 || averageReturn < 0.05)
+        if (volatility > 0.2m || maxDrawdown > 0.3m || averageReturn < 0.05m)
         {
             return RiskLevel.Medium;
         }
@@ -49,19 +49,19 @@ public class StockRiskClassifier(IStockPriceRetriever stockPriceRetriever) : ISt
         return RiskLevel.Low;
     }
 
-    private static RiskLevel ClassifyStock(double volatility, double averageReturn, double maxDrawdown,
+    private static RiskLevel ClassifyStock(decimal volatility, decimal averageReturn, decimal maxDrawdown,
         StockClassificationData stockClassificationData)
     {
-        if (volatility > 0.3 || maxDrawdown > 0.4 || stockClassificationData.Beta > 1.5 ||
+        if (volatility > 0.3m || maxDrawdown > 0.4m || stockClassificationData.Beta > 1.5m ||
             stockClassificationData.Roe < 10 || stockClassificationData.PeRatio > 25 ||
-            stockClassificationData.PbRatio > 3 || stockClassificationData.DividendYield < 1 || averageReturn < 0.05)
+            stockClassificationData.PbRatio > 3 || stockClassificationData.DividendYield < 1 || averageReturn < 0.05m)
         {
             return RiskLevel.High;
         }
 
-        if (volatility > 0.2 || maxDrawdown > 0.3 || stockClassificationData.Beta > 1.0 ||
+        if (volatility > 0.2m || maxDrawdown > 0.3m || stockClassificationData.Beta > 1.0m ||
             stockClassificationData.Roe < 15 || stockClassificationData.PeRatio > 20 ||
-            stockClassificationData.PbRatio > 2 || stockClassificationData.DividendYield < 2 || averageReturn < 0.10)
+            stockClassificationData.PbRatio > 2 || stockClassificationData.DividendYield < 2 || averageReturn < 0.10m)
         {
             return RiskLevel.Medium;
         }

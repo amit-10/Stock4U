@@ -11,12 +11,12 @@ public class Position
     
     public string ShareCategory { get; set; } = null!;
 
-    public double EntrancePrice { get; set; }
+    public decimal EntryPrice { get; set; }
 
-    public double SharesCount { get; set; }
+    public decimal SharesCount { get; set; }
 
     [BsonRepresentation(BsonType.String)]
     public PositionType PositionType { get; set; }
     
-    public DateTime EntranceTime { get; set; }
+    public DateTime EntryTime { get; set; }
 }

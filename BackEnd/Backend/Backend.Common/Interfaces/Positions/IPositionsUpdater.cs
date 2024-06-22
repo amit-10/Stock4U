@@ -6,6 +6,8 @@ public interface IPositionsUpdater
 {
     Task EnterPositionAsync(string userId, Position position);
 
-    Task ClosePositionAsync(string userId, string positionId, double closePrice, DateTime closeTime,
-        double sharesCountToClose);
+    Task ClosePositionAsync(string userId, string positionId, decimal closePrice, DateTime closeTime,
+        decimal sharesCountToClose);
+
+    Task SetPositionFeedbackAsync(UserPositionHistory position, PositionFeedback feedback);
 }

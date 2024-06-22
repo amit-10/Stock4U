@@ -5,6 +5,7 @@ using Backend.Dal.Interfaces;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using Newtonsoft.Json;
 
 namespace Backend.Dal.Lib;
 
@@ -47,6 +48,23 @@ public class PositionsRetriever(
         catch (Exception exception)
         {
             logger.LogError(exception, "Error getting user {userId} positions history", userId);
+            throw;
+        }
+
+        return userPositionsHistory;
+    }
+
+    public async Task<List<UserPositionHistory>> GetNonFeedbackedClosedPositions()
+    {
+        List<UserPositionHistory> userPositionsHistory;
+        try
+        {
+            userPositionsHistory = await _userPositionsHistoryCollection.AsQueryable()
+                .Where(position => position.ClosedPosition.PositionFeedback == PositionFeedback.NotCalculated).ToListAsync();
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Error getting non feedbacked positions");
             throw;
         }
 

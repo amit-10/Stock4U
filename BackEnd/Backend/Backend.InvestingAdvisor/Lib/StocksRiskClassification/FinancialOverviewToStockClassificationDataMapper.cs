@@ -2,7 +2,7 @@ using Backend.Common.Models.Stocks;
 using Backend.InvestingAdvisor.Models;
 using Mapster;
 
-namespace Backend.InvestingAdvisor.Lib;
+namespace Backend.InvestingAdvisor.Lib.StocksRiskClassification;
 
 public static class FinancialOverviewToStockClassificationDataMapper
 {

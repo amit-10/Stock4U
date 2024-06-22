@@ -1,30 +1,30 @@
-namespace Backend.InvestingAdvisor.Lib;
+namespace Backend.InvestingAdvisor.Lib.Utils;
 
 public static class StatisticsCalculator
 {
-    public static double CalculateVolatility(Dictionary<DateTime, double> closePriceHistory)
+    public static decimal CalculateVolatility(Dictionary<DateTime, decimal> closePriceHistory)
     {
         var returns = CalculateReturns(closePriceHistory);
         var mean = returns.Sum() / returns.Count;
-        var variance = returns.Sum(r => Math.Pow(r - mean, 2)) / returns.Count;
+        var variance = returns.Sum(r => Math.Pow((double)(r - mean), 2)) / returns.Count;
         var volatility = Math.Sqrt(variance) * Math.Sqrt(252); // Annualized volatility
         
-        return volatility;
+        return (decimal)volatility;
     }
 
-    public static double CalculateAverageReturn(Dictionary<DateTime, double> closePriceHistory)
+    public static decimal CalculateAverageReturn(Dictionary<DateTime, decimal> closePriceHistory)
     {
         var returns = CalculateReturns(closePriceHistory);
         var averageReturn = returns.Sum() / returns.Count;
         return averageReturn * 252; // Annualized average return
     }
 
-    public static double CalculateMaxDrawdown(Dictionary<DateTime, double> closePriceHistory)
+    public static decimal CalculateMaxDrawdown(Dictionary<DateTime, decimal> closePriceHistory)
     {
         var dates = closePriceHistory.Keys.ToList();
         dates.Sort();
 
-        double maxDrawdown = 0;
+        decimal maxDrawdown = 0;
         var peak = closePriceHistory[dates[0]];
 
         foreach (var date in dates)
@@ -44,9 +44,9 @@ public static class StatisticsCalculator
         return maxDrawdown;
     }
     
-    private static List<double> CalculateReturns(Dictionary<DateTime, double> closePriceHistory)
+    private static List<decimal> CalculateReturns(Dictionary<DateTime, decimal> closePriceHistory)
     {
-        var returns = new List<double>();
+        var returns = new List<decimal>();
         var dates = closePriceHistory.Keys.ToList();
         dates.Sort();
         
@@ -59,5 +59,10 @@ public static class StatisticsCalculator
         }
 
         return returns;
+    }
+
+    public static decimal CalculateChangePercentage(decimal initialValue, decimal finalValue)
+    {
+        return (finalValue - initialValue) / initialValue * 100;
     }
 }

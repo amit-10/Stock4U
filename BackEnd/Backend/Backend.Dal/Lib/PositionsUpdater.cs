@@ -22,7 +22,7 @@ public class PositionsUpdater(
     public async Task EnterPositionAsync(string userId, Position position)
     {
         var filter = Builders<UserPositions>.Filter.Eq(up => up.UserId, userId);
-        var totalPrice = position.EntrancePrice * position.SharesCount;
+        var totalPrice = position.EntryPrice * position.SharesCount;
         var update = Builders<UserPositions>.Update
             .Push(up => up.Positions, position)
             .Inc(up => up.AccountBalance, -totalPrice);
@@ -38,8 +38,8 @@ public class PositionsUpdater(
         }
     }
 
-    public async Task ClosePositionAsync(string userId, string positionId, double closePrice, DateTime closeTime,
-        double sharesCountToClose)
+    public async Task ClosePositionAsync(string userId, string positionId, decimal closePrice, DateTime closeTime,
+        decimal sharesCountToClose)
     {
         var filter = Builders<UserPositions>.Filter.Eq(up => up.UserId, userId);
         var totalPrice = sharesCountToClose * closePrice;
@@ -77,23 +77,48 @@ public class PositionsUpdater(
                 PositionId = positionId,
                 ShareSymbol = currentPosition.ShareSymbol,
                 ShareCategory = currentPosition.ShareCategory,
-                EntrancePrice = currentPosition.EntrancePrice,
+                EntryPrice = currentPosition.EntryPrice,
                 PositionType = currentPosition.PositionType,
-                EntranceTime = currentPosition.EntranceTime,
-                ClosePrice = closePrice,
-                CloseTime = closeTime,
-                SharesCount = sharesCountToClose
+                EntryTime = currentPosition.EntryTime,
+                ExitPrice = closePrice,
+                ExitTime = closeTime,
+                SharesCount = sharesCountToClose,
+                PositionFeedback = PositionFeedback.NotCalculated
             }
         };
 
         try
         {
+            // todo: update if exists (user closed some shares of same position)?
             await _userPositionsHistoryCollection.InsertOneAsync(positionHistory);
         }
         catch (Exception exception)
         {
             logger.LogError(exception, "Error inserting position {positionId} history for user {userId}", positionId,
                 userId);
+            throw;
+        }
+    }
+
+    public async Task SetPositionFeedbackAsync(UserPositionHistory position, PositionFeedback feedback)
+    {
+        var filter =
+            Builders<UserPositionHistory>.Filter.And(
+                Builders<UserPositionHistory>.Filter.Eq(p => p.UserId, position.UserId),
+                Builders<UserPositionHistory>.Filter.Eq(p => p.ClosedPosition.PositionId,
+                    position.ClosedPosition.PositionId),
+                Builders<UserPositionHistory>.Filter.Eq(p => p.ClosedPosition.ExitTime,
+                    position.ClosedPosition.ExitTime));
+        var update = Builders<UserPositionHistory>.Update.Set(p => p.ClosedPosition.PositionFeedback, feedback);
+
+        try
+        {
+            await _userPositionsHistoryCollection.UpdateOneAsync(filter, update);
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Error updating position {positionId} feedback for user {userId}",
+                position.ClosedPosition.PositionId, position.UserId);
             throw;
         }
     }

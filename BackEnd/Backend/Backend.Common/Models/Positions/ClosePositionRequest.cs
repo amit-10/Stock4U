@@ -6,9 +6,9 @@ public class ClosePositionRequest
     
     public string PositionId { get; set; } = null!;
     
-    public double ClosePrice { get; set; }
+    public decimal ClosePrice { get; set; }
     
     public DateTime CloseTime { get; set; }
     
-    public double SharesCount { get; set; }
+    public decimal SharesCount { get; set; }
 }
