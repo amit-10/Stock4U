@@ -1,6 +1,5 @@
 import './Profile.css';
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -8,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
@@ -33,10 +32,10 @@ import { useState, useEffect } from 'react';
   }
 
 function Profile() {
-    const theme = useTheme();
     const [rows, setRows] = useState([]);
     const [bank, setBank] = useState(0);
     const [profit, setProfit] = useState(0);
+    const [risk, setRisk] = useState('');
 
 
     useEffect(() => {
@@ -45,21 +44,22 @@ function Profile() {
                 const positionsHistoryResposne = await axios.get('http://localhost:5266/Positions/GetUserPositionsHistory?userId=aaa');
            
                 const positionsHistory = positionsHistoryResposne.data;
-                const positionsHistoryRows = positionsHistory.map(( {positionId, shareSymbol, sharesCount, positionType, entrancePrice, closePrice }) => {
-                    return createData(positionId, shareSymbol, sharesCount, positionType, closePrice - entrancePrice);
+                const positionsHistoryRows = positionsHistory.map(( {positionId, shareSymbol, sharesCount, positionType, entryPrice, exitPrice, positionFeedback }) => {
+                    return createData(positionId, shareSymbol, sharesCount, positionType, (exitPrice - entryPrice).toFixed(2), positionFeedback);
                 })
     
                 setRows(positionsHistoryRows);
     
-                // const userInvestmentStatusResponse = await axios.get('http://localhost:5266/Positions/GetUserInvestmentStatus?userId=aaa');
-                // const userInvestmentStatus = userInvestmentStatusResponse.data;
-                // const currentBalance = userInvestmentStatus.AccountBalance;
-                // let totalPrices = 0;
-                // const entryPrices = userInvestmentStatus.Positions.foreach(position => totalPrices += position.EntryPrice);
+                const userInvestmentStatusResponse = await axios.get('http://localhost:5266/Positions/GetUserInvestmentStatus?userId=aaa');
+                const userInvestmentStatus = userInvestmentStatusResponse.data;
+                const currentBalance = userInvestmentStatus.accountBalance;
+                let totalPrices = 0;
+                userInvestmentStatus.positions.forEach(position => totalPrices += position.entryPrice);
     
-                // const profit = currentBalance - totalPrices;
-                // setBank(currentBalance);
-                // setProfit(profit);
+                const profit = currentBalance - totalPrices;
+                setBank(currentBalance.toFixed(2));
+                setProfit(profit.toFixed(2));
+                setRisk(userInvestmentStatus.riskLevel);
             } catch (e) {
                 console.log(e);
             }
@@ -84,7 +84,7 @@ function Profile() {
                                 Begginner Investor
                             </Typography>
                             <Typography variant="subtitle1" color="#545f71" component="div">
-                                Low Risk / High Risk Behavior
+                                {risk} Risk Behavior
                             </Typography>
                             </CardContent>
                             <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
@@ -101,7 +101,7 @@ function Profile() {
                                 Bank
                             </Typography>
                             <Typography variant="subtitle1" color="#545f71" component="div">
-                                {bank}
+                                {bank}$
                             </Typography>
                             </CardContent>
                             <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
@@ -118,7 +118,7 @@ function Profile() {
                                 Shares Profit
                             </Typography>
                             <Typography variant="subtitle1" color="#545f71" component="div">
-                                {profit}
+                                {profit}$
                             </Typography>
                             </CardContent>
                             <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
@@ -130,7 +130,7 @@ function Profile() {
             </div>
             <div class="Positions-History">
                 <div class="Positions-History-Title">
-                    Positions History
+                    <Typography color="#545f71" variant="h6" gutterBottom> Positions History </Typography>
                 </div>
                 <TableContainer component={Paper}>
                     <Table aria-label="customized table">
