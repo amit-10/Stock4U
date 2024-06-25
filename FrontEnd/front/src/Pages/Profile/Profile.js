@@ -52,13 +52,9 @@ function Profile() {
     
                 const userInvestmentStatusResponse = await axios.get('http://localhost:5266/Positions/GetUserInvestmentStatus?userId=aaa');
                 const userInvestmentStatus = userInvestmentStatusResponse.data;
-                const currentBalance = userInvestmentStatus.accountBalance;
-                let totalPrices = 0;
-                userInvestmentStatus.positions.forEach(position => totalPrices += position.entryPrice);
     
-                const profit = currentBalance - totalPrices;
-                setBank(currentBalance.toFixed(2));
-                setProfit(profit.toFixed(2));
+                setBank(userInvestmentStatus.accountBalance);
+                setProfit(userInvestmentStatus.totalWorth);
                 setRisk(userInvestmentStatus.riskLevel);
             } catch (e) {
                 console.log(e);

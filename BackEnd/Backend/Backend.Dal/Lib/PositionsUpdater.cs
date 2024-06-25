@@ -23,9 +23,10 @@ public class PositionsUpdater(
     {
         var filter = Builders<UserPositions>.Filter.Eq(up => up.UserId, userId);
         var totalPrice = position.EntryPrice * position.SharesCount;
+        var balanceToAdd = position.PositionType == PositionType.Long ? -totalPrice : totalPrice;
         var update = Builders<UserPositions>.Update
             .Push(up => up.Positions, position)
-            .Inc(up => up.AccountBalance, -totalPrice);
+            .Inc(up => up.AccountBalance, balanceToAdd);
 
         try
         {
@@ -83,7 +84,7 @@ public class PositionsUpdater(
                 ExitPrice = closePrice,
                 ExitTime = closeTime,
                 SharesCount = sharesCountToClose,
-                PositionFeedback = PositionFeedback.NotCalculated
+                PositionFeedback = PositionFeedback.NoFeedback
             }
         };
 

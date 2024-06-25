@@ -1,13 +1,27 @@
 using Backend.Common.Interfaces.Positions;
+using Backend.Common.Interfaces.Stocks;
 using Backend.Common.Models.Positions;
 
 namespace Backend.Bl.Lib;
 
-public class PositionsHandler(IPositionsRetriever positionsRetriever, IPositionsUpdater positionsUpdater) : IPositionsHandler
+public class PositionsHandler(
+    IPositionsRetriever positionsRetriever,
+    IPositionsUpdater positionsUpdater,
+    IStockPriceRetriever stockPriceRetriever) : IPositionsHandler
 {
-    public async Task<UserPositions> GetUserInvestmentStatusAsync(string userId)
+    public async Task<UserInvestmentStatus> GetUserInvestmentStatusAsync(string userId)
     {
-        return await positionsRetriever.GetUserInvestmentStatusByIdAsync(userId);
+        var userPositions = await positionsRetriever.GetUserInvestmentStatusByIdAsync(userId);
+        var userInvestmentStatus = new UserInvestmentStatus
+        {
+            UserId = userPositions.UserId,
+            RiskLevel = userPositions.RiskLevel,
+            AccountBalance = userPositions.AccountBalance,
+            Positions = userPositions.Positions,
+            TotalWorth = await CalculateUserNetWorth(userPositions)
+        };
+        
+        return userInvestmentStatus;
     }
 
     public async Task<IEnumerable<ClosedPosition>> GetUserPositionsHistoryAsync(string userId)
@@ -25,5 +39,19 @@ public class PositionsHandler(IPositionsRetriever positionsRetriever, IPositions
     {
         await positionsUpdater.ClosePositionAsync(closePositionRequest.UserId, closePositionRequest.PositionId,
             closePositionRequest.ClosePrice, closePositionRequest.CloseTime, closePositionRequest.SharesCount);
+    }
+
+    private async Task<decimal> CalculateUserNetWorth(UserPositions userPositions)
+    {
+        var totalNetWorth = userPositions.AccountBalance;
+        foreach (var position in userPositions.Positions)
+        {
+            var realTimeStock = await stockPriceRetriever.GetRealTimeStockAsync(position.ShareSymbol);
+            var currentInvestment = realTimeStock.CurrentPrice * position.SharesCount;
+            var balanceToAdd = position.PositionType == PositionType.Long ? currentInvestment : -currentInvestment;
+            totalNetWorth += balanceToAdd;
+        }
+
+        return totalNetWorth;
     }
 }
