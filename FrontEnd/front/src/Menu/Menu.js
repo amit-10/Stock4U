@@ -31,7 +31,7 @@ function Menu() {
           </div>
 
           <div class="Menu-Button">
-            <IconButton component={Link} to="/investments"> 
+            <IconButton component={Link} to="/leaderboard"> 
                 <AssignmentOutlinedIcon/> 
             </IconButton>
             Leaderboard
