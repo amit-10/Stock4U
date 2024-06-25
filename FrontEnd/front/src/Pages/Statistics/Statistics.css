@@ -1,0 +1,22 @@
+
+.charts-sections1 {
+    /* display: flex; */
+    /* display: grid; */
+    /* justify-content: center; */
+    /* max-height: 250px; */
+    width: 100%;
+    height: 25%;
+}
+
+.charts-sections2 {
+    /* display: flex; */
+    /* display: grid; */
+    /* justify-content: center; */
+    /* max-height: 250px; */
+    width: 100%;
+    height: 45%;
+}
+
+AgChartsReact {
+    max-height: 250px;
+}

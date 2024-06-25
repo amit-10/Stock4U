@@ -6,6 +6,7 @@ import Profile from './Pages/Profile/Profile';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Investments from './Pages/Investments/Investments';
 import Leaderboard from './Pages/Leaderboard/Leaderboard';
+import Statistics from './Pages/Statistics/Statistics';
 import AuthProvider from './Context/auth.context';
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
               <div class="Pages">
                 <Routes>
                   <Route path="" element={<></>} />
+                  <Route path="statistics" element={<Statistics />} />
                   <Route path="investments" element={<Investments />} />
                   <Route path="leaderboard" element={<Leaderboard />} />
                   <Route path="profile" element={<Profile />} />
