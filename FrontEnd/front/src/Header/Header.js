@@ -1,14 +1,12 @@
 import './Header.css';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-import Avatar from '@mui/material/Avatar';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import * as React from 'react';
+import { useContext, useState } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -24,6 +22,8 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import axios from 'axios';
+import { authContext } from '../Context/auth.context';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -67,13 +67,13 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 
 function Header() {
-    const [open, setOpen] = React.useState(false);
-    const [email, setEmail] = React.useState("");
-    const [password, setPassword] = React.useState("");
+    const [open, setOpen] = useState(false);
+    const [openSignUp, setOpenSignUp] = useState(false);
 
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
-      React.useState(null);
+    const [auth,setAuth] = useContext(authContext);
+
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -175,7 +175,42 @@ function Header() {
   
     const handleClose = () => {
       setOpen(false);
+      setOpenSignUp(false);
     };
+
+    const handleSignUp = () => {
+      setOpen(false);
+      setOpenSignUp(true);
+    };
+
+
+    const logIn = async (email, password) => {
+      try {
+        setAuth({email,password});
+        console.log('auth', auth);
+
+        await axios.get(`http://localhost:5266/logIn?email=${email}&password=${password}`);
+      }
+      catch (e)
+      {
+        console.log('login failed', e);
+      }
+    }
+
+    const signUp = async (email, password) => {
+      try {
+        const body = {
+          email,
+          password
+        }
+        setAuth({email,password});
+        await axios.post(`http://localhost:5266/signUp`, body);
+      }
+      catch (e)
+      {
+        console.log('login failed', e);
+      }
+    }
 
   return (
     <div>
@@ -241,8 +276,7 @@ function Header() {
                 const password = formJson.password;
                 console.log(email);
                 console.log(password);
-                setEmail(email);
-                setPassword(email);
+                logIn(email, password);
                 handleClose();
             },
             }}
@@ -274,7 +308,57 @@ function Header() {
             </DialogContent>
             <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
-            <Button type="submit">Subscribe</Button>
+            <Button type="submit">Sign In</Button>
+            <Button onClick={handleSignUp}>Sign Up</Button>
+            </DialogActions>
+        </Dialog>
+
+        <Dialog
+            open={openSignUp}
+            onClose={handleClose}
+            PaperProps={{
+            component: 'form',
+            onSubmit: (event) => {
+                event.preventDefault();
+                const formData = new FormData(event.currentTarget);
+                const formJson = Object.fromEntries((formData).entries());
+                const email = formJson.email;
+                const password = formJson.password;
+                console.log(email);
+                console.log(password);
+                signUp(email, password);
+                handleClose();
+            },
+            }}
+        >
+            <DialogTitle>Sign Up</DialogTitle>
+            <DialogContent>
+            <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="name"
+                name="email"
+                label="Email Address"
+                type="email"
+                fullWidth
+                variant="standard"
+            />
+            <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="name"
+                name="password"
+                label="Password"
+                type="password"
+                fullWidth
+                variant="standard"
+            />
+            </DialogContent>
+            <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button type="submit">Sign Up</Button>
             </DialogActions>
         </Dialog>
       </div>

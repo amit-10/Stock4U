@@ -17,7 +17,7 @@ function Menu() {
           </div>
 
           <div class="Menu-Button">
-            <IconButton component={Link} to="/"> 
+            <IconButton component={Link} to="/statistics"> 
                 <SignalCellularAltRoundedIcon/> 
             </IconButton>
             Statistics
