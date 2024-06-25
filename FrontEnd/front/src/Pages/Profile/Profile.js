@@ -40,6 +40,14 @@ function Profile() {
 
     const [auth,setAuth] = useContext(authContext);
 
+    const feedbacks = {
+        NoFeedback: 'No feedback',
+        Positive: 'Well done! You did well',
+        RiskLevelMismatch: 'The risk level mismatch',
+        ExitedTooEarly: 'Look like you exited too early...',
+        ExitedTooLate: 'Look like you exited too late...',
+        ShouldNotHaveEntered: 'You should not have entered'
+    }
 
     useEffect(() => {
         async function getRows() {
@@ -151,7 +159,7 @@ function Profile() {
                                 <StyledTableCell align="right">{row.shares}</StyledTableCell>
                                 <StyledTableCell align="right">{row.type}</StyledTableCell>
                                 <StyledTableCell align="right">{row.profit}$</StyledTableCell>
-                                <StyledTableCell align="right">{row.note}</StyledTableCell>
+                                <StyledTableCell align="right">{feedbacks[row.note]}</StyledTableCell>
                                 </StyledTableRow>
                             ))}
                         </TableBody>
