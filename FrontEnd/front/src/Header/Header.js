@@ -1,14 +1,12 @@
 import './Header.css';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-import Avatar from '@mui/material/Avatar';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import * as React from 'react';
+import { useContext, useState } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -25,6 +23,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import axios from 'axios';
+import { authContext } from '../Context/auth.context';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -68,14 +67,13 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 
 function Header() {
-    const [open, setOpen] = React.useState(false);
-    const [openSignUp, setOpenSignUp] = React.useState(false);
-    const [email, setEmail] = React.useState("");
-    const [password, setPassword] = React.useState("");
+    const [open, setOpen] = useState(false);
+    const [openSignUp, setOpenSignUp] = useState(false);
 
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
-      React.useState(null);
+    const [auth,setAuth] = useContext(authContext);
+
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -177,6 +175,7 @@ function Header() {
   
     const handleClose = () => {
       setOpen(false);
+      setOpenSignUp(false);
     };
 
     const handleSignUp = () => {
@@ -187,9 +186,10 @@ function Header() {
 
     const logIn = async (email, password) => {
       try {
+        setAuth({email,password});
+        console.log('auth', auth);
+
         await axios.get(`http://localhost:5266/logIn?email=${email}&password=${password}`);
-        setEmail(email);
-        setPassword(email);
       }
       catch (e)
       {
@@ -203,9 +203,8 @@ function Header() {
           email,
           password
         }
+        setAuth({email,password});
         await axios.post(`http://localhost:5266/signUp`, body);
-        setEmail(email);
-        setPassword(email);
       }
       catch (e)
       {

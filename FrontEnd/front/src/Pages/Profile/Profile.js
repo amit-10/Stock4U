@@ -13,7 +13,8 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { authContext } from '../../Context/auth.context';
 
     const StyledTableCell = styled(TableCell)(({ theme }) => ({}));
   
@@ -36,6 +37,8 @@ function Profile() {
     const [bank, setBank] = useState(0);
     const [profit, setProfit] = useState(0);
     const [risk, setRisk] = useState('');
+
+    const [auth,setAuth] = useContext(authContext);
 
 
     useEffect(() => {
@@ -70,7 +73,7 @@ function Profile() {
 
     return (
         <div className="App">
-            <Typography color="#545f71" variant="h6" gutterBottom> Profile \ Elor Sulimani </Typography>
+            <Typography color="#545f71" variant="h6" gutterBottom> Profile \ {auth.email} </Typography>
             <div class="Card-Section">
                 <div class="Card">
                     <Card sx={{ display: 'flex', backgroundColor: '#dadada', color: '#545f71', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
