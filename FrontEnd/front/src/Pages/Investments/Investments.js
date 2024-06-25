@@ -20,6 +20,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import ToggleButton from '@mui/material/ToggleButton'
 import { TrendingDown, TrendingUp } from '@mui/icons-material';
+import { Switch } from '@mui/material';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({}));
 
@@ -52,8 +53,15 @@ const stockOptions = [
 
 function NewPositionDialog({open, handleClose}) {
     const [type, setType] = React.useState("LONG");
+    const [limitIsActive, setLimitIsActive] = React.useState(false)
 
-    return <Dialog onClose={handleClose} open={open}>
+    function close() {
+        setType("LONG");
+        setLimitIsActive(false);
+        handleClose();
+    }
+
+    return <Dialog onClose={close} open={open}>
         <DialogTitle>New Position Parameters</DialogTitle>
         <div className='Dialog-Content'>
             <Autocomplete
@@ -74,12 +82,51 @@ function NewPositionDialog({open, handleClose}) {
                 </ToggleButton>
             </ToggleButtonGroup>
             <TextField label="Amount"/>
+            <div style={{display: "flex", justifyContent: "space-between", alignItems: "flex-end", paddingTop: "20px"}}>
+                <Typography style={{fontWeight: "bold", fontSize: "16px"}}>Activate Limit</Typography>
+                <Switch value={limitIsActive} onChange={() => setLimitIsActive(prev => !prev)}/>
+            </div>
+            <Typography>
+                If you want to limit the entry price for the position, select this option
+            </Typography>
+            <TextField label="Limit"/>
+            <div style={{display: "flex", justifyContent: "center", alignItems: "flex-end", paddingTop: "40px"}}>
+                <Button variant='contained'>Confirm</Button>
+            </div>
+        </div>
+    </Dialog>
+}
+
+function ExitPositionDialog({open, handleClose}) {
+    const [limitIsActive, setLimitIsActive] = React.useState(false)
+
+    function close() {
+        setLimitIsActive(false);
+        handleClose();
+    }
+
+    return <Dialog onClose={close} open={open}>
+        <DialogTitle>Exit Position</DialogTitle>
+        <div className='Dialog-Content'>
+            <TextField label="Amount"/>
+            <div style={{display: "flex", justifyContent: "space-between", alignItems: "flex-end", paddingTop: "20px"}}>
+                <Typography style={{fontWeight: "bold", fontSize: "16px"}}>Activate Limit</Typography>
+                <Switch value={limitIsActive} onChange={() => setLimitIsActive(prev => !prev)}/>
+            </div>
+            <Typography>
+                If you want to limit the exit price for the position, select this option
+            </Typography>
+            <TextField label="Limit"/>
+            <div style={{display: "flex", justifyContent: "center", alignItems: "flex-end", paddingTop: "40px"}}>
+                <Button variant='contained'>Confirm</Button>
+            </div>
         </div>
     </Dialog>
 }
 
 function Investments() {
     const [newPositionOpen, setNewPositionOpen] = React.useState(false);
+    const [exitPositionOpen, setExitPositionOpen] = React.useState(false);
 
     return <div className="App">
         <Typography color="#545f71" variant="h6" gutterBottom> Investments </Typography>
@@ -169,7 +216,7 @@ function Investments() {
                                     </div>
                                 </StyledTableCell>
                                 <StyledTableCell align="right">
-                                    <Button variant='contained'>Exit Position</Button>
+                                    <Button variant='contained' onClick={() => setExitPositionOpen(true)}>Exit Position</Button>
                                 </StyledTableCell>
                             </StyledTableRow>
                         ))}
@@ -178,6 +225,7 @@ function Investments() {
             </TableContainer>
         </div>
         <NewPositionDialog open={newPositionOpen} handleClose={() => setNewPositionOpen(false)}/>
+        <ExitPositionDialog open={exitPositionOpen} handleClose={() => setExitPositionOpen(false)}/>
     </div>;
 }
 
