@@ -4,7 +4,7 @@ namespace Backend.InvestingAdvisor.Configuration;
 
 public class PositionsFeedbackConfiguration
 {
-    public double FeedbackCalculationIntervalInHours { get; set; } = 24;
+    public double FeedbackCalculationIntervalInMinutes { get; set; } = 60;
 
     public decimal PeakDropThreshold { get; set; } = 10m;
 
@@ -18,8 +18,8 @@ public class PositionsFeedbackConfiguration
 
     public Dictionary<RiskLevel, decimal> PositiveFeedbackThreshold { get; set; } = new()
     {
-        { RiskLevel.Low, 10m },
-        { RiskLevel.Medium, 15m },
-        { RiskLevel.High, 20m }
+        { RiskLevel.Low, 0.025m },
+        { RiskLevel.Medium, 0.0375m },
+        { RiskLevel.High, 0.05m }
     };
 }
