@@ -1,6 +1,5 @@
 import './Profile.css';
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -8,11 +7,13 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
 
     const StyledTableCell = styled(TableCell)(({ theme }) => ({}));
   
@@ -29,17 +30,47 @@ import Paper from '@mui/material/Paper';
   function createData(id, company, shares, type, profit, note ) {
     return { id, company, shares, type, profit, note };
   }
-  
-  const rows = [
-    createData('#1', 'Tesla', 500, "LONG", -1.02, 'You shouldnt have entered this position'),
-    createData('#2', 'Amazon', 450, "LONG", 2.16, 'Congratulations! good choice'),
-    createData('#3', 'Google', 700, "SHORT", 1.13, 'Youve exisited the position too early'),
-    createData('#4', 'Microsoft', 630, "LONG", -2.04, 'You shouldnt have entered this position'),
-    createData('#5', 'Meta', 800, "LONG", 0.91, 'You shouldnt have entered this position')
-  ];
 
 function Profile() {
-    const theme = useTheme();
+    const [rows, setRows] = useState([]);
+    const [bank, setBank] = useState(0);
+    const [profit, setProfit] = useState(0);
+    const [risk, setRisk] = useState('');
+
+
+    useEffect(() => {
+        async function getRows() {
+            try {
+                const positionsHistoryResposne = await axios.get('http://localhost:5266/Positions/GetUserPositionsHistory?userId=aaa');
+           
+                const positionsHistory = positionsHistoryResposne.data;
+                const positionsHistoryRows = positionsHistory.map(( {positionId, shareSymbol, sharesCount, positionType, entryPrice, exitPrice, positionFeedback }) => {
+                    return createData(positionId, shareSymbol, sharesCount, positionType, (exitPrice - entryPrice).toFixed(2), positionFeedback);
+                })
+    
+                setRows(positionsHistoryRows);
+    
+                const userInvestmentStatusResponse = await axios.get('http://localhost:5266/Positions/GetUserInvestmentStatus?userId=aaa');
+                const userInvestmentStatus = userInvestmentStatusResponse.data;
+                const currentBalance = userInvestmentStatus.accountBalance;
+                let totalPrices = 0;
+                userInvestmentStatus.positions.forEach(position => totalPrices += position.entryPrice);
+    
+                const profit = currentBalance - totalPrices;
+                setBank(currentBalance.toFixed(2));
+                setProfit(profit.toFixed(2));
+                setRisk(userInvestmentStatus.riskLevel);
+            } catch (e) {
+                console.log(e);
+            }
+          
+        };
+    
+        if (!rows.length)
+        {
+            getRows();
+        }
+      }, []);
 
     return (
         <div className="App">
@@ -53,7 +84,7 @@ function Profile() {
                                 Begginner Investor
                             </Typography>
                             <Typography variant="subtitle1" color="#545f71" component="div">
-                                Low Risk / High Risk Behavior
+                                {risk} Risk Behavior
                             </Typography>
                             </CardContent>
                             <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
@@ -70,7 +101,7 @@ function Profile() {
                                 Bank
                             </Typography>
                             <Typography variant="subtitle1" color="#545f71" component="div">
-                                10K
+                                {bank}$
                             </Typography>
                             </CardContent>
                             <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
@@ -87,7 +118,7 @@ function Profile() {
                                 Shares Profit
                             </Typography>
                             <Typography variant="subtitle1" color="#545f71" component="div">
-                                7K
+                                {profit}$
                             </Typography>
                             </CardContent>
                             <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
@@ -99,7 +130,7 @@ function Profile() {
             </div>
             <div class="Positions-History">
                 <div class="Positions-History-Title">
-                    Positions History
+                    <Typography color="#545f71" variant="h6" gutterBottom> Positions History </Typography>
                 </div>
                 <TableContainer component={Paper}>
                     <Table aria-label="customized table">
