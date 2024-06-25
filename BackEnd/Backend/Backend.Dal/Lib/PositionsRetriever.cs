@@ -60,7 +60,7 @@ public class PositionsRetriever(
         try
         {
             userPositionsHistory = await _userPositionsHistoryCollection.AsQueryable()
-                .Where(position => position.ClosedPosition.PositionFeedback == PositionFeedback.NotCalculated).ToListAsync();
+                .Where(position => position.ClosedPosition.PositionFeedback == PositionFeedback.NoFeedback).ToListAsync();
         }
         catch (Exception exception)
         {
