@@ -24,6 +24,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import axios from 'axios';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -68,6 +69,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 function Header() {
     const [open, setOpen] = React.useState(false);
+    const [openSignUp, setOpenSignUp] = React.useState(false);
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
 
@@ -177,6 +179,40 @@ function Header() {
       setOpen(false);
     };
 
+    const handleSignUp = () => {
+      setOpen(false);
+      setOpenSignUp(true);
+    };
+
+
+    const logIn = async (email, password) => {
+      try {
+        await axios.get(`http://localhost:5266/logIn?email=${email}&password=${password}`);
+        setEmail(email);
+        setPassword(email);
+      }
+      catch (e)
+      {
+        console.log('login failed', e);
+      }
+    }
+
+    const signUp = async (email, password) => {
+      try {
+        const body = {
+          email,
+          password
+        }
+        await axios.post(`http://localhost:5266/signUp`, body);
+        setEmail(email);
+        setPassword(email);
+      }
+      catch (e)
+      {
+        console.log('login failed', e);
+      }
+    }
+
   return (
     <div>
       <header class="Header">
@@ -241,8 +277,7 @@ function Header() {
                 const password = formJson.password;
                 console.log(email);
                 console.log(password);
-                setEmail(email);
-                setPassword(email);
+                logIn(email, password);
                 handleClose();
             },
             }}
@@ -274,7 +309,57 @@ function Header() {
             </DialogContent>
             <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
-            <Button type="submit">Subscribe</Button>
+            <Button type="submit">Sign In</Button>
+            <Button onClick={handleSignUp}>Sign Up</Button>
+            </DialogActions>
+        </Dialog>
+
+        <Dialog
+            open={openSignUp}
+            onClose={handleClose}
+            PaperProps={{
+            component: 'form',
+            onSubmit: (event) => {
+                event.preventDefault();
+                const formData = new FormData(event.currentTarget);
+                const formJson = Object.fromEntries((formData).entries());
+                const email = formJson.email;
+                const password = formJson.password;
+                console.log(email);
+                console.log(password);
+                signUp(email, password);
+                handleClose();
+            },
+            }}
+        >
+            <DialogTitle>Sign Up</DialogTitle>
+            <DialogContent>
+            <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="name"
+                name="email"
+                label="Email Address"
+                type="email"
+                fullWidth
+                variant="standard"
+            />
+            <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="name"
+                name="password"
+                label="Password"
+                type="password"
+                fullWidth
+                variant="standard"
+            />
+            </DialogContent>
+            <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button type="submit">Sign Up</Button>
             </DialogActions>
         </Dialog>
       </div>
