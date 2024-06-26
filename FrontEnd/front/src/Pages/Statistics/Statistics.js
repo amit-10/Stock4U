@@ -17,6 +17,7 @@ function Statistics() {
     const [achievements, setAchievements] = useState('');
     const [auth,setAuth] = useContext(authContext);
     const [chartOptions, setChartOptions] = useState({});
+    const [donutOptions, setDonutOptions] = useState({});
     const daysBack = 7;
 
     const [options, setOptions] = useState({});
@@ -61,7 +62,23 @@ function Statistics() {
                         ],
                       }
 
+                      const newDonutOptions = {
+                        data: newLineDate,
+                        title: {
+                          text: 'Profits Per Day',
+                        },
+                        series: [
+                          {
+                            type: "donut",
+                            calloutLabelKey: "date",
+                            angleKey: "shareProfit",
+                            innerRadiusRatio: 0.7,
+                          },
+                        ],
+                      }
+
                     setOptions(newOptions);
+                    setDonutOptions(newDonutOptions);
 
                     newRows.push({
                         shareKey: position.shareSymbol,
@@ -156,7 +173,10 @@ function Statistics() {
                     {/* <AgChartsReact options={chartOptions} /> */}
                     <AgChartsReact options={options} />
             </div>
-            
+            <div class="charts-sections3">
+                    {/* <AgChartsReact options={chartOptions} /> */}
+                    <AgChartsReact options={donutOptions} />
+            </div>
         </div>
     );
 

@@ -17,6 +17,15 @@
     height: 45%;
 }
 
+.charts-sections3 {
+    /* display: flex; */
+    /* display: grid; */
+    /* justify-content: center; */
+    /* max-height: 250px; */
+    width: 100%;
+    height: 20%;
+}
+
 AgChartsReact {
     max-height: 250px;
 }
