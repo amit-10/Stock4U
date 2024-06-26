@@ -35,22 +35,16 @@ function Statistics() {
 
                     const newLineDate = [];
 
-                    for (let i = 1; i <= daysBack; i++)
-                    {
-                        const currentDate = new Date();
-                        currentDate.getDate();
-                        const dateToCalculate = currentDate.setDate(currentDate.getDate() - i);
-              
-                        const historyResponse = await axios.get(`http://localhost:5266/Stocks/GetStockHistory?symbol=${position.shareSymbol}&daysBack=${i}`);
-                        const historyPrice = historyResponse.data;
-                        console.log({historyPrice, dateToCalculate});
+                    const historyResponse = await axios.get(`http://localhost:5266/Stocks/GetStockHistory?symbol=${position.shareSymbol}&daysBack=${daysBack}`);
+                    const historyPrice = historyResponse.data;
 
+                    Object.keys(historyPrice).forEach(key => {
+                        console.log(key);
                         newLineDate.push({
-                            date: dateToCalculate,
-                            shareProfit: historyPrice.closePrice
+                            date: key,
+                            shareProfit: historyPrice[key].closePrice
                         })
-              
-                    }
+                    });
 
                     const newOptions = {
                         title: {
