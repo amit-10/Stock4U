@@ -11,7 +11,7 @@ function SidePanel() {
   useEffect(() => {
     async function getAchivements() {
         try {
-            const achievementsResponse = await axios.get('http://localhost:5266/Achievements/GetAllAchievements');
+            const achievementsResponse = await axios.get('http://localhost:5266/Achievements/GetUserAchievements?userId=aaa');
             const achievements = achievementsResponse.data;
 
             console.log({achievements});
@@ -129,9 +129,9 @@ function SidePanel() {
             {achievements.map(achivement =>  <div class="Item">
               <Avatar sx={{ width: 30, height: 30, marginRight: '10px' }}/>
               <div class="Item-Description">
-                <Typography variant="h8" gutterBottom> {achivement.description} </Typography>
+                <Typography variant="h8" gutterBottom> {achivement.achievementType} </Typography>
                 <div class="Update-Date">
-                  <Typography sx={{ width: 10, height: 10, marginRight: '10px' }}  variant="h10" gutterBottom> 5 minutes ago </Typography>
+                  <Typography sx={{ width: 10, height: 10, marginRight: '10px' }}  variant="h10" gutterBottom>  {(new Date(achivement.achievedTime)).toLocaleDateString()} </Typography>
                 </div>
               </div>
             </div>)}
