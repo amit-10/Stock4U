@@ -51,4 +51,21 @@ public class AchievementsRetriever(
 
         return achievements;
     }
+
+    public async Task<List<Achievement>> GetAchievementsByTypesAsync(List<AchievementType> achievementTypes)
+    {
+        List<Achievement> achievements;
+        try
+        {
+            achievements = await _achievementsCollection.AsQueryable()
+                .Where(achievement => achievementTypes.Contains(achievement.Type)).ToListAsync();
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Error getting achievements");
+            throw;
+        }
+
+        return achievements;
+    }
 }

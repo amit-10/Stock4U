@@ -1,3 +1,4 @@
+using Backend.Common.Interfaces.Achievements;
 using Backend.Common.Interfaces.Positions;
 using Backend.Common.Interfaces.Stocks;
 using Backend.Common.Models.Positions;
@@ -7,20 +8,27 @@ namespace Backend.Bl.Lib;
 public class PositionsHandler(
     IPositionsRetriever positionsRetriever,
     IPositionsUpdater positionsUpdater,
-    IStockPriceRetriever stockPriceRetriever) : IPositionsHandler
+    IStockPriceRetriever stockPriceRetriever,
+    IAchievementsRetriever achievementsRetriever) : IPositionsHandler
 {
     public async Task<UserInvestmentStatus> GetUserInvestmentStatusAsync(string userId)
     {
         var userPositions = await positionsRetriever.GetUserInvestmentStatusByIdAsync(userId);
+        var userToAchievements = await achievementsRetriever.GetUserAchievementsAsync(userId);
+        var achievements = await achievementsRetriever.GetAchievementsByTypesAsync(userToAchievements
+            .Select(userToAchievement => userToAchievement.AchievementType)
+            .ToList());
+
         var userInvestmentStatus = new UserInvestmentStatus
         {
             UserId = userPositions.UserId,
             RiskLevel = userPositions.RiskLevel,
             AccountBalance = userPositions.AccountBalance,
             Positions = userPositions.Positions,
-            TotalWorth = await CalculateUserNetWorth(userPositions)
+            TotalWorth = await CalculateUserNetWorth(userPositions),
+            AchievementsPoints = achievements.Sum(achievement => achievement.PointsNumber)
         };
-        
+
         return userInvestmentStatus;
     }
 
