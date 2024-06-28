@@ -70,7 +70,8 @@ public class PositionsHandler(
             AccountBalance = userPositions.AccountBalance,
             Positions = userPositions.Positions,
             TotalWorth = await CalculateUserNetWorth(userPositions),
-            AchievementsPoints = achievements.Sum(achievement => achievement.PointsNumber)
+            AchievementsPoints = achievements.Sum(achievement => achievement.PointsNumber),
+            AchievementsCount = achievements.Count
         };
         return userInvestmentStatus;
     }
