@@ -28,7 +28,7 @@ function Statistics() {
 
         const statusResponse = await axios.get('http://localhost:5266/Positions/GetUserInvestmentStatus?userId=aaa');
         const status = statusResponse.data;
-        const achievemnets = status.achievements;
+        const achievemnets = status.achievementsPoints;
         setAchievements(achievemnets);
         setBank(status.accountBalance);
     }, 10000);
