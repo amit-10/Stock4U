@@ -24,4 +24,19 @@ public class AchievementsController(
             return StatusCode(StatusCodes.Status500InternalServerError, exception.Message);
         }
     }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetUserAchievementsAsync(string userId)
+    {
+        try
+        {
+            var userInvestmentStatus = await achievementsHandler.GetUserAchievementsAsync(userId);
+            return StatusCode(StatusCodes.Status200OK, userInvestmentStatus);
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Error getting user achievements {userId}", userId);
+            return StatusCode(StatusCodes.Status500InternalServerError, exception.Message);
+        }
+    }
 }

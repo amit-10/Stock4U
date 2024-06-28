@@ -9,4 +9,9 @@ public class AchievementsHandler(IAchievementsRetriever achievementsRetriever) :
     {
         return await achievementsRetriever.GetAllAchievementsAsync();
     }
+
+    public async Task<List<UserToAchievement>> GetUserAchievementsAsync(string userId)
+    {
+        return await achievementsRetriever.GetUserAchievementsAsync(userId);
+    }
 }

@@ -11,4 +11,6 @@ public class MongoConfiguration
     public string UserPositionsHistoryCollectionName { get; set; } = null!;
     
     public string AchievementsCollectionName { get; set; } = null!;
+    
+    public string UserToAchievementCollectionName { get; set; } = null!;
 }
