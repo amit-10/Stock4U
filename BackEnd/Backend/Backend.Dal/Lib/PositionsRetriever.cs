@@ -19,13 +19,13 @@ public class PositionsRetriever(
     private readonly IMongoCollection<UserPositionHistory> _userPositionsHistoryCollection =
         mongoHandler.GetCollection<UserPositionHistory>(mongoConfiguration.UserPositionsHistoryCollectionName);
 
-    public async Task<UserPositions> GetUserInvestmentStatusByIdAsync(string userId)
+    public async Task<UserPositions> GetUserPositionsByIdAsync(string userId)
     {
-        UserPositions userInvestmentStatus;
+        UserPositions userPositions;
         try
         {
-            userInvestmentStatus = await _userInvestmentStatusCollection.AsQueryable()
-                .SingleOrDefaultAsync(userPositions => userPositions.UserId == userId);
+            userPositions = await _userInvestmentStatusCollection.AsQueryable()
+                .SingleOrDefaultAsync(positions => positions.UserId == userId);
         }
         catch (Exception exception)
         {
@@ -33,7 +33,23 @@ public class PositionsRetriever(
             throw;
         }
 
-        return userInvestmentStatus;
+        return userPositions;
+    }
+
+    public async Task<List<UserPositions>> GetAllUserPositionsAsync()
+    {
+        List<UserPositions> userPositions;
+        try
+        {
+            userPositions = await _userInvestmentStatusCollection.AsQueryable().ToListAsync();
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Error getting users positions");
+            throw;
+        }
+
+        return userPositions;
     }
 
     public async Task<List<UserPositionHistory>> GetUserPositionsHistoryAsync(string userId)
