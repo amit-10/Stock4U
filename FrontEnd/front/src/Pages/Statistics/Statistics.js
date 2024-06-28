@@ -2,6 +2,7 @@ import './Statistics.css';
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import Button from '@mui/material/Button';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { useState, useEffect, useContext } from 'react';
@@ -13,14 +14,47 @@ function Statistics() {
     const [bank] = useState(0);
     const [profit] = useState(0);
     const [risk] = useState('');
-    const [positions, setPositions] = useState('');
-    const [achievements, setAchievements] = useState('');
+    const [positions, setPositions] = useState([]);
+    const [achievements, setAchievements] = useState(0);
     const [auth,setAuth] = useContext(authContext);
     const [chartOptions, setChartOptions] = useState({});
     const [donutOptions, setDonutOptions] = useState({});
     const daysBack = 7;
 
     const [options, setOptions] = useState({});
+
+    async function handleOnButtonClick(shareSymbol)
+    {
+        const historyResponse = await axios.get(`http://localhost:5266/Stocks/GetStockHistory?symbol=${shareSymbol}&daysBack=${daysBack}`);
+        const historyPrice = historyResponse.data;
+
+        const newLineDate = [];
+
+        Object.keys(historyPrice).forEach(key => {
+            console.log(key);
+            newLineDate.push({
+                date: key,
+                shareProfit: historyPrice[key].closePrice
+            })
+        });
+
+        const newOptions = {
+            title: {
+              text: `Share ${shareSymbol} Over Time`,
+            },
+            data: newLineDate,
+            series: [
+              {
+                type: "line",
+                xKey: "date",
+                yKey: "shareProfit",
+                yName: "profit"
+              }
+            ],
+          }
+
+          setOptions(newOptions);
+    }
 
     useEffect(() => {
         async function getPositions() {
@@ -166,6 +200,7 @@ function Statistics() {
             </div>
 
             <div class="charts-sections1">
+                {positions.map(position => <Button onClick={() => handleOnButtonClick(position.shareSymbol)}>{position.shareSymbol}</Button>)}
                 <AgChartsReact options={options} />
             </div>
             <div class="graphs">
