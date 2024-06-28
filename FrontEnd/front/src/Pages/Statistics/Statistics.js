@@ -11,7 +11,7 @@ import { AgChartsReact } from 'ag-charts-react';
 import axios from 'axios';
 
 function Statistics() {
-    const [bank] = useState(0);
+    const [bank, setBank] = useState(0);
     const [profit] = useState(0);
     const [risk] = useState('');
     const [positions, setPositions] = useState([]);
@@ -22,6 +22,16 @@ function Statistics() {
     const daysBack = 7;
 
     const [options, setOptions] = useState({});
+
+    setInterval(async () => {
+        console.log('nigga');
+
+        const statusResponse = await axios.get('http://localhost:5266/Positions/GetUserInvestmentStatus?userId=aaa');
+        const status = statusResponse.data;
+        const achievemnets = status.achievements;
+        setAchievements(achievemnets);
+        setBank(status.accountBalance);
+    }, 10000);
 
     async function handleOnButtonClick(shareSymbol)
     {
@@ -188,7 +198,7 @@ function Statistics() {
                                 Achievements
                             </Typography>
                             <Typography variant="subtitle1" color="#545f71" component="div">
-                                {achievements}
+                                {achievements} Points
                             </Typography>
                             </CardContent>
                             <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
