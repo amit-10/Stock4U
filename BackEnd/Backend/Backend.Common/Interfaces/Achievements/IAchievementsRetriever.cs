@@ -7,4 +7,6 @@ public interface IAchievementsRetriever
     Task<List<Achievement>> GetAllAchievementsAsync();
 
     Task<List<UserToAchievement>> GetUserAchievementsAsync(string userId);
+
+    Task<List<Achievement>> GetAchievementsByTypesAsync(List<AchievementType> achievementTypes);
 }
