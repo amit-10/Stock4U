@@ -5,4 +5,6 @@ namespace Backend.Common.Interfaces.Achievements;
 public interface IAchievementsRetriever
 {
     Task<List<Achievement>> GetAllAchievementsAsync();
+
+    Task<List<UserToAchievement>> GetUserAchievementsAsync(string userId);
 }
