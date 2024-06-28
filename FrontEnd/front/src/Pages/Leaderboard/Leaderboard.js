@@ -28,8 +28,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
   }));
   
-  function createData(id, company, shares, type, profit, note ) {
-    return { id, company, shares, type, profit, note };
+  function createData(position, name, achievements, profit) {
+    return { position, name, achievements, profit };
   }
 
 function Leaderboard() {
@@ -47,9 +47,13 @@ function Leaderboard() {
                 const leaderboardResposne = await axios.get('http://localhost:5266/Positions/GetTopTenUsers');
            
                 const leaderboard = leaderboardResposne.data;
-                const leaderboardRows = leaderboard.map(( {positionId, shareSymbol, sharesCount, positionType, entryPrice, exitPrice, positionFeedback }) => {
-                    return createData(positionId, shareSymbol, sharesCount, positionType, (exitPrice - entryPrice).toFixed(2), positionFeedback);
-                })
+
+                const leaderboardRows = leaderboard.map(( {userId, achievementsPoints, totalWorth }, index) => {
+                    console.log(index);
+                    return createData(index, userId, achievementsPoints, totalWorth);
+                });
+
+                console.log({leaderboardRows});
     
                 setRows(leaderboardRows);
     
@@ -135,23 +139,19 @@ function Leaderboard() {
                     <Table aria-label="customized table">
                         <TableHead>
                             <TableRow>
-                                <StyledTableCell>Id</StyledTableCell>
-                                <StyledTableCell align="right">Company</StyledTableCell>
-                                <StyledTableCell align="right">Shares</StyledTableCell>
-                                <StyledTableCell align="right">Type</StyledTableCell>
+                                <StyledTableCell>Position</StyledTableCell>
+                                <StyledTableCell align="right">Name</StyledTableCell>
+                                <StyledTableCell align="right">Achievements</StyledTableCell>
                                 <StyledTableCell align="right">Profit</StyledTableCell>
-                                <StyledTableCell align="right">Note</StyledTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {rows.map((row) => (
-                                <StyledTableRow key={row.id}>
-                                <StyledTableCell component="th" scope="row"> {row.id} </StyledTableCell>
-                                <StyledTableCell align="right">{row.company}</StyledTableCell>
-                                <StyledTableCell align="right">{row.shares}</StyledTableCell>
-                                <StyledTableCell align="right">{row.type}</StyledTableCell>
+                                <StyledTableRow key={row.position}>
+                                <StyledTableCell component="th" scope="row"> {row.position} </StyledTableCell>
+                                <StyledTableCell component="th" scope="row"> {row.name} </StyledTableCell>
+                                <StyledTableCell align="right">{row.achievements}</StyledTableCell>
                                 <StyledTableCell align="right">{row.profit}$</StyledTableCell>
-                                <StyledTableCell align="right">{feedbacks[row.note]}</StyledTableCell>
                                 </StyledTableRow>
                             ))}
                         </TableBody>
