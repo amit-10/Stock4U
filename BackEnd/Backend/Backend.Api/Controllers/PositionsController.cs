@@ -25,6 +25,21 @@ public class PositionsController(IPositionsHandler positionsHandler, ILogger<Pos
     }
     
     [HttpGet]
+    public async Task<IActionResult> GetTopTenUsersAsync()
+    {
+        try
+        {
+            var userInvestmentStatus = await positionsHandler.GetTopTenUsersAsync();
+            return StatusCode(StatusCodes.Status200OK, userInvestmentStatus);
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Error getting top ten users");
+            return StatusCode(StatusCodes.Status500InternalServerError, exception.Message);
+        }
+    }
+    
+    [HttpGet]
     public async Task<IActionResult> GetUserPositionsHistoryAsync(string userId)
     {
         try

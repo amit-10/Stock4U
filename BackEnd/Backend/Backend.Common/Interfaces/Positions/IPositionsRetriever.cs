@@ -4,7 +4,9 @@ namespace Backend.Common.Interfaces.Positions;
 
 public interface IPositionsRetriever
 {
-    Task<UserPositions> GetUserInvestmentStatusByIdAsync(string userId);
+    Task<UserPositions> GetUserPositionsByIdAsync(string userId);
+    
+    Task<List<UserPositions>> GetAllUserPositionsAsync();
 
     Task<List<UserPositionHistory>> GetUserPositionsHistoryAsync(string userId);
 

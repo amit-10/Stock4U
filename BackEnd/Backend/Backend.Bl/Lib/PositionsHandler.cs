@@ -1,6 +1,7 @@
 using Backend.Common.Interfaces.Achievements;
 using Backend.Common.Interfaces.Positions;
 using Backend.Common.Interfaces.Stocks;
+using Backend.Common.Models.Achievements;
 using Backend.Common.Models.Positions;
 
 namespace Backend.Bl.Lib;
@@ -13,23 +14,25 @@ public class PositionsHandler(
 {
     public async Task<UserInvestmentStatus> GetUserInvestmentStatusAsync(string userId)
     {
-        var userPositions = await positionsRetriever.GetUserInvestmentStatusByIdAsync(userId);
-        var userToAchievements = await achievementsRetriever.GetUserAchievementsAsync(userId);
-        var achievements = await achievementsRetriever.GetAchievementsByTypesAsync(userToAchievements
-            .Select(userToAchievement => userToAchievement.AchievementType)
-            .ToList());
-
-        var userInvestmentStatus = new UserInvestmentStatus
-        {
-            UserId = userPositions.UserId,
-            RiskLevel = userPositions.RiskLevel,
-            AccountBalance = userPositions.AccountBalance,
-            Positions = userPositions.Positions,
-            TotalWorth = await CalculateUserNetWorth(userPositions),
-            AchievementsPoints = achievements.Sum(achievement => achievement.PointsNumber)
-        };
+        var userPositions = await positionsRetriever.GetUserPositionsByIdAsync(userId);
+        var achievements = await GetUserAchievementsAsync(userId);
+        var userInvestmentStatus = await CreateUserInvestmentStatusAsync(userPositions, achievements);
 
         return userInvestmentStatus;
+    }
+
+    public async Task<List<UserInvestmentStatus>> GetTopTenUsersAsync()
+    {
+        var allUsersPositions = await positionsRetriever.GetAllUserPositionsAsync();
+        var allUsersStatus = new List<UserInvestmentStatus>();
+        foreach (var userPositions in allUsersPositions)
+        {
+            var userAchievements = await GetUserAchievementsAsync(userPositions.UserId);
+            var userInvestmentStatus = await CreateUserInvestmentStatusAsync(userPositions, userAchievements);
+            allUsersStatus.Add(userInvestmentStatus);
+        }
+
+        return allUsersStatus.OrderByDescending(status => status.AchievementsPoints).Take(10).ToList();
     }
 
     public async Task<IEnumerable<ClosedPosition>> GetUserPositionsHistoryAsync(string userId)
@@ -47,6 +50,29 @@ public class PositionsHandler(
     {
         await positionsUpdater.ClosePositionAsync(closePositionRequest.UserId, closePositionRequest.PositionId,
             closePositionRequest.ClosePrice, closePositionRequest.CloseTime, closePositionRequest.SharesCount);
+    }
+
+    private async Task<List<Achievement>> GetUserAchievementsAsync(string userId)
+    {
+        var userToAchievements = await achievementsRetriever.GetUserAchievementsAsync(userId);
+        var achievements = await achievementsRetriever.GetAchievementsByTypesAsync(userToAchievements
+            .Select(userToAchievement => userToAchievement.AchievementType)
+            .ToList());
+        return achievements;
+    }
+
+    private async Task<UserInvestmentStatus> CreateUserInvestmentStatusAsync(UserPositions userPositions, List<Achievement> achievements)
+    {
+        var userInvestmentStatus = new UserInvestmentStatus
+        {
+            UserId = userPositions.UserId,
+            RiskLevel = userPositions.RiskLevel,
+            AccountBalance = userPositions.AccountBalance,
+            Positions = userPositions.Positions,
+            TotalWorth = await CalculateUserNetWorth(userPositions),
+            AchievementsPoints = achievements.Sum(achievement => achievement.PointsNumber)
+        };
+        return userInvestmentStatus;
     }
 
     private async Task<decimal> CalculateUserNetWorth(UserPositions userPositions)

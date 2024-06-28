@@ -17,7 +17,7 @@ public class PositionFeedbackClassifier(
 {
     public async Task<PositionFeedback> GetPositionFeedbackAsync(UserPositionHistory position)
     {
-        var userInvestmentStatus = await positionsRetriever.GetUserInvestmentStatusByIdAsync(position.UserId);
+        var userInvestmentStatus = await positionsRetriever.GetUserPositionsByIdAsync(position.UserId);
         var userRiskLevel = userInvestmentStatus.RiskLevel;
         var stockRiskLevel = await stockRiskClassifier.GetStockRiskLevelAsync(position.ClosedPosition.ShareSymbol);
 
