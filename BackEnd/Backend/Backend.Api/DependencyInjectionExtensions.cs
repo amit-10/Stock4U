@@ -1,4 +1,5 @@
 using Backend.Bl.Lib;
+using Backend.Common.Interfaces.Achievements;
 using Backend.Common.Interfaces.InvestingAdvisor;
 using Backend.Common.Interfaces.Positions;
 using Backend.Common.Interfaces.Stocks;
@@ -25,7 +26,9 @@ public static class DependencyInjectionExtensions
             .AddSingleton<IInvestingAdvisorHandler, InvestingAdvisorHandler>()
             .AddSingleton<IStockRiskClassifier, StockRiskClassifier>()
             .AddSingleton<IPositionFeedbackClassifier, PositionFeedbackClassifier>()
-            .AddHostedService<ClassifyPositionsService>();
+            .AddSingleton<IAchievementsHandler, AchievementsHandler>()
+            .AddSingleton<IAchievementsRetriever, AchievementsRetriever>()
+            /*.AddHostedService<ClassifyPositionsService>()*/;
 
         return serviceCollection;
     }

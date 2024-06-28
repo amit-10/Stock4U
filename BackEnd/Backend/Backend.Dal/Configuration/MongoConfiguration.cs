@@ -9,4 +9,6 @@ public class MongoConfiguration
     public string UserPositionsCollectionName { get; set; } = null!;
     
     public string UserPositionsHistoryCollectionName { get; set; } = null!;
+    
+    public string AchievementsCollectionName { get; set; } = null!;
 }

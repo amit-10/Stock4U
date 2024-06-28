@@ -3,8 +3,6 @@ using Backend.Common.Interfaces.Positions;
 using Backend.InvestingAdvisor.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Backend.InvestingAdvisor.Lib.PositionsFeedback
 {

@@ -5,7 +5,6 @@ using Backend.Dal.Interfaces;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using Newtonsoft.Json;
 
 namespace Backend.Dal.Lib;
 
