@@ -166,16 +166,15 @@ function Statistics() {
             </div>
 
             <div class="charts-sections1">
+                <AgChartsReact options={options} />
+            </div>
+            <div class="graphs">
+                <div class="charts-sections2">
                     <AgChartsReact options={chartOptions} />
-                    {/* <AgChartsReact options={options} /> */}
-            </div>
-            <div class="charts-sections2">
-                    {/* <AgChartsReact options={chartOptions} /> */}
-                    <AgChartsReact options={options} />
-            </div>
-            <div class="charts-sections3">
-                    {/* <AgChartsReact options={chartOptions} /> */}
-                    <AgChartsReact options={donutOptions} />
+                </div>
+                <div class="charts-sections3">
+                        <AgChartsReact options={donutOptions} />
+                </div>
             </div>
         </div>
     );
