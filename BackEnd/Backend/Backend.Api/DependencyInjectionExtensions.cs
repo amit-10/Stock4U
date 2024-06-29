@@ -6,6 +6,7 @@ using Backend.Common.Interfaces.Achievements;
 using Backend.Common.Interfaces.InvestingAdvisor;
 using Backend.Common.Interfaces.Positions;
 using Backend.Common.Interfaces.Stocks;
+using Backend.Common.Interfaces.Users;
 using Backend.Dal.Configuration;
 using Backend.Dal.Interfaces;
 using Backend.Dal.Lib;
@@ -33,6 +34,9 @@ public static class DependencyInjectionExtensions
             .AddSingleton<IAchievementsRetriever, AchievementsRetriever>()
             .AddSingleton<IAchievementsUpdater, AchievementsUpdater>()
             .AddSingleton<IUserToAchievementConnector, UserToAchievementConnector>()
+            .AddSingleton<IUsersHandler, UsersHandler>()
+            .AddSingleton<IUsersUpdater, UsersUpdater>()
+            .AddSingleton<IUsersRetriever, UsersRetriever>()
             .AddHostedService<UserToAchievementService>()
             /*.AddHostedService<ClassifyPositionsService>()*/;
 
