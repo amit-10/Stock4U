@@ -27,7 +27,10 @@ public class UsersUpdater(
         Users newUser = new Users {
             Email = registerUserRequest.Email,
             Username = registerUserRequest.Username,
-            Password = registerUserRequest.Password
+            Password = registerUserRequest.Password,
+            FirstName = registerUserRequest.FirstName,
+            LastName = registerUserRequest.LastName,
+            RiskLevel = registerUserRequest.RiskLevel
         };
         await _usersCollection.InsertOneAsync(newUser);
     }
