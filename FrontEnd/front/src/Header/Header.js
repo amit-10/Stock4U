@@ -182,6 +182,9 @@ function Header() {
       setOpenSignUp(true);
     };
 
+    const signOut = () => {
+      setAuth({});
+    }
 
     const logIn = async (userId, password) => {
       try {
@@ -211,7 +214,11 @@ function Header() {
         <Box sx={{ flexGrow: 1 }}>
           <AppBar position="static" enableColorOnDark color="transparent">
             <Toolbar>
-              <Typography variant="h6" noWrap component="div" sx={{ display: { xs: 'none', sm: 'block' } }} > Stock4U </Typography>
+              <Typography variant="h6" noWrap component="div" sx={{ display: { xs: 'none', sm: 'block' } }} > Stock4U 
+                   {(auth && auth.userId) ? `      Hello ${auth.userId}!`: ''}
+                   {(auth && auth.userId) ? <Button onClick={signOut}> Sign Out </Button>: ''}
+
+               </Typography>
 
               <Box sx={{ flexGrow: 1 }} />
               <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
