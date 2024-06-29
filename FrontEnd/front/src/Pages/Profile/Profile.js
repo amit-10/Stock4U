@@ -12,9 +12,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import axios from 'axios';
 import { useState, useEffect, useContext } from 'react';
 import { authContext } from '../../Context/auth.context';
+import { getInvestorStatus, getUserPositionsHistory } from '../../Services/Backend.service';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({}));
   
@@ -38,7 +38,7 @@ function Profile() {
     const [profit, setProfit] = useState(0);
     const [risk, setRisk] = useState('');
 
-    const [auth,setAuth] = useContext(authContext);
+    const [auth] = useContext(authContext);
 
     const feedbacks = {
         NoFeedback: 'No feedback',
@@ -58,7 +58,7 @@ function Profile() {
             }
 
             try {
-                const positionsHistoryResposne = await axios.get(`http://localhost:5266/Positions/GetUserPositionsHistory?userId=${auth.userId}`);
+                const positionsHistoryResposne = await getUserPositionsHistory(auth.userId);
            
                 const positionsHistory = positionsHistoryResposne.data;
                 const positionsHistoryRows = positionsHistory.map(( {positionId, shareSymbol, sharesCount, positionType, entryPrice, exitPrice, positionFeedback }) => {
@@ -67,7 +67,7 @@ function Profile() {
     
                 setRows(positionsHistoryRows);
     
-                const userInvestmentStatusResponse = await axios.get(`http://localhost:5266/Positions/GetUserInvestmentStatus?userId=${auth.userId}`);
+                const userInvestmentStatusResponse = await getInvestorStatus(auth.userId);
                 const userInvestmentStatus = userInvestmentStatusResponse.data;
     
                 setBank(userInvestmentStatus.accountBalance);
@@ -76,7 +76,6 @@ function Profile() {
             } catch (e) {
                 console.log(e);
             }
-          
         };
     
         if (!rows.length)

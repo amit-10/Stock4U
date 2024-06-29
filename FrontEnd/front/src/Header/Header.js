@@ -21,8 +21,8 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import axios from 'axios';
 import { authContext } from '../Context/auth.context';
+import { login, register } from '../Services/Backend.service';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -185,10 +185,8 @@ function Header() {
 
     const logIn = async (userId, password) => {
       try {
+        await login(userId, password);
         setAuth({userId,password});
-        console.log('auth', auth);
-
-        await axios.post(`http://localhost:5266/Users/Login`, { userId, password });
       }
       catch (e)
       {
@@ -198,21 +196,12 @@ function Header() {
 
     const signUp = async (userId, firstName, lastName, riskLevel, email, password) => {
       try {
-        const authBody = {
-          userId,
-          email,
-          password,
-          firstName,
-          lastName,
-          riskLevel
-        };
-
+        await register({ userId, email, password, firstName, lastName, riskLevel });
         setAuth(authBody);
-        await axios.post(`http://localhost:5266/Users/Register`, authBody);
       }
       catch (e)
       {
-        console.log('login failed', e);
+        console.log('Sign up failed', e);
       }
     }
 
@@ -276,11 +265,7 @@ function Header() {
                 event.preventDefault();
                 const formData = new FormData(event.currentTarget);
                 const formJson = Object.fromEntries((formData).entries());
-                const userId = formJson.userId;
-                const password = formJson.password;
-                console.log(userId);
-                console.log(password);
-                logIn(userId, password);
+                logIn(formJson.userId, formJson.password);
                 handleClose();
             },
             }}
@@ -326,17 +311,11 @@ function Header() {
                 event.preventDefault();
                 const formData = new FormData(event.currentTarget);
                 const formJson = Object.fromEntries((formData).entries());
-                const userId = formJson.userId;
-                const firstName = formJson.firstName;
-                const lastName = formJson.lastName;
-                const riskLevel = formJson.riskLevel;
-                const email = formJson.email;
-                const password = formJson.password;
-                signUp(userId, firstName, lastName, riskLevel, email, password);
+                signUp(formJson.userId, formJson.firstName, formJson.lastName, formJson.riskLevel, formJson.email, formJson.password);
                 handleClose();
             },
             }}
-        >
+          >
             <DialogTitle>Sign Up</DialogTitle>
             <DialogContent>
             <TextField

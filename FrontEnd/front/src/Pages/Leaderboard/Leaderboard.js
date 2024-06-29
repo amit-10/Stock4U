@@ -12,9 +12,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import axios from 'axios';
 import { useState, useEffect, useContext } from 'react';
 import { authContext } from '../../Context/auth.context';
+import { getTopTenUsers, getInvestorStatus } from '../../Services/Backend.service';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({}));
   
@@ -44,29 +44,25 @@ function Leaderboard() {
     useEffect(() => {
         async function getRows() {
             try {
-                const leaderboardResposne = await axios.get('http://localhost:5266/Positions/GetTopTenUsers');
+                const leaderboardResposne = await getTopTenUsers();
            
                 const leaderboard = leaderboardResposne.data;
 
                 const leaderboardRows = leaderboard.map(( {userId, achievementsPoints, totalWorth }, index) => {
-                    console.log(index);
                     return createData(index, userId, achievementsPoints, totalWorth);
                 });
 
-                console.log({leaderboardRows});
     
                 setRows(leaderboardRows);
     
-                const userInvestmentStatusResponse = await axios.get(`http://localhost:5266/Positions/GetUserInvestmentStatus?userId=${auth.userId}`);
-                const userInvestmentStatus = userInvestmentStatusResponse.data;
+                const userInvestmentStatusResponse = await getInvestorStatus(auth.userId);
     
-                setBank(userInvestmentStatus.accountBalance);
-                setProfit(userInvestmentStatus.totalWorth);
-                setAchievements(userInvestmentStatus.achievementsPoints);
+                setBank(userInvestmentStatusResponse.data.accountBalance);
+                setProfit(userInvestmentStatusResponse.data.totalWorth);
+                setAchievements(userInvestmentStatusResponse.data.achievementsPoints);
             } catch (e) {
                 console.log(e);
             }
-          
         };
     
         if (!rows.length)

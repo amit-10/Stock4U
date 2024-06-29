@@ -1,29 +1,25 @@
 import './SidePanel.css';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
-import axios from 'axios';
 import { useState, useEffect, useContext } from 'react';
 import { authContext } from '../Context/auth.context';
+import { getUserAchievements } from '../Services/Backend.service';
 
 function SidePanel() {
 
   const [achievements, setAchievements] = useState([]);
-  const [auth,setAuth] = useContext(authContext);
+  const [auth] = useContext(authContext);
   
   useEffect(() => {
     async function getAchivements() {
-      if (!auth || !auth.userId)
-      {
-          return;
-      }
+        if (!auth || !auth.userId)
+        {
+            return;
+        }
       
         try {
-            const achievementsResponse = await axios.get(`http://localhost:5266/Achievements/GetUserAchievements?userId=${auth.userId}`);
-            const achievements = achievementsResponse.data;
-
-            console.log({achievements});
-
-            setAchievements(achievements);
+            const achievementsResponse = await getUserAchievements(auth.userId);
+            setAchievements(achievementsResponse.data);
         } catch (e) {
             console.log(e);
         }
@@ -33,8 +29,6 @@ function SidePanel() {
     {
       getAchivements();
     }
-
-    
   }, [auth]);
 
   return (
