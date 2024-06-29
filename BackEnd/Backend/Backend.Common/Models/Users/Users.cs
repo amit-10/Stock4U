@@ -2,18 +2,21 @@ using Backend.Common.Models.InvestingAdvisor;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Backend.Common.Models.Positions;
+namespace Backend.Common.Models.Users;
 
 [BsonIgnoreExtraElements]
-public class UserPositions
+public class Users
 {
+    public string Email { get; set; } = null!;
+
     public string UserId { get; set; } = null!;
     
-    [BsonRepresentation(BsonType.Decimal128)]
-    public decimal AccountBalance { get; set; }
-    
+    public string Password { get; set; } = null!;
+
+    public string FirstName { get; set; } = null!;
+
+    public string LastName { get; set; } = null!;
+
     [BsonRepresentation(BsonType.String)]
     public RiskLevel RiskLevel { get; set; }
-    
-    public List<Position> Positions { get; set; } = null!;
 }

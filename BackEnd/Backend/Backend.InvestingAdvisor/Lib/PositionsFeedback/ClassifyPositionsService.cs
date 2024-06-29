@@ -6,29 +6,16 @@ using Microsoft.Extensions.Logging;
 
 namespace Backend.InvestingAdvisor.Lib.PositionsFeedback
 {
-    public class ClassifyPositionsService : IHostedService
+    public class ClassifyPositionsService(
+        PositionsFeedbackConfiguration positionsFeedbackConfiguration,
+        IPositionsRetriever positionsRetriever,
+        IPositionFeedbackClassifier positionFeedbackClassifier,
+        IPositionsUpdater positionsUpdater,
+        ILogger<ClassifyPositionsService> logger)
+        : IHostedService
     {
-        private readonly PositionsFeedbackConfiguration _positionsFeedbackConfiguration;
-        private readonly IPositionsRetriever _positionsRetriever;
-        private readonly IPositionFeedbackClassifier _positionFeedbackClassifier;
-        private readonly IPositionsUpdater _positionsUpdater;
-        private readonly ILogger<ClassifyPositionsService> _logger;
-        private Task _backgroundTask;
-        private CancellationTokenSource _cancellationTokenSource;
-
-        public ClassifyPositionsService(
-            PositionsFeedbackConfiguration positionsFeedbackConfiguration,
-            IPositionsRetriever positionsRetriever,
-            IPositionFeedbackClassifier positionFeedbackClassifier,
-            IPositionsUpdater positionsUpdater,
-            ILogger<ClassifyPositionsService> logger)
-        {
-            _positionsFeedbackConfiguration = positionsFeedbackConfiguration;
-            _positionsRetriever = positionsRetriever;
-            _positionFeedbackClassifier = positionFeedbackClassifier;
-            _positionsUpdater = positionsUpdater;
-            _logger = logger;
-        }
+        private Task _backgroundTask = null!;
+        private CancellationTokenSource _cancellationTokenSource = null!;
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
@@ -41,16 +28,16 @@ namespace Backend.InvestingAdvisor.Lib.PositionsFeedback
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                var positionsToClassify = await _positionsRetriever.GetNonFeedbackedClosedPositions();
+                var positionsToClassify = await positionsRetriever.GetNonFeedbackedClosedPositions();
                 foreach (var positionToClassify in positionsToClassify)
                 {
-                    var positionFeedback = await _positionFeedbackClassifier.GetPositionFeedbackAsync(positionToClassify);
-                    await _positionsUpdater.SetPositionFeedbackAsync(positionToClassify, positionFeedback);
+                    var positionFeedback = await positionFeedbackClassifier.GetPositionFeedbackAsync(positionToClassify);
+                    await positionsUpdater.SetPositionFeedbackAsync(positionToClassify, positionFeedback);
                 }
 
-                _logger.LogInformation("Successfully updated positions feedback");
+                logger.LogInformation("Successfully updated positions feedback");
 
-                await Task.Delay(TimeSpan.FromMinutes(_positionsFeedbackConfiguration.FeedbackCalculationIntervalInMinutes),
+                await Task.Delay(TimeSpan.FromMinutes(positionsFeedbackConfiguration.FeedbackCalculationIntervalInMinutes),
                     cancellationToken);
             }
         }

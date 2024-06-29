@@ -13,4 +13,8 @@ public interface IPositionsHandler
     Task EnterPositionAsync(EnterPositionRequest enterPositionRequest);
 
     Task ClosePositionAsync(ClosePositionRequest closePositionRequest);
+
+    Task<decimal> CalculateUserNetWorth(UserPositions userPositions);
+
+    Task<decimal> CalculatePositionChangePercentage(Position position);
 }

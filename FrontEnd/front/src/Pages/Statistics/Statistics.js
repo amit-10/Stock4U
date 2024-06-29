@@ -1,5 +1,4 @@
 import './Statistics.css';
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
@@ -8,34 +7,37 @@ import Typography from '@mui/material/Typography';
 import { useState, useEffect, useContext } from 'react';
 import { authContext } from '../../Context/auth.context';
 import { AgChartsReact } from 'ag-charts-react';
-import axios from 'axios';
+import { getInvestorStatus, getStockHistory, getRealTimeStock } from '../../Services/Backend.service';
 
 function Statistics() {
     const [bank, setBank] = useState(0);
-    const [profit] = useState(0);
     const [risk] = useState('');
     const [positions, setPositions] = useState([]);
     const [achievements, setAchievements] = useState(0);
-    const [auth,setAuth] = useContext(authContext);
+    const [auth] = useContext(authContext);
     const [chartOptions, setChartOptions] = useState({});
     const [donutOptions, setDonutOptions] = useState({});
     const daysBack = 7;
+    const intervalCheckMS = 10000 // 10 seconds
 
     const [options, setOptions] = useState({});
 
     setInterval(async () => {
-        console.log('nigga');
+        if (!auth || !auth.userId)
+        {
+            return;
+        }
 
-        const statusResponse = await axios.get('http://localhost:5266/Positions/GetUserInvestmentStatus?userId=aaa');
+        const statusResponse = await getInvestorStatus(auth.userId);
         const status = statusResponse.data;
         const achievemnets = status.achievementsPoints;
         setAchievements(achievemnets);
         setBank(status.accountBalance);
-    }, 10000);
+    }, intervalCheckMS);
 
     async function handleOnButtonClick(shareSymbol)
     {
-        const historyResponse = await axios.get(`http://localhost:5266/Stocks/GetStockHistory?symbol=${shareSymbol}&daysBack=${daysBack}`);
+        const historyResponse = await getStockHistory(shareSymbol, daysBack);
         const historyPrice = historyResponse.data;
 
         const newLineDate = [];
@@ -68,27 +70,27 @@ function Statistics() {
 
     useEffect(() => {
         async function getPositions() {
+            if (!auth || !auth.userId)
+            {
+                return;
+            }
+
             try {
-                const userInvestmentStatusResponse = await axios.get('http://localhost:5266/Positions/GetUserInvestmentStatus?userId=aaa');
+                const userInvestmentStatusResponse = await getInvestorStatus(auth.userId);
                 const userInvestmentStatus = userInvestmentStatusResponse.data;
     
                 const newRows = [];
                 userInvestmentStatus.positions.forEach(async position => {
-                    const realTimeResponse = await axios.get(`http://localhost:5266/Stocks/GetRealTimeStock?symbol=${position.shareSymbol}`);
+                    const realTimeResponse = await getRealTimeStock(position.shareSymbol);
                     const realTimeValue = realTimeResponse.data;
-                    console.log(position);
 
                     const newLineDate = [];
 
-                    const historyResponse = await axios.get(`http://localhost:5266/Stocks/GetStockHistory?symbol=${position.shareSymbol}&daysBack=${daysBack}`);
+                    const historyResponse = await getStockHistory(position.shareSymbol, daysBack);
                     const historyPrice = historyResponse.data;
 
                     Object.keys(historyPrice).forEach(key => {
-                        console.log(key);
-                        newLineDate.push({
-                            date: key,
-                            shareProfit: historyPrice[key].closePrice
-                        })
+                        newLineDate.push({ date: key, shareProfit: historyPrice[key].closePrice });
                     });
 
                     const newOptions = {
@@ -104,7 +106,7 @@ function Statistics() {
                             yName: "profit"
                           }
                         ],
-                      }
+                      };
 
                       const newDonutOptions = {
                         data: newLineDate,
@@ -119,7 +121,7 @@ function Statistics() {
                             innerRadiusRatio: 0.7,
                           },
                         ],
-                      }
+                      };
 
                     setOptions(newOptions);
                     setDonutOptions(newDonutOptions);
@@ -138,18 +140,14 @@ function Statistics() {
             } catch (e) {
                 console.log(e);
             }
-          
         };
-
-
 
         if (!positions.length)
         {
             getPositions();
         }
 
-        
-      }, []);
+      }, [auth]);
 
 
     return (
@@ -225,8 +223,5 @@ function Statistics() {
     );
 
 }
-
-// const root = createRoot(document.getElementById('root'));
-// root.render(<ChartExample />);
 
 export default Statistics;

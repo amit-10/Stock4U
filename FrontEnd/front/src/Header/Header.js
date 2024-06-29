@@ -16,14 +16,13 @@ import InputBase from '@mui/material/InputBase';
 import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import axios from 'axios';
 import { authContext } from '../Context/auth.context';
+import { login, register } from '../Services/Backend.service';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -183,13 +182,14 @@ function Header() {
       setOpenSignUp(true);
     };
 
+    const signOut = () => {
+      setAuth({});
+    }
 
-    const logIn = async (email, password) => {
+    const logIn = async (userId, password) => {
       try {
-        setAuth({email,password});
-        console.log('auth', auth);
-
-        await axios.get(`http://localhost:5266/logIn?email=${email}&password=${password}`);
+        await login(userId, password);
+        setAuth({userId,password});
       }
       catch (e)
       {
@@ -197,18 +197,14 @@ function Header() {
       }
     }
 
-    const signUp = async (email, password) => {
+    const signUp = async (userId, firstName, lastName, riskLevel, email, password) => {
       try {
-        const body = {
-          email,
-          password
-        }
-        setAuth({email,password});
-        await axios.post(`http://localhost:5266/signUp`, body);
+        await register({ userId, email, password, firstName, lastName, riskLevel });
+        setAuth(authBody);
       }
       catch (e)
       {
-        console.log('login failed', e);
+        console.log('Sign up failed', e);
       }
     }
 
@@ -218,7 +214,11 @@ function Header() {
         <Box sx={{ flexGrow: 1 }}>
           <AppBar position="static" enableColorOnDark color="transparent">
             <Toolbar>
-              <Typography variant="h6" noWrap component="div" sx={{ display: { xs: 'none', sm: 'block' } }} > Stock4U </Typography>
+              <Typography variant="h6" noWrap component="div" sx={{ display: { xs: 'none', sm: 'block' } }} > Stock4U 
+                   {(auth && auth.userId) ? `      Hello ${auth.userId}!`: ''}
+                   {(auth && auth.userId) ? <Button onClick={signOut}> Sign Out </Button>: ''}
+
+               </Typography>
 
               <Box sx={{ flexGrow: 1 }} />
               <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
@@ -272,11 +272,7 @@ function Header() {
                 event.preventDefault();
                 const formData = new FormData(event.currentTarget);
                 const formJson = Object.fromEntries((formData).entries());
-                const email = formJson.email;
-                const password = formJson.password;
-                console.log(email);
-                console.log(password);
-                logIn(email, password);
+                logIn(formJson.userId, formJson.password);
                 handleClose();
             },
             }}
@@ -288,9 +284,9 @@ function Header() {
                 required
                 margin="dense"
                 id="name"
-                name="email"
-                label="Email Address"
-                type="email"
+                name="userId"
+                label="User ID"
+                type="text"
                 fullWidth
                 variant="standard"
             />
@@ -322,17 +318,57 @@ function Header() {
                 event.preventDefault();
                 const formData = new FormData(event.currentTarget);
                 const formJson = Object.fromEntries((formData).entries());
-                const email = formJson.email;
-                const password = formJson.password;
-                console.log(email);
-                console.log(password);
-                signUp(email, password);
+                signUp(formJson.userId, formJson.firstName, formJson.lastName, formJson.riskLevel, formJson.email, formJson.password);
                 handleClose();
             },
             }}
-        >
+          >
             <DialogTitle>Sign Up</DialogTitle>
             <DialogContent>
+            <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="userId"
+                name="userId"
+                label="User ID"
+                type="text"
+                fullWidth
+                variant="standard"
+            />
+              <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="firstName"
+                name="firstName"
+                label="First Name"
+                type="text"
+                fullWidth
+                variant="standard"
+            />
+            <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="lastName"
+                name="lastName"
+                label="Last Name"
+                type="text"
+                fullWidth
+                variant="standard"
+            />     
+            <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="riskLevel"
+                name="riskLevel"
+                label="Risk Level"
+                type="text"
+                fullWidth
+                variant="standard"
+            />              
             <TextField
                 autoFocus
                 required

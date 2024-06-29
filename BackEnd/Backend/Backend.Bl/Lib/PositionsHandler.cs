@@ -3,6 +3,7 @@ using Backend.Common.Interfaces.Positions;
 using Backend.Common.Interfaces.Stocks;
 using Backend.Common.Models.Achievements;
 using Backend.Common.Models.Positions;
+using Backend.InvestingAdvisor.Lib.Utils;
 
 namespace Backend.Bl.Lib;
 
@@ -76,7 +77,7 @@ public class PositionsHandler(
         return userInvestmentStatus;
     }
 
-    private async Task<decimal> CalculateUserNetWorth(UserPositions userPositions)
+    public async Task<decimal> CalculateUserNetWorth(UserPositions userPositions)
     {
         var totalNetWorth = userPositions.AccountBalance;
         foreach (var position in userPositions.Positions)
@@ -88,5 +89,13 @@ public class PositionsHandler(
         }
 
         return totalNetWorth;
+    }
+
+    public async Task<decimal> CalculatePositionChangePercentage(Position position)
+    {
+        var realTimeStock = await stockPriceRetriever.GetRealTimeStockAsync(position.ShareSymbol);
+        var changePercentage =
+            StatisticsCalculator.CalculateChangePercentage(position.EntryPrice, realTimeStock.CurrentPrice);
+        return position.PositionType == PositionType.Long ? changePercentage : -changePercentage;
     }
 }

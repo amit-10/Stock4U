@@ -1,8 +1,12 @@
+using Backend.Bl.Configuration;
+using Backend.Bl.Interfaces;
 using Backend.Bl.Lib;
+using Backend.Bl.Lib.Achievements;
 using Backend.Common.Interfaces.Achievements;
 using Backend.Common.Interfaces.InvestingAdvisor;
 using Backend.Common.Interfaces.Positions;
 using Backend.Common.Interfaces.Stocks;
+using Backend.Common.Interfaces.Users;
 using Backend.Dal.Configuration;
 using Backend.Dal.Interfaces;
 using Backend.Dal.Lib;
@@ -28,6 +32,12 @@ public static class DependencyInjectionExtensions
             .AddSingleton<IPositionFeedbackClassifier, PositionFeedbackClassifier>()
             .AddSingleton<IAchievementsHandler, AchievementsHandler>()
             .AddSingleton<IAchievementsRetriever, AchievementsRetriever>()
+            .AddSingleton<IAchievementsUpdater, AchievementsUpdater>()
+            .AddSingleton<IUserToAchievementConnector, UserToAchievementConnector>()
+            .AddSingleton<IUsersHandler, UsersHandler>()
+            .AddSingleton<IUsersUpdater, UsersUpdater>()
+            .AddSingleton<IUsersRetriever, UsersRetriever>()
+            .AddHostedService<UserToAchievementService>()
             /*.AddHostedService<ClassifyPositionsService>()*/;
 
         return serviceCollection;
@@ -48,7 +58,8 @@ public static class DependencyInjectionExtensions
             .AddConfiguration<MongoConfiguration>(configuration, "MongoDb")
             .AddConfiguration<RealTimeStocksApiConfiguration>(configuration, "RealTimeStocksApi")
             .AddConfiguration<HistoryStocksApiConfiguration>(configuration, "HistoryStocksApi")
-            .AddConfiguration<PositionsFeedbackConfiguration>(configuration, "PositionsFeedback");
+            .AddConfiguration<PositionsFeedbackConfiguration>(configuration, "PositionsFeedback")
+            .AddConfiguration<UserToAchievementConfiguration>(configuration, "UserToAchievement");
         
         return serviceCollection;
     }
