@@ -9,7 +9,7 @@ public class Users
 {
     public string Email { get; set; } = null!;
 
-    public string Username { get; set; } = null!;
+    public string UserId { get; set; } = null!;
     
     public string Password { get; set; } = null!;
 

@@ -18,7 +18,7 @@ public class UsersRetriever(
 
     public async Task LoginAsync(LoginUserRequest loginUserRequest)
     {
-        var existingUser = await _usersCollection.Find(u => u.Username == loginUserRequest.Username && u.Password == loginUserRequest.Password).FirstOrDefaultAsync();
+        var existingUser = await _usersCollection.Find(u => u.UserId == loginUserRequest.UserId && u.Password == loginUserRequest.Password).FirstOrDefaultAsync();
         if (existingUser == null)
         {
             logger.LogError("Could not login {@user} - username or password are incorrect", loginUserRequest);
