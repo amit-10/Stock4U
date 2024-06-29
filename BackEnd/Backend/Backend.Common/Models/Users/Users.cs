@@ -17,5 +17,6 @@ public class Users
 
     public string LastName { get; set; } = null!;
 
+    [BsonRepresentation(BsonType.String)]
     public RiskLevel RiskLevel { get; set; }
 }

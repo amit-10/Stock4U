@@ -1,4 +1,6 @@
 using Backend.Common.Models.InvestingAdvisor;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Backend.Common.Models.Users;
 
@@ -14,5 +16,6 @@ public class RegisterUserRequest
 
     public string LastName { get; set; } = null!;
 
+    [BsonRepresentation(BsonType.String)]
     public RiskLevel RiskLevel { get; set; }
 }
