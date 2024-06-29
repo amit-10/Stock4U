@@ -12,11 +12,10 @@ import axios from 'axios';
 
 function Statistics() {
     const [bank, setBank] = useState(0);
-    const [profit] = useState(0);
     const [risk] = useState('');
     const [positions, setPositions] = useState([]);
     const [achievements, setAchievements] = useState(0);
-    const [auth,setAuth] = useContext(authContext);
+    const [auth] = useContext(authContext);
     const [chartOptions, setChartOptions] = useState({});
     const [donutOptions, setDonutOptions] = useState({});
     const daysBack = 7;
@@ -24,9 +23,12 @@ function Statistics() {
     const [options, setOptions] = useState({});
 
     setInterval(async () => {
-        console.log('nigga');
+        if (!auth || !auth.userId)
+        {
+            return;
+        }
 
-        const statusResponse = await axios.get('http://localhost:5266/Positions/GetUserInvestmentStatus?userId=aaa');
+        const statusResponse = await axios.get(`http://localhost:5266/Positions/GetUserInvestmentStatus?userId=${auth.userId}`);
         const status = statusResponse.data;
         const achievemnets = status.achievementsPoints;
         setAchievements(achievemnets);
@@ -68,8 +70,13 @@ function Statistics() {
 
     useEffect(() => {
         async function getPositions() {
+            if (!auth || !auth.userId)
+            {
+                return;
+            }
+
             try {
-                const userInvestmentStatusResponse = await axios.get('http://localhost:5266/Positions/GetUserInvestmentStatus?userId=aaa');
+                const userInvestmentStatusResponse = await axios.get(`http://localhost:5266/Positions/GetUserInvestmentStatus?userId=${auth.userId}`);
                 const userInvestmentStatus = userInvestmentStatusResponse.data;
     
                 const newRows = [];
@@ -149,7 +156,7 @@ function Statistics() {
         }
 
         
-      }, []);
+      }, [auth]);
 
 
     return (

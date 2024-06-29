@@ -16,7 +16,6 @@ import InputBase from '@mui/material/InputBase';
 import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
@@ -184,12 +183,12 @@ function Header() {
     };
 
 
-    const logIn = async (email, password) => {
+    const logIn = async (userId, password) => {
       try {
-        setAuth({email,password});
+        setAuth({userId,password});
         console.log('auth', auth);
 
-        await axios.get(`http://localhost:5266/logIn?email=${email}&password=${password}`);
+        await axios.post(`http://localhost:5266/Users/Login`, { userId, password });
       }
       catch (e)
       {
@@ -197,14 +196,19 @@ function Header() {
       }
     }
 
-    const signUp = async (email, password) => {
+    const signUp = async (userId, firstName, lastName, riskLevel, email, password) => {
       try {
-        const body = {
+        const authBody = {
+          userId,
           email,
-          password
-        }
-        setAuth({email,password});
-        await axios.post(`http://localhost:5266/signUp`, body);
+          password,
+          firstName,
+          lastName,
+          riskLevel
+        };
+
+        setAuth(authBody);
+        await axios.post(`http://localhost:5266/Users/Register`, authBody);
       }
       catch (e)
       {
@@ -272,11 +276,11 @@ function Header() {
                 event.preventDefault();
                 const formData = new FormData(event.currentTarget);
                 const formJson = Object.fromEntries((formData).entries());
-                const email = formJson.email;
+                const userId = formJson.userId;
                 const password = formJson.password;
-                console.log(email);
+                console.log(userId);
                 console.log(password);
-                logIn(email, password);
+                logIn(userId, password);
                 handleClose();
             },
             }}
@@ -288,9 +292,9 @@ function Header() {
                 required
                 margin="dense"
                 id="name"
-                name="email"
-                label="Email Address"
-                type="email"
+                name="userId"
+                label="User ID"
+                type="text"
                 fullWidth
                 variant="standard"
             />
@@ -322,17 +326,63 @@ function Header() {
                 event.preventDefault();
                 const formData = new FormData(event.currentTarget);
                 const formJson = Object.fromEntries((formData).entries());
+                const userId = formJson.userId;
+                const firstName = formJson.firstName;
+                const lastName = formJson.lastName;
+                const riskLevel = formJson.riskLevel;
                 const email = formJson.email;
                 const password = formJson.password;
-                console.log(email);
-                console.log(password);
-                signUp(email, password);
+                signUp(userId, firstName, lastName, riskLevel, email, password);
                 handleClose();
             },
             }}
         >
             <DialogTitle>Sign Up</DialogTitle>
             <DialogContent>
+            <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="userId"
+                name="userId"
+                label="User ID"
+                type="text"
+                fullWidth
+                variant="standard"
+            />
+              <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="firstName"
+                name="firstName"
+                label="First Name"
+                type="text"
+                fullWidth
+                variant="standard"
+            />
+            <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="lastName"
+                name="lastName"
+                label="Last Name"
+                type="text"
+                fullWidth
+                variant="standard"
+            />     
+            <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="riskLevel"
+                name="riskLevel"
+                label="Risk Level"
+                type="text"
+                fullWidth
+                variant="standard"
+            />              
             <TextField
                 autoFocus
                 required

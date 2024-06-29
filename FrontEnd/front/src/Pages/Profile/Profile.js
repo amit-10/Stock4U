@@ -51,8 +51,14 @@ function Profile() {
 
     useEffect(() => {
         async function getRows() {
+
+            if (!auth || !auth.userId)
+            {
+                return;
+            }
+
             try {
-                const positionsHistoryResposne = await axios.get('http://localhost:5266/Positions/GetUserPositionsHistory?userId=aaa');
+                const positionsHistoryResposne = await axios.get(`http://localhost:5266/Positions/GetUserPositionsHistory?userId=${auth.userId}`);
            
                 const positionsHistory = positionsHistoryResposne.data;
                 const positionsHistoryRows = positionsHistory.map(( {positionId, shareSymbol, sharesCount, positionType, entryPrice, exitPrice, positionFeedback }) => {
@@ -61,7 +67,7 @@ function Profile() {
     
                 setRows(positionsHistoryRows);
     
-                const userInvestmentStatusResponse = await axios.get('http://localhost:5266/Positions/GetUserInvestmentStatus?userId=aaa');
+                const userInvestmentStatusResponse = await axios.get(`http://localhost:5266/Positions/GetUserInvestmentStatus?userId=${auth.userId}`);
                 const userInvestmentStatus = userInvestmentStatusResponse.data;
     
                 setBank(userInvestmentStatus.accountBalance);
@@ -77,11 +83,11 @@ function Profile() {
         {
             getRows();
         }
-      }, []);
+      }, [auth]);
 
     return (
         <div className="App">
-            <Typography color="#545f71" variant="h6" gutterBottom> Profile \ {auth.email} </Typography>
+            <Typography color="#545f71" variant="h6" gutterBottom> Profile \ {auth.userId} </Typography>
             <div class="Card-Section">
                 <div class="Card">
                     <Card sx={{ display: 'flex', backgroundColor: '#dadada', color: '#545f71', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
