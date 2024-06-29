@@ -127,7 +127,7 @@ function SidePanel() {
 
             <Typography variant="h6" gutterBottom> Achievements </Typography>
 
-            {achievements.map(achivement =>  <div class="Item">
+            {achievements.map((achivement, index) =>  <div class="Item" key={index}>
               <Avatar sx={{ width: 30, height: 30, marginRight: '10px' }}/>
               <div class="Item-Description">
                 <Typography variant="h8" gutterBottom> {achivement.achievementType} </Typography>
