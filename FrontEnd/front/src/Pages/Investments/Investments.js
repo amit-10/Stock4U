@@ -19,10 +19,11 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
-import axios from 'axios';
 import { useDebounce } from 'use-debounce';
 import { TrendingDown, TrendingUp } from '@mui/icons-material';
 import { Switch } from '@mui/material';
+import { authContext } from '../../Context/auth.context';
+import { getStockRiskLevel, getRealTimeStock, getInvestorStatus, enterPosition, closePosition } from '../../Services/Backend.service';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({}));
 
@@ -40,18 +41,21 @@ function createData(id, symbol, shares, type, priceOfShare, difference) {
     return { id, symbol, shares, type, priceOfShare, difference };
 }
 
+
 function NewPositionDialog({open, handleClose, userRiskLevel}) {
     const [symbolText, setSymbolText] = React.useState('');
     const [symbol] = useDebounce(symbolText, 500);
+    const [amount, setAmount] = React.useState(0);
     const [symbolValid, setSymbolValid] = React.useState(false);
     const [symbolComment, setSymbolComment] = React.useState('');
     const [type, setType] = React.useState("Long");
     const [limitIsActive, setLimitIsActive] = React.useState(false);
+    const [auth] = React.useContext(authContext);
 
     async function checkSymbol() {
         if (!!symbol) {
             try {
-                const symbolRiskLevelResponse = await axios.get(`http://localhost:5266/InvestingAdvisor/GetStockRiskLevel?symbol=${symbol}`);
+                const symbolRiskLevelResponse = await getStockRiskLevel(symbol);
                 const symbolRiskLevel = symbolRiskLevelResponse.data;
                 setSymbolValid(true)
                 if (symbolRiskLevel.toLowerCase() === userRiskLevel.toLowerCase()) {
@@ -81,8 +85,33 @@ function NewPositionDialog({open, handleClose, userRiskLevel}) {
         handleClose();
     }
 
-    function enterPosition() {
-        close();
+    async function enterNewPosition() {
+        try {
+            const stockResponse = await getRealTimeStock(symbol);
+            const stockCurrentPrice = stockResponse.data.c;
+
+            const body = {
+                userId: auth.userId,
+                position: {
+                    positionId: (new Date()).toISOString(),
+                    shareSymbol: symbol,
+                    shareCategory: "",
+                    entryPrice: stockCurrentPrice,
+                    sharesCount: amount,
+                    positionType: type,
+                    entryTime: new Date()
+                }
+            };
+
+            console.log({body})
+            await enterPosition(body);
+            close();
+        }
+        catch (e)
+        {
+            console.log('failed entering position', e);
+        }
+        
     }
 
     return <Dialog onClose={close} open={open}>
@@ -102,7 +131,7 @@ function NewPositionDialog({open, handleClose, userRiskLevel}) {
                     SHORT
                 </ToggleButton>
             </ToggleButtonGroup>
-            <TextField label="Amount"/>
+            <TextField onChange={(_, value) => setAmount(value)} label="Amount"/>
             <div style={{display: "flex", justifyContent: "space-between", alignItems: "flex-end", paddingTop: "20px"}}>
                 <Typography style={{fontWeight: "bold", fontSize: "16px"}}>Activate Limit</Typography>
                 <Switch value={limitIsActive} onChange={() => setLimitIsActive(prev => !prev)}/>
@@ -112,24 +141,47 @@ function NewPositionDialog({open, handleClose, userRiskLevel}) {
             </Typography>
             <TextField label="Limit"/>
             <div style={{display: "flex", justifyContent: "center", alignItems: "flex-end", paddingTop: "40px"}}>
-                <Button variant='contained' onClick={enterPosition}>Confirm</Button>
+                <Button variant='contained' onClick={enterNewPosition}>Confirm</Button>
             </div>
         </div>
     </Dialog>
 }
 
-function ExitPositionDialog({open, handleClose}) {
-    const [limitIsActive, setLimitIsActive] = React.useState(false)
+function ExitPositionDialog({open, handleClose, positionId, symbol}) {
+    const [limitIsActive, setLimitIsActive] = React.useState(false);
+    const [amount, setAmount] = React.useState(0);
+    const [auth] = React.useContext(authContext);
 
     function close() {
+
         setLimitIsActive(false);
         handleClose();
+    }
+
+    async function closeOldPosition() { 
+        try {
+            const stockResponse = await getRealTimeStock(symbol);
+            const stockCurrentPrice = stockResponse.data.c;
+
+            const body = {
+                userId: auth.userId,
+                positionId: positionId,
+                closePrice: stockCurrentPrice,
+                closeTime: new Date(),
+                sharesCount: amount ?? 0
+            };
+            console.log('body', body)
+            await closePosition(body);
+            close();
+        } catch (e) {
+            console.log('close position failed' , e);
+        }
     }
 
     return <Dialog onClose={close} open={open}>
         <DialogTitle>Exit Position</DialogTitle>
         <div className='Dialog-Content'>
-            <TextField label="Amount"/>
+            <TextField onChange={(_, value) => setAmount(value)} label="Amount"/>
             <div style={{display: "flex", justifyContent: "space-between", alignItems: "flex-end", paddingTop: "20px"}}>
                 <Typography style={{fontWeight: "bold", fontSize: "16px"}}>Activate Limit</Typography>
                 <Switch value={limitIsActive} onChange={() => setLimitIsActive(prev => !prev)}/>
@@ -139,7 +191,7 @@ function ExitPositionDialog({open, handleClose}) {
             </Typography>
             <TextField label="Limit"/>
             <div style={{display: "flex", justifyContent: "center", alignItems: "flex-end", paddingTop: "40px"}}>
-                <Button variant='contained'>Confirm</Button>
+                <Button onClick={closeOldPosition} variant='contained'>Confirm</Button>
             </div>
         </div>
     </Dialog>
@@ -154,15 +206,23 @@ function Investments() {
     const [profit, setProfit] = React.useState(0);
     const [achievements, setAchievements] = React.useState(0);
     const [riskLevel, setRiskLevel] = React.useState('');
+    const [auth] = React.useContext(authContext);
+    const [selectedPositionId, setSelectedPositionId] = React.useState('');
+    const [selectedSymbol, setSelectedSymbol] = React.useState('');
 
     async function getData() {
+        if (!auth || !auth.userId)
+        {
+            return;
+        }
+
         try {
-            const userInvestmentStatusResponse = await axios.get('http://localhost:5266/Positions/GetUserInvestmentStatus?userId=aaa');
+            const userInvestmentStatusResponse = await getInvestorStatus(auth.userId);
             const userInvestmentStatus = userInvestmentStatusResponse.data;
             let userPositions = [];
 
             for (let {positionId, shareSymbol, entryPrice, sharesCount, positionType} of userInvestmentStatus.positions) {
-                const stockResponse = await axios.get(`http://localhost:5266/Stocks/GetRealTimeStock?symbol=${shareSymbol}`);
+                const stockResponse = await getRealTimeStock(shareSymbol);
                 const stockCurrentPrice = stockResponse.data.c;
                 const difference = ((stockCurrentPrice - (entryPrice/sharesCount)) / (entryPrice/sharesCount)) * 100;
 
@@ -179,7 +239,7 @@ function Investments() {
         }
     }
 
-    React.useEffect(() => {getData()}, [refresh]);
+    React.useEffect(() => {getData()}, [refresh, auth]);
 
     function closeNewPosition() {
         setNewPositionOpen(false)
@@ -189,6 +249,12 @@ function Investments() {
     function closeExitPosition() {
         setExitPositionOpen(false)
         setRefresh(prev => !prev);
+    }
+
+    function onClosePosition(positionId, symbol) {
+        setExitPositionOpen(true);
+        setSelectedPositionId(positionId);
+        setSelectedSymbol(symbol);
     }
 
     return <div className="App">
@@ -281,7 +347,7 @@ function Investments() {
                                     </div>
                                 </StyledTableCell>
                                 <StyledTableCell align="right">
-                                    <Button variant='contained' onClick={() => setExitPositionOpen(true)}>Exit Position</Button>
+                                    <Button variant='contained' onClick={() => onClosePosition(row.id, row.symbol)}>Exit Position</Button>
                                 </StyledTableCell>
                             </StyledTableRow>
                         ))}
@@ -290,7 +356,7 @@ function Investments() {
             </TableContainer>
         </div>
         <NewPositionDialog open={newPositionOpen} handleClose={closeNewPosition}/>
-        <ExitPositionDialog open={exitPositionOpen} handleClose={closeExitPosition}/>
+        <ExitPositionDialog open={exitPositionOpen} handleClose={closeExitPosition} positionId={selectedPositionId} symbol={selectedSymbol}/>
     </div>;
 }
 
