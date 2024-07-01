@@ -44,35 +44,39 @@ function Statistics() {
 
     async function handleOnButtonClick(shareSymbol)
     {
-        const historyResponse = await getStockHistory(shareSymbol, daysBack);
-        const historyPrice = historyResponse.data;
-
-        const newLineDate = [];
-
-        Object.keys(historyPrice).forEach(key => {
-            console.log(key);
-            newLineDate.push({
-                date: key,
-                shareProfit: historyPrice[key].closePrice
-            })
-        });
-
-        const newOptions = {
-            title: {
-              text: `Share ${shareSymbol} Over Time`,
-            },
-            data: newLineDate,
-            series: [
-              {
-                type: "line",
-                xKey: "date",
-                yKey: "shareProfit",
-                yName: "profit"
+        try {
+            const historyResponse = await getStockHistory(shareSymbol, daysBack);
+            const historyPrice = historyResponse.data;
+    
+            const newLineDate = [];
+    
+            Object.keys(historyPrice).forEach(key => {
+                console.log(key);
+                newLineDate.push({
+                    date: key,
+                    shareProfit: historyPrice[key].closePrice
+                })
+            });
+    
+            const newOptions = {
+                title: {
+                  text: `Share ${shareSymbol} Over Time`,
+                },
+                data: newLineDate,
+                series: [
+                  {
+                    type: "line",
+                    xKey: "date",
+                    yKey: "shareProfit",
+                    yName: "profit"
+                  }
+                ],
               }
-            ],
-          }
-
-          setOptions(newOptions);
+    
+              setOptions(newOptions);
+        } catch (e) {
+            console.log('failed getting history', e);
+        }
     }
 
     useEffect(() => {
