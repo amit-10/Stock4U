@@ -18,21 +18,28 @@ function Statistics() {
     const [chartOptions, setChartOptions] = useState({});
     const [donutOptions, setDonutOptions] = useState({});
     const daysBack = 7;
-    const intervalCheckMS = 10000 // 10 seconds
+    const intervalCheckMS = 60000 // 60 seconds
 
     const [options, setOptions] = useState({});
 
     setInterval(async () => {
-        if (!auth || !auth.userId)
-        {
-            return;
+        try {
+            if (!auth || !auth.userId)
+            {
+                return;
+            }
+    
+            const statusResponse = await getInvestorStatus(auth.userId);
+            const status = statusResponse.data;
+            const achievemnets = status.achievementsPoints;
+            setAchievements(achievemnets);
+            setBank(status.accountBalance);
         }
-
-        const statusResponse = await getInvestorStatus(auth.userId);
-        const status = statusResponse.data;
-        const achievemnets = status.achievementsPoints;
-        setAchievements(achievemnets);
-        setBank(status.accountBalance);
+        catch (e)
+        {
+            console.log('failed interval updating user data', e);
+        }
+       
     }, intervalCheckMS);
 
     async function handleOnButtonClick(shareSymbol)
