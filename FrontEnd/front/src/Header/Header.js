@@ -200,7 +200,7 @@ function Header() {
     const signUp = async (userId, firstName, lastName, riskLevel, email, password) => {
       try {
         await register({ userId, email, password, firstName, lastName, riskLevel });
-        setAuth(authBody);
+        setAuth({ userId, email, password, firstName, lastName, riskLevel });
       }
       catch (e)
       {
