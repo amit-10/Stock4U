@@ -39,7 +39,12 @@ public class PositionFeedbackClassifier(
 
         var profit = StatisticsCalculator.CalculateChangePercentage(entryPrice, exitPrice);
         var positionTimeInDays = (position.ClosedPosition.ExitTime - position.ClosedPosition.EntryTime).Days;
-        var maxPriceDuringPosition = stockClosePrices.Max(dateToPrice => dateToPrice.ClosePrice);
+
+        decimal maxPriceDuringPosition = 0;
+        if (positionTimeInDays > 0)
+        {
+            maxPriceDuringPosition = stockClosePrices.Max(dateToPrice => dateToPrice.ClosePrice);
+        }
 
         if (ExitedTooLate(maxPriceDuringPosition, exitPrice, entryPrice))
         {
@@ -118,6 +123,11 @@ public class PositionFeedbackClassifier(
 
     private bool ExitedTooLate(decimal maxPriceDuringPosition, decimal exitPrice, decimal entryPrice)
     {
+        if (maxPriceDuringPosition == 0)
+        {
+            return false;
+        }
+        
         var maxPriceToExitPriceLossPercentage =
             -StatisticsCalculator.CalculateChangePercentage(maxPriceDuringPosition, exitPrice);
         return maxPriceDuringPosition > entryPrice &&

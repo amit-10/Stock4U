@@ -38,7 +38,7 @@ public static class DependencyInjectionExtensions
             .AddSingleton<IUsersUpdater, UsersUpdater>()
             .AddSingleton<IUsersRetriever, UsersRetriever>()
             .AddHostedService<UserToAchievementService>()
-            /*.AddHostedService<ClassifyPositionsService>()*/;
+            .AddHostedService<ClassifyPositionsService>();
 
         return serviceCollection;
     }

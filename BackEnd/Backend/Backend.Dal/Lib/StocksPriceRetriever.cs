@@ -58,6 +58,12 @@ public class StocksPriceRetriever(
             throw;
         }
 
+        if (response.DateToStockData is null)
+        {
+            logger.LogError("Reached history api limit on request for symbol {symbol}", symbol);
+            throw new Exception("Reached history api limit");
+        }
+
         var formattedResponse = response.DateToStockData.Take(daysBack).ToDictionary()
             .Adapt<Dictionary<string, StockDailyData>>();
         return formattedResponse;

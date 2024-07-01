@@ -21,7 +21,18 @@ public class UserToAchievementService(
     public Task StartAsync(CancellationToken cancellationToken)
     {
         _cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-        _backgroundTask = Task.Run(async () => await BackgroundProcessing(_cancellationTokenSource.Token));
+        _backgroundTask = Task.Run(async () =>
+        {
+            try
+            {
+                await BackgroundProcessing(_cancellationTokenSource.Token);
+            }
+            catch (Exception exception)
+            {
+                logger.LogError(exception, "Failed updating user achievements");
+                throw;
+            }
+        });
         return Task.CompletedTask;
     }
 
