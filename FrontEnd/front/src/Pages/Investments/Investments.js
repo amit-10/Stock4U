@@ -131,7 +131,7 @@ function NewPositionDialog({open, handleClose, userRiskLevel}) {
                     SHORT
                 </ToggleButton>
             </ToggleButtonGroup>
-            <TextField onChange={(_, value) => setAmount(value)} label="Amount"/>
+            <TextField onChange={(_, value) => setAmount(_.target.value)} label="Amount"/>
             <div style={{display: "flex", justifyContent: "space-between", alignItems: "flex-end", paddingTop: "20px"}}>
                 <Typography style={{fontWeight: "bold", fontSize: "16px"}}>Activate Limit</Typography>
                 <Switch value={limitIsActive} onChange={() => setLimitIsActive(prev => !prev)}/>
@@ -181,7 +181,7 @@ function ExitPositionDialog({open, handleClose, positionId, symbol}) {
     return <Dialog onClose={close} open={open}>
         <DialogTitle>Exit Position</DialogTitle>
         <div className='Dialog-Content'>
-            <TextField onChange={(_, value) => setAmount(value)} label="Amount"/>
+            <TextField onChange={(_, value) => setAmount(_.target.value)} label="Amount"/>
             <div style={{display: "flex", justifyContent: "space-between", alignItems: "flex-end", paddingTop: "20px"}}>
                 <Typography style={{fontWeight: "bold", fontSize: "16px"}}>Activate Limit</Typography>
                 <Switch value={limitIsActive} onChange={() => setLimitIsActive(prev => !prev)}/>
@@ -224,9 +224,9 @@ function Investments() {
             for (let {positionId, shareSymbol, entryPrice, sharesCount, positionType} of userInvestmentStatus.positions) {
                 const stockResponse = await getRealTimeStock(shareSymbol);
                 const stockCurrentPrice = stockResponse.data.c;
-                const difference = ((stockCurrentPrice - (entryPrice/sharesCount)) / (entryPrice/sharesCount)) * 100;
+                const difference = ((stockCurrentPrice - entryPrice) / entryPrice) * 100;
 
-                userPositions.push(createData(positionId, shareSymbol, sharesCount, positionType, (entryPrice/sharesCount).toFixed(2), difference.toFixed(2)));
+                userPositions.push(createData(positionId, shareSymbol, sharesCount, positionType, entryPrice, difference.toFixed(2)));
             }
 
             setRows(userPositions);
