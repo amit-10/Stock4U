@@ -1,4 +1,3 @@
-import './App.css';
 import Menu from './Menu/Menu';
 import Header from './Header/Header';
 import SidePanel from './SidePanel/SidePanel';
@@ -8,21 +7,22 @@ import Investments from './Pages/Investments/Investments';
 import Leaderboard from './Pages/Leaderboard/Leaderboard';
 import Statistics from './Pages/Statistics/Statistics';
 import AuthProvider from './Context/auth.context';
+import { styled } from '@mui/material';
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <div className="App">
-          <div class="Panels">
-            <div class="Menu">
+        <Container>
+          <Panels>
+            <AppMenu>
                 <Menu/>
-            </div>
-            <header className="App-header">
-              <div class="Header">
+            </AppMenu>
+            <AppHeader>
+              <div>
                 <Header/>
               </div>
-              <div class="Pages">
+              <div>
                 <Routes>
                   <Route path="" element={<></>} />
                   <Route path="statistics" element={<Statistics />} />
@@ -31,15 +31,45 @@ function App() {
                   <Route path="profile" element={<Profile />} />
                 </Routes>
               </div>
-            </header>
-            <div class="SidePanel">
+            </AppHeader>
+            <AppSidePanel>
               <SidePanel/>
-            </div>
-          </div>
-        </div>
+            </AppSidePanel>
+          </Panels>
+        </Container>
       </BrowserRouter>
     </AuthProvider>
   );
 }
+
+const Container = styled('div')`
+  text-align: center;
+  height: 100vh;
+`
+
+const AppHeader = styled('div')`
+  background-color: #FFF8F3;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`
+
+const Panels = styled('div')`
+  display: flex;
+  height: 100%;
+`
+
+const AppMenu = styled('div')`
+  margin-right: auto; 
+  margin-left: 0;
+  float: left;
+`
+
+const AppSidePanel = styled('div')`
+  margin-left: auto; 
+  margin-right: 0;
+  float: right;
+  height: 100%;
+`
 
 export default App;

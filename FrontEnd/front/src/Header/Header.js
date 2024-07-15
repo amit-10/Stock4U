@@ -23,6 +23,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import { authContext } from '../Context/auth.context';
 import { login, register } from '../Services/Backend.service';
+import { Login } from '@mui/icons-material';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -210,9 +211,9 @@ function Header() {
 
   return (
     <div>
-      <header class="Header">
+      <header className="Header-Styles">
         <Box sx={{ flexGrow: 1 }}>
-          <AppBar position="static" enableColorOnDark color="transparent">
+          <AppBar position="static" enableColorOnDark color="transparent" sx={{boxShadow: 'none'}}>
             <Toolbar>
               <Typography variant="h6" noWrap component="div" sx={{ display: { xs: 'none', sm: 'block' } }} > Stock4U 
                    {(auth && auth.userId) ? `      Hello ${auth.userId}!`: ''}
@@ -222,15 +223,6 @@ function Header() {
 
               <Box sx={{ flexGrow: 1 }} />
               <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              <Search sx={{ border: '1px gray solid'}}>
-                <SearchIconWrapper>
-                  <SearchIcon />
-                </SearchIconWrapper>
-                <StyledInputBase
-                  placeholder="Search…"
-                  inputProps={{ 'aria-label': 'search' }}
-                />
-              </Search>
                 <IconButton
                   size="large"
                   edge="end"
@@ -240,7 +232,7 @@ function Header() {
                   onClick={handleClickOpen}
                   color="inherit"
                 >
-                  <AccountCircle />
+                  <Login />
                 </IconButton>
               </Box>
               <Box sx={{ display: { xs: 'flex', md: 'none' } }}>

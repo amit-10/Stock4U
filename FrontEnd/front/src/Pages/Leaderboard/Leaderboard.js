@@ -73,16 +73,16 @@ function Leaderboard() {
 
     return (
         <div className="App">
-            <Typography color="#545f71" variant="h6" gutterBottom> Leaderboard \ {auth.userId} </Typography>
-            <div class="Card-Section">
+            <Typography color="#405D72" variant="h4" gutterBottom> Leaderboard </Typography>
+            <div style={{display: 'flex', justifyContent: 'space-evenly', width: '100%'}}>
                 <div class="Card">
-                    <Card sx={{ display: 'flex', backgroundColor: '#dadada', color: '#545f71', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
+                    <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ flex: '1 0 auto' }}>
                             <Typography component="div" variant="h5">
                                 Achievements
                             </Typography>
-                            <Typography variant="subtitle1" color="#545f71" component="div">
+                            <Typography variant="subtitle1" color="#405D72" component="div">
                                 {achievements} Points
                             </Typography>
                             </CardContent>
@@ -93,13 +93,13 @@ function Leaderboard() {
                 </div>
 
                 <div class="Card">
-                    <Card sx={{ display: 'flex', backgroundColor: '#dadada', color: '#545f71', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
+                    <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ flex: '1 0 auto' }}>
                             <Typography component="div" variant="h5">
                                 Position
                             </Typography>
-                            <Typography variant="subtitle1" color="#545f71" component="div">
+                            <Typography variant="subtitle1" color="#405D72" component="div">
                                 {position}#
                             </Typography>
                             </CardContent>
@@ -110,13 +110,13 @@ function Leaderboard() {
                 </div>
               
                 <div class="Card">
-                    <Card sx={{ display: 'flex', backgroundColor: '#dadada', color: '#545f71', minWidth: '250px',  justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
+                    <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', minWidth: '250px',  justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ flex: '1 0 auto' }}>
                             <Typography component="div" variant="h5">
                                 Shares Profit
                             </Typography>
-                            <Typography variant="subtitle1" color="#545f71" component="div">
+                            <Typography variant="subtitle1" color="#405D72" component="div">
                                 {profit}$
                             </Typography>
                             </CardContent>
@@ -127,12 +127,9 @@ function Leaderboard() {
                 </div>
 
             </div>
-            <div class="Positions-History">
-                <div class="Positions-History-Title">
-                    <Typography color="#545f71" variant="h6" gutterBottom>Leaderboard </Typography>
-                </div>
-                <TableContainer component={Paper}>
-                    <Table aria-label="customized table">
+            <div class="LeaderBoard">
+                <TableContainer component={Paper} sx={{marginTop: '20px'}}>
+                    <Table sx={{backgroundColor: '#F7E7DC'}}>
                         <TableHead>
                             <TableRow>
                                 <StyledTableCell>Position</StyledTableCell>

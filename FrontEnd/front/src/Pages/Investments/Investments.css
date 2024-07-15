@@ -3,11 +3,6 @@
     /* margin-left: 50px; */
 }
 
-.Card-Section{
-    display: flex;
-    justify-content: center;
-}
-
 .Card {
     padding: 10px;
 }

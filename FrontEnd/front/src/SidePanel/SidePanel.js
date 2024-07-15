@@ -1,9 +1,9 @@
-import './SidePanel.css';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
 import { useState, useEffect, useContext } from 'react';
 import { authContext } from '../Context/auth.context';
 import { getUserAchievements } from '../Services/Backend.service';
+import { styled } from '@mui/material';
 
 function SidePanel() {
 
@@ -32,114 +32,137 @@ function SidePanel() {
   }, [auth]);
 
   return (
-    <div className="App">
-      <div class="Items">
-        <div class="Usefull-Info">
+    <Container>
+      <div>
+        <UsefullInfo>
             <Typography variant="h6" gutterBottom> Usefull Info </Typography>
 
-            <div class="Item">
+            <Item>
               <Avatar sx={{ width: 30, height: 30, marginRight: '10px' }}/>
-              <div class="Item-Description">
+              <div>
                 <Typography variant="h8" gutterBottom> A share jumped in 5% </Typography>
-                <div class="Update-Date">
+                <UpdateDate>
                   <Typography sx={{ width: 10, height: 10, marginRight: '10px' }}  variant="h10" gutterBottom> 5 minutes ago </Typography>
-                </div>
+                </UpdateDate>
               </div>
-            </div>
+            </Item>
 
-            <div class="Item">
+            <Item>
               <Avatar sx={{ width: 30, height: 30, marginRight: '10px' }}/>
-              <div class="Item-Description">
+              <div>
                 <Typography variant="h8" gutterBottom>A share jumped in 2.5% </Typography>
-                <div class="Update-Date">
+                <UpdateDate>
                   <Typography sx={{ width: 10, height: 10, marginRight: '10px' }}  variant="h10" gutterBottom> 16 minutes ago </Typography>
-                </div>
+                </UpdateDate>
               </div>
-            </div>
+            </Item>
 
-            <div class="Item">
+            <Item>
               <Avatar sx={{ width: 30, height: 30, marginRight: '10px' }}/>
-              <div class="Item-Description">
+              <div>
                 <Typography variant="h8" gutterBottom>Jeff Bezos said "..." </Typography>
-                <div class="Update-Date">
+                <UpdateDate>
                   <Typography sx={{ width: 10, height: 10, marginRight: '10px' }}  variant="h10" gutterBottom> 8 hours ago </Typography>
-                </div>
+                </UpdateDate>
               </div>
-            </div>
+            </Item>
 
-            <div class="Item">
+            <Item>
               <Avatar sx={{ width: 30, height: 30, marginRight: '10px' }}/>
-              <div class="Item-Description">
+              <div>
                 <Typography variant="h8" gutterBottom>You've completed </Typography>
-                <div class="Update-Date">
+                <UpdateDate>
                   <Typography sx={{ width: 10, height: 10, marginRight: '10px' }}  variant="h10" gutterBottom> 12 hours ago</Typography>
-                </div>
+                </UpdateDate>
               </div>
-            </div>
-        </div>
+            </Item>
+        </UsefullInfo>
 
-        <div class="Leaderboard">
+        <div style={{paddingTop: '30px'}}>
             <Typography variant="h6" gutterBottom> Leaderboard </Typography>
 
-            <div class="Item">
+            <Item>
               <Avatar sx={{ width: 30, height: 30, marginRight: '10px' }}/>
-              <div class="Item-Description">
+              <div>
                 <Typography variant="h8" gutterBottom> Amit Cohen </Typography>
-                <div class="Update-Date">
+                <UpdateDate>
                   <Typography sx={{ width: 10, height: 10, marginRight: '10px' }}  variant="h10" gutterBottom> 1256# </Typography>
-                </div>
+                </UpdateDate>
               </div>
-            </div>
+            </Item>
 
-            <div class="Item">
+            <Item>
               <Avatar sx={{ width: 30, height: 30, marginRight: '10px' }}/>
-              <div class="Item-Description">
+              <div>
                 <Typography variant="h8" gutterBottom>Elor Sulimani </Typography>
-                <div class="Update-Date">
+                <UpdateDate>
                   <Typography sx={{ width: 10, height: 10, marginRight: '10px' }}  variant="h10" gutterBottom> 1257# </Typography>
-                </div>
+                </UpdateDate>
               </div>
-            </div>
+            </Item>
 
-            <div class="Item">
+            <Item>
               <Avatar sx={{ width: 30, height: 30, marginRight: '10px' }}/>
-              <div class="Item-Description">
+              <div>
                 <Typography variant="h8" gutterBottom>Lior Zioni </Typography>
-                <div class="Update-Date">
+                <UpdateDate>
                   <Typography sx={{ width: 10, height: 10, marginRight: '10px' }}  variant="h10" gutterBottom> 1258# </Typography>
-                </div>
+                </UpdateDate>
               </div>
-            </div>
+            </Item>
 
-            <div class="Item">
+            <Item>
               <Avatar sx={{ width: 30, height: 30, marginRight: '10px' }}/>
-              <div class="Item-Description">
+              <div>
                 <Typography variant="h8" gutterBottom>Itay Aviran</Typography>
-                <div class="Update-Date">
+                <UpdateDate>
                   <Typography sx={{ width: 10, height: 10, marginRight: '10px' }}  variant="h10" gutterBottom> 1259# </Typography>
-                </div>
+                </UpdateDate>
               </div>
-            </div>
+            </Item>
 
         </div>
           
-        <div class="Achievements">
+        <div style={{paddingTop: '30px'}}>
 
             <Typography variant="h6" gutterBottom> Achievements </Typography>
 
-            {achievements.map((achivement, index) =>  <div class="Item" key={index}>
+            {achievements.map((achivement, index) =>  <Item key={index}>
               <Avatar sx={{ width: 30, height: 30, marginRight: '10px' }}/>
-              <div class="Item-Description">
+              <div>
                 <Typography variant="h8" gutterBottom> {achivement.achievementType} </Typography>
-                <div class="Update-Date">
+                <UpdateDate>
                   <Typography sx={{ width: 10, height: 10, marginRight: '10px' }}  variant="h10" gutterBottom>  {(new Date(achivement.achievedTime)).toLocaleDateString()} </Typography>
-                </div>
+                </UpdateDate>
               </div>
-            </div>)}
+            </Item>)}
         </div>
       </div>
-    </div>
+    </Container>
   );
 }
+
+const Container = styled('div')`
+  text-align: center;
+  border-left: solid 2px #F7E7DC;
+  height: 100%;
+`
+
+const UsefullInfo = styled('div')`
+  padding-top: 30px;
+  flex-direction: column;
+  display: flex;
+  font-size: 15px;
+`
+
+const Item = styled('div')`
+  display: flex;
+  padding: 10px;
+`
+
+const UpdateDate = styled('div')`
+  font-size: 11px;
+  position: absolute;
+`
 
 export default SidePanel;

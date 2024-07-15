@@ -3,18 +3,6 @@
     /* margin-left: 50px; */
 }
 
-.Card-Section{
-    display: flex;
-    justify-content: center;
-}
-
 .Card {
     padding: 10px;
-}
-
-
-.Positions-History {
-    display: flex;
-    display: grid;
-    justify-content: center
 }

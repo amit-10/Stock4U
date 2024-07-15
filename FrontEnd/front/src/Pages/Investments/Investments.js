@@ -258,16 +258,16 @@ function Investments() {
     }
 
     return <div className="App">
-        <Typography color="#545f71" variant="h6" gutterBottom> Investments </Typography>
-        <div class="Card-Section">
+        <Typography color="#405D72" variant="h4" gutterBottom> Investments </Typography>
+        <div style={{display: 'flex', justifyContent: 'space-evenly', width: '100%'}}>
             <div class="Card">
-                <Card sx={{ display: 'flex', backgroundColor: '#dadada', color: '#545f71', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
+                <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         <CardContent sx={{ flex: '1 0 auto' }}>
                             <Typography component="div" variant="h5">
                                 Bank
                             </Typography>
-                            <Typography variant="subtitle1" color="#545f71" component="div">
+                            <Typography variant="subtitle1" color="#405D72" component="div">
                                 {bank}$
                             </Typography>
                         </CardContent>
@@ -277,13 +277,13 @@ function Investments() {
                 </Card>
             </div>
             <div class="Card">
-                <Card sx={{ display: 'flex', backgroundColor: '#dadada', color: '#545f71', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
+                <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         <CardContent sx={{ flex: '1 0 auto' }}>
                             <Typography component="div" variant="h5">
                                 Shares Profit
                             </Typography>
-                            <Typography variant="subtitle1" color="#545f71" component="div">
+                            <Typography variant="subtitle1" color="#405D72" component="div">
                                 {profit}$
                             </Typography>
                         </CardContent>
@@ -294,13 +294,13 @@ function Investments() {
             </div>
 
             <div class="Card">
-                <Card sx={{ display: 'flex', backgroundColor: '#dadada', color: '#545f71', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
+                <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         <CardContent sx={{ flex: '1 0 auto' }}>
                             <Typography component="div" variant="h5">
                                 Achievements
                             </Typography>
-                            <Typography variant="subtitle1" color="#545f71" component="div">
+                            <Typography variant="subtitle1" color="#405D72" component="div">
                                 {achievements}
                             </Typography>
                         </CardContent>
@@ -311,11 +311,11 @@ function Investments() {
             </div>
 
         </div>
-        <div class="My-Positions">
-            <div class="My-Positions-Title">
-                My Positions
+        <div style={{padding: '0 20px'}}>
+            <div>
+                <Typography color="#405D72" variant="h6" gutterBottom>My Positions</Typography>
             </div>
-            <TableContainer component={Paper}>
+            <TableContainer component={Paper} sx={{backgroundColor: '#F7E7DC'}}>
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -325,8 +325,8 @@ function Investments() {
                             <StyledTableCell align="right">Entry Price per Share</StyledTableCell>
                             <StyledTableCell align="right">Type</StyledTableCell>
                             <StyledTableCell align="right">Difference</StyledTableCell>
-                            <StyledTableCell align="right">
-                                <Button variant='contained' onClick={() => setNewPositionOpen(true)}>Enter New Position</Button>
+                            <StyledTableCell align="right" sx={{color: '#405D72'}}>
+                                <Button color='inherit' variant='contained' onClick={() => setNewPositionOpen(true)}>Enter New Position</Button>
                             </StyledTableCell>
                         </TableRow>
                     </TableHead>
@@ -347,7 +347,7 @@ function Investments() {
                                     </div>
                                 </StyledTableCell>
                                 <StyledTableCell align="right">
-                                    <Button variant='contained' onClick={() => onClosePosition(row.id, row.symbol)}>Exit Position</Button>
+                                    <Button sx={{backgroundColor: '#405D72'}} variant='contained' onClick={() => onClosePosition(row.id, row.symbol)}>Exit Position</Button>
                                 </StyledTableCell>
                             </StyledTableRow>
                         ))}

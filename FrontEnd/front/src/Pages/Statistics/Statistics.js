@@ -163,16 +163,16 @@ function Statistics() {
 
     return (
         <div className="App">
-            <Typography color="#545f71" variant="h6" gutterBottom> Today </Typography>
-            <div class="Card-Section">
+            <Typography color="#405D72" variant="h4" gutterBottom> Statistics </Typography>
+            <div style={{display: 'flex', justifyContent: 'space-evenly', width: '100%'}}>
                 <div class="Card">
-                    <Card sx={{ display: 'flex', backgroundColor: '#dadada', color: '#545f71', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
+                    <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ flex: '1 0 auto' }}>
                             <Typography component="div" variant="h5">
                                 Begginner Investor
                             </Typography>
-                            <Typography variant="subtitle1" color="#545f71" component="div">
+                            <Typography variant="subtitle1" color="#405D72" component="div">
                                 {risk} Risk Behavior
                             </Typography>
                             </CardContent>
@@ -183,13 +183,13 @@ function Statistics() {
                 </div>
 
                 <div class="Card">
-                    <Card sx={{ display: 'flex', backgroundColor: '#dadada', color: '#545f71', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
+                    <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ flex: '1 0 auto' }}>
                             <Typography component="div" variant="h5">
                                 Bank
                             </Typography>
-                            <Typography variant="subtitle1" color="#545f71" component="div">
+                            <Typography variant="subtitle1" color="#405D72" component="div">
                                 {bank}$
                             </Typography>
                             </CardContent>
@@ -200,13 +200,13 @@ function Statistics() {
                 </div>
               
                 <div class="Card">
-                    <Card sx={{ display: 'flex', backgroundColor: '#dadada', color: '#545f71', minWidth: '250px',  justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
+                    <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', minWidth: '250px',  justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ flex: '1 0 auto' }}>
                             <Typography component="div" variant="h5">
                                 Achievements
                             </Typography>
-                            <Typography variant="subtitle1" color="#545f71" component="div">
+                            <Typography variant="subtitle1" color="#405D72" component="div">
                                 {achievements} Points
                             </Typography>
                             </CardContent>
