@@ -22,25 +22,25 @@ function Statistics() {
 
     const [options, setOptions] = useState({});
 
-    setInterval(async () => {
-        try {
-            if (!auth || !auth.userId)
-            {
-                return;
-            }
+    // setInterval(async () => {
+    //     try {
+    //         if (!auth || !auth.userId)
+    //         {
+    //             return;
+    //         }
     
-            const statusResponse = await getInvestorStatus(auth.userId);
-            const status = statusResponse.data;
-            const achievemnets = status.achievementsPoints;
-            setAchievements(achievemnets);
-            setBank(status.accountBalance);
-        }
-        catch (e)
-        {
-            console.log('failed interval updating user data', e);
-        }
+    //         const statusResponse = await getInvestorStatus(auth.userId);
+    //         const status = statusResponse.data;
+    //         const achievemnets = status.achievementsPoints;
+    //         setAchievements(achievemnets);
+    //         setBank(status.accountBalance);
+    //     }
+    //     catch (e)
+    //     {
+    //         console.log('failed interval updating user data', e);
+    //     }
        
-    }, intervalCheckMS);
+    // }, intervalCheckMS);
 
     async function handleOnButtonClick(shareSymbol)
     {
