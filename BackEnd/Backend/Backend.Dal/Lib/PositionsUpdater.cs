@@ -39,6 +39,23 @@ public class PositionsUpdater(
         }
     }
 
+    public async Task EditStopLimitAsync(string userId, string positionId, decimal stopLimitPrice)
+    {
+        var filter = Builders<UserPositions>.Filter.And(Builders<UserPositions>.Filter.Eq(up => up.UserId, userId),
+    Builders<UserPositions>.Filter.ElemMatch(up => up.Positions, pos => pos.PositionId == positionId));
+        var update = Builders<UserPositions>.Update.Set("Positions.$.StopLimitPrice", stopLimitPrice);
+
+        try
+        {
+            await _userPositionsCollection.UpdateOneAsync(filter, update);
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Error entering position {@position} for user {userId}", positionId, userId);
+            throw;
+        }
+    }
+
     public async Task ClosePositionAsync(string userId, string positionId, decimal closePrice, DateTime closeTime,
         decimal sharesCountToClose)
     {
@@ -84,7 +101,8 @@ public class PositionsUpdater(
                 ExitPrice = closePrice,
                 ExitTime = closeTime,
                 SharesCount = sharesCountToClose,
-                PositionFeedback = PositionFeedback.NoFeedback
+                PositionFeedback = PositionFeedback.NoFeedback,
+                StopLimitPrice = currentPosition.StopLimitPrice
             }
         };
 
