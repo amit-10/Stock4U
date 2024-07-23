@@ -1,4 +1,6 @@
-
+.App {
+    text-align: center;
+  }
 .charts-sections1 {
     /* display: flex; */
     /* display: grid; */

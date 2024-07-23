@@ -19,7 +19,7 @@ function Statistics() {
     const [donutOptions, setDonutOptions] = useState({});
     const daysBack = 7;
     const intervalCheckMS = 60000 // 60 seconds
-
+    const establishedPositions = [];
     const [options, setOptions] = useState({});
 
     // setInterval(async () => {
@@ -92,6 +92,12 @@ function Statistics() {
     
                 const newRows = [];
                 userInvestmentStatus.positions.forEach(async position => {
+
+                    if (establishedPositions.includes(position.shareSymbol)) {
+                        return;
+                    }
+                    
+                    establishedPositions.push(position.shareSymbol)
                     const realTimeResponse = await getRealTimeStock(position.shareSymbol);
                     const realTimeValue = realTimeResponse.data;
 
