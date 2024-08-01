@@ -196,8 +196,8 @@ function ConfigurestopLimitPriceDialog({ open, handleClose, positionId }) {
             <Typography style={{ fontWeight: "bold", fontSize: "16px" }}>Stop Limit Value in USD</Typography>
             <TextField onChange={(_, value) => setStopLimit(_.target.value)} label="250$" />
             <div style={{ display: "flex", justifyContent: "center", alignItems: "flex-end", paddingTop: "40px" }}>
-                <Button onClick={configureStopLimit} variant='contained'>Confirm</Button>
-                <Button style={{ marginLeft: '10px' }} onClick={resetStopLimit} variant='contained'>Reset Stop Limit value</Button>
+                <Button onClick={resetStopLimit} variant='contained'>Delete current Stop Limit</Button>
+                <Button style={{ marginLeft: '10px' }} onClick={configureStopLimit} variant='contained'>Confirm</Button>
             </div>
         </div>
     </Dialog>

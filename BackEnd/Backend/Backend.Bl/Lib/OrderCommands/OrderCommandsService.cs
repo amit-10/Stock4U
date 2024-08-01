@@ -2,6 +2,7 @@ using Backend.Bl.Configuration;
 using Backend.Bl.Interfaces;
 using Backend.Common.Interfaces.Positions;
 using Backend.Common.Interfaces.Stocks;
+using Backend.Common.Models.Positions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -42,25 +43,26 @@ public class OrderCommandsService(
             var allUsersPositions = await positionsRetriever.GetAllUserPositionsAsync();
             foreach (var userPositions in allUsersPositions)
             {
-                logger.LogInformation("UserID {position.PositionId}", userPositions.UserId);
                 foreach (var position in userPositions.Positions)
                 {
                     if (position.StopLimitPrice != -1)
                     {
                         var realTimeStock = await stockPriceRetriever.GetRealTimeStockAsync(position.ShareSymbol);
                         var realTimeStockPrice = realTimeStock.CurrentPrice;
-                        logger.LogInformation("postion id: {position.PositionId}, realTimeStockPrice: {realTimeStockPrice}, StopLimitPrice: {StopLimitPrice}", position.PositionId, realTimeStockPrice, position.StopLimitPrice);
+                        logger.LogDebug("postion id: {position.PositionId}, realTimeStockPrice: {realTimeStockPrice}, StopLimitPrice: {StopLimitPrice}", position.PositionId, realTimeStockPrice, position.StopLimitPrice);
 
-                        if (realTimeStockPrice <= position.StopLimitPrice)
+                        bool exitPositionLong = realTimeStockPrice <= position.StopLimitPrice && position.PositionType == PositionType.Long;
+                        bool exitPositionShort = realTimeStockPrice >= position.StopLimitPrice && position.PositionType == PositionType.Short;
+
+                        if (exitPositionLong || exitPositionShort)
                         {
                             await positionsUpdater.ClosePositionAsync(userPositions.UserId, position.PositionId, realTimeStockPrice, DateTime.Now, position.SharesCount);
+                            logger.LogInformation("Successfully closed position '{position.PositionId}' for user '{userPositions.UserId}'", position.PositionId, userPositions.UserId);
                         }
                     }
-                    // logger.LogInformation("{userPositions.Positions}", position.PositionId);
                 }
-
-                // logger.LogInformation("Successfully updated users achievements");
             }
+            logger.LogInformation("Successfully checked if users should exit a position");
 
             await Task.Delay(
                 TimeSpan.FromMinutes(orderCommandsConfiguration.OrderCommandsCalculationTimeInMinutes),
