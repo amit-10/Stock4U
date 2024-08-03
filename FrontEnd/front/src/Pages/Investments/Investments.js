@@ -23,7 +23,7 @@ import { useDebounce } from 'use-debounce';
 import { TrendingDown, TrendingUp } from '@mui/icons-material';
 import { Switch } from '@mui/material';
 import { authContext } from '../../Context/auth.context';
-import { getStockRiskLevel, getRealTimeStock, getInvestorStatus, enterPosition, closePosition } from '../../Services/Backend.service';
+import { getStockRiskLevel, getRealTimeStock, getInvestorStatus, enterPosition, closePosition, editStopLimit } from '../../Services/Backend.service';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({}));
 
@@ -37,12 +37,12 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-function createData(id, symbol, shares, type, priceOfShare, difference) {
-    return { id, symbol, shares, type, priceOfShare, difference };
+function createData(id, symbol, shares, type, priceOfShare, difference, stopLimitPrice) {
+    return { id, symbol, shares, type, priceOfShare, difference, stopLimitPrice };
 }
 
 
-function NewPositionDialog({open, handleClose, userRiskLevel}) {
+function NewPositionDialog({ open, handleClose, userRiskLevel }) {
     const [symbolText, setSymbolText] = React.useState('');
     const [symbol] = useDebounce(symbolText, 500);
     const [amount, setAmount] = React.useState(0);
@@ -50,6 +50,7 @@ function NewPositionDialog({open, handleClose, userRiskLevel}) {
     const [symbolComment, setSymbolComment] = React.useState('');
     const [type, setType] = React.useState("Long");
     const [limitIsActive, setLimitIsActive] = React.useState(false);
+    const [stopLimitPrice, setstopLimitPrice] = React.useState(-1);
     const [auth] = React.useContext(authContext);
 
     async function checkSymbol() {
@@ -70,7 +71,7 @@ function NewPositionDialog({open, handleClose, userRiskLevel}) {
         }
     }
 
-    React.useEffect(() => {checkSymbol()}, [symbol]);
+    React.useEffect(() => { checkSymbol() }, [symbol]);
 
     function changeSymbol(event) {
         setSymbolValid(false);
@@ -99,26 +100,26 @@ function NewPositionDialog({open, handleClose, userRiskLevel}) {
                     entryPrice: stockCurrentPrice,
                     sharesCount: amount,
                     positionType: type,
-                    entryTime: new Date()
+                    entryTime: new Date(),
+                    stopLimitPrice: limitIsActive === false ? -1 : stopLimitPrice
                 }
             };
 
-            console.log({body})
+            console.log({ body })
             await enterPosition(body);
             close();
         }
-        catch (e)
-        {
+        catch (e) {
             console.log('failed entering position', e);
         }
-        
+
     }
 
     return <Dialog onClose={close} open={open}>
         <DialogTitle>New Position Parameters</DialogTitle>
         <div className='Dialog-Content'>
-            <TextField label="Search Stocks" value={symbolText} onChange={changeSymbol}/>
-            <div style={{height: '20px', color: symbolValid ? '#333333' : '#df3a3a'}}>{symbolComment}</div>
+            <TextField label="Search Stocks" value={symbolText} onChange={changeSymbol} />
+            <div style={{ height: '20px', color: symbolValid ? '#333333' : '#df3a3a' }}>{symbolComment}</div>
             <ToggleButtonGroup
                 value={type}
                 exclusive
@@ -131,34 +132,86 @@ function NewPositionDialog({open, handleClose, userRiskLevel}) {
                     SHORT
                 </ToggleButton>
             </ToggleButtonGroup>
-            <TextField onChange={(_, value) => setAmount(_.target.value)} label="Amount"/>
-            <div style={{display: "flex", justifyContent: "space-between", alignItems: "flex-end", paddingTop: "20px"}}>
-                <Typography style={{fontWeight: "bold", fontSize: "16px"}}>Activate Limit</Typography>
-                <Switch value={limitIsActive} onChange={() => setLimitIsActive(prev => !prev)}/>
+            <TextField onChange={(_, value) => setAmount(_.target.value)} label="Amount" />
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", paddingTop: "20px" }}>
+                <Typography style={{ fontWeight: "bold", fontSize: "16px" }}>Activate Limit</Typography>
+                <Switch value={limitIsActive} onChange={() => setLimitIsActive(prev => !prev)} />
             </div>
-            <Typography>
-                If you want to limit the entry price for the position, select this option
-            </Typography>
-            <TextField label="Limit"/>
-            <div style={{display: "flex", justifyContent: "center", alignItems: "flex-end", paddingTop: "40px"}}>
+            {limitIsActive ?
+                <>
+                    <Typography>
+                        If you want to limit the entry price for the position, select this option
+                    </Typography>
+                    <TextField label="Limit" inputProps={{ type: 'number', min: 0 }} onChange={(_, value) => setstopLimitPrice(_.target.value)} />
+                </>
+                : null}
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "flex-end", paddingTop: "40px" }}>
                 <Button variant='contained' onClick={enterNewPosition}>Confirm</Button>
             </div>
         </div>
     </Dialog>
 }
 
-function ExitPositionDialog({open, handleClose, positionId, symbol}) {
-    const [limitIsActive, setLimitIsActive] = React.useState(false);
+function ConfigurestopLimitPriceDialog({ open, handleClose, positionId }) {
+    const [stopLimit, setStopLimit] = React.useState(-1);
+    const [auth] = React.useContext(authContext);
+
+    function close() {
+        handleClose();
+    }
+
+    async function configureStopLimit() {
+        try {
+            const body = {
+                userId: auth.userId,
+                positionId: positionId,
+                stopLimitPrice: stopLimit
+            };
+            console.log('body', body)
+            await editStopLimit(body);
+            close();
+        } catch (e) {
+            console.log('close position failed', e);
+        }
+    }
+
+    async function resetStopLimit() {
+        try {
+            const body = {
+                userId: auth.userId,
+                positionId: positionId,
+                stopLimitPrice: -1
+            };
+            console.log('body', body)
+            await editStopLimit(body);
+            close();
+        } catch (e) {
+            console.log('close position failed', e);
+        }
+    }
+
+    return <Dialog onClose={close} open={open}>
+        <DialogTitle>Configure Stop Limit</DialogTitle>
+        <div className='Dialog-Content'>
+            <Typography style={{ fontWeight: "bold", fontSize: "16px" }}>Stop Limit Value in USD</Typography>
+            <TextField onChange={(_, value) => setStopLimit(_.target.value)} label="250$" />
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "flex-end", paddingTop: "40px" }}>
+                <Button onClick={resetStopLimit} variant='contained'>Delete current Stop Limit</Button>
+                <Button style={{ marginLeft: '10px' }} onClick={configureStopLimit} variant='contained'>Confirm</Button>
+            </div>
+        </div>
+    </Dialog>
+}
+
+function ExitPositionDialog({ open, handleClose, positionId, symbol }) {
     const [amount, setAmount] = React.useState(0);
     const [auth] = React.useContext(authContext);
 
     function close() {
-
-        setLimitIsActive(false);
         handleClose();
     }
 
-    async function closeOldPosition() { 
+    async function closeOldPosition() {
         try {
             const stockResponse = await getRealTimeStock(symbol);
             const stockCurrentPrice = stockResponse.data.c;
@@ -168,29 +221,21 @@ function ExitPositionDialog({open, handleClose, positionId, symbol}) {
                 positionId: positionId,
                 closePrice: stockCurrentPrice,
                 closeTime: new Date(),
-                sharesCount: amount ?? 0
+                sharesCount: amount ?? 0,
             };
             console.log('body', body)
             await closePosition(body);
             close();
         } catch (e) {
-            console.log('close position failed' , e);
+            console.log('close position failed', e);
         }
     }
 
     return <Dialog onClose={close} open={open}>
         <DialogTitle>Exit Position</DialogTitle>
         <div className='Dialog-Content'>
-            <TextField onChange={(_, value) => setAmount(_.target.value)} label="Amount"/>
-            <div style={{display: "flex", justifyContent: "space-between", alignItems: "flex-end", paddingTop: "20px"}}>
-                <Typography style={{fontWeight: "bold", fontSize: "16px"}}>Activate Limit</Typography>
-                <Switch value={limitIsActive} onChange={() => setLimitIsActive(prev => !prev)}/>
-            </div>
-            <Typography>
-                If you want to limit the exit price for the position, select this option
-            </Typography>
-            <TextField label="Limit"/>
-            <div style={{display: "flex", justifyContent: "center", alignItems: "flex-end", paddingTop: "40px"}}>
+            <TextField onChange={(_, value) => setAmount(_.target.value)} label="Amount" />
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "flex-end", paddingTop: "40px" }}>
                 <Button onClick={closeOldPosition} variant='contained'>Confirm</Button>
             </div>
         </div>
@@ -200,6 +245,7 @@ function ExitPositionDialog({open, handleClose, positionId, symbol}) {
 function Investments() {
     const [newPositionOpen, setNewPositionOpen] = React.useState(false);
     const [exitPositionOpen, setExitPositionOpen] = React.useState(false);
+    const [configurestopLimitPrice, setConfigurestopLimitPrice] = React.useState(false);
     const [refresh, setRefresh] = React.useState(false);
     const [rows, setRows] = React.useState([]);
     const [bank, setBank] = React.useState(0);
@@ -211,8 +257,7 @@ function Investments() {
     const [selectedSymbol, setSelectedSymbol] = React.useState('');
 
     async function getData() {
-        if (!auth || !auth.userId)
-        {
+        if (!auth || !auth.userId) {
             return;
         }
 
@@ -221,12 +266,12 @@ function Investments() {
             const userInvestmentStatus = userInvestmentStatusResponse.data;
             let userPositions = [];
 
-            for (let {positionId, shareSymbol, entryPrice, sharesCount, positionType} of userInvestmentStatus.positions) {
+            for (let { positionId, shareSymbol, entryPrice, sharesCount, positionType, stopLimitPrice } of userInvestmentStatus.positions) {
                 const stockResponse = await getRealTimeStock(shareSymbol);
                 const stockCurrentPrice = stockResponse.data.c;
                 const difference = ((stockCurrentPrice - entryPrice) / entryPrice) * 100;
 
-                userPositions.push(createData(positionId, shareSymbol, sharesCount, positionType, entryPrice, difference.toFixed(2)));
+                userPositions.push(createData(positionId, shareSymbol, sharesCount, positionType, entryPrice, difference.toFixed(2), stopLimitPrice));
             }
 
             setRows(userPositions);
@@ -239,7 +284,7 @@ function Investments() {
         }
     }
 
-    React.useEffect(() => {getData()}, [refresh, auth]);
+    React.useEffect(() => { getData() }, [refresh, auth]);
 
     function closeNewPosition() {
         setNewPositionOpen(false)
@@ -251,6 +296,16 @@ function Investments() {
         setRefresh(prev => !prev);
     }
 
+    function closeConfigureStopLimit() {
+        setConfigurestopLimitPrice(false);
+        setRefresh(prev => !prev);
+    }
+
+    function onConfigureStopLimit(show, rowId) {
+        setConfigurestopLimitPrice(show);
+        setSelectedPositionId(rowId);
+    }
+
     function onClosePosition(positionId, symbol) {
         setExitPositionOpen(true);
         setSelectedPositionId(positionId);
@@ -259,7 +314,7 @@ function Investments() {
 
     return <div className="App">
         <Typography color="#405D72" variant="h4" gutterBottom> Investments </Typography>
-        <div style={{display: 'flex', justifyContent: 'space-evenly', width: '100%'}}>
+        <div style={{ display: 'flex', justifyContent: 'space-evenly', width: '100%' }}>
             <div class="Card">
                 <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -311,11 +366,11 @@ function Investments() {
             </div>
 
         </div>
-        <div style={{padding: '0 20px'}}>
+        <div style={{ padding: '0 20px' }}>
             <div>
                 <Typography color="#405D72" variant="h6" gutterBottom>My Positions</Typography>
             </div>
-            <TableContainer component={Paper} sx={{backgroundColor: '#F7E7DC'}}>
+            <TableContainer component={Paper} sx={{ backgroundColor: '#F7E7DC' }}>
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -325,7 +380,8 @@ function Investments() {
                             <StyledTableCell align="right">Entry Price per Share</StyledTableCell>
                             <StyledTableCell align="right">Type</StyledTableCell>
                             <StyledTableCell align="right">Difference</StyledTableCell>
-                            <StyledTableCell align="right" sx={{color: '#405D72'}}>
+                            <StyledTableCell align="right">Stop Limit Value</StyledTableCell>
+                            <StyledTableCell align="right" sx={{ color: '#405D72' }}>
                                 <Button color='inherit' variant='contained' onClick={() => setNewPositionOpen(true)}>Enter New Position</Button>
                             </StyledTableCell>
                         </TableRow>
@@ -341,13 +397,25 @@ function Investments() {
                                 <StyledTableCell align="right">
                                     <div className='Difference'>
                                         {Math.abs(row.difference)}%
-                                        {row.difference < 0 ? 
-                                            <TrendingDown style={{color: row.type?.toLowerCase() == 'short' ? 'green' : '#df3a3a'}}/> : 
-                                            <TrendingUp style={{color: row.type?.toLowerCase() == 'short' ? '#df3a3a' : 'green'}}/>}
+                                        {row.difference < 0 ?
+                                            <TrendingDown style={{ color: row.type?.toLowerCase() == 'short' ? 'green' : '#df3a3a' }} /> :
+                                            <TrendingUp style={{ color: row.type?.toLowerCase() == 'short' ? '#df3a3a' : 'green' }} />}
                                     </div>
                                 </StyledTableCell>
                                 <StyledTableCell align="right">
-                                    <Button sx={{backgroundColor: '#405D72'}} variant='contained' onClick={() => onClosePosition(row.id, row.symbol)}>Exit Position</Button>
+                                    {row.stopLimitPrice === -1 ?
+                                        <>
+                                            <Button size="small" variant='outlined' onClick={() => onConfigureStopLimit(true, row.id)}>Configure a Stop Limit value</Button>
+                                        </>
+                                        :
+                                        <>
+                                            <div>{row.stopLimitPrice}$</div>
+                                            <Button size="small" variant='outlined' onClick={() => onConfigureStopLimit(true, row.id)}>Reonfigure Stop Limit value</Button>
+                                        </>
+                                    }
+                                </StyledTableCell>
+                                <StyledTableCell align="right">
+                                    <Button sx={{ backgroundColor: '#405D72' }} variant='contained' onClick={() => onClosePosition(row.id, row.symbol)}>Exit Position</Button>
                                 </StyledTableCell>
                             </StyledTableRow>
                         ))}
@@ -355,8 +423,9 @@ function Investments() {
                 </Table>
             </TableContainer>
         </div>
-        <NewPositionDialog open={newPositionOpen} handleClose={closeNewPosition}/>
-        <ExitPositionDialog open={exitPositionOpen} handleClose={closeExitPosition} positionId={selectedPositionId} symbol={selectedSymbol}/>
+        <NewPositionDialog open={newPositionOpen} handleClose={closeNewPosition} />
+        <ExitPositionDialog open={exitPositionOpen} handleClose={closeExitPosition} positionId={selectedPositionId} symbol={selectedSymbol} />
+        <ConfigurestopLimitPriceDialog open={configurestopLimitPrice} handleClose={closeConfigureStopLimit} positionId={selectedPositionId} />
     </div>;
 }
 

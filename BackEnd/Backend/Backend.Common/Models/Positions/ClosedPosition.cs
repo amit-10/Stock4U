@@ -11,4 +11,5 @@ public class ClosedPosition : Position
     
     [BsonRepresentation(BsonType.String)]
     public PositionFeedback PositionFeedback { get; set; }
+
 }

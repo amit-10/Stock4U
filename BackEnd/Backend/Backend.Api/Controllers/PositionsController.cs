@@ -23,7 +23,7 @@ public class PositionsController(IPositionsHandler positionsHandler, ILogger<Pos
             return StatusCode(StatusCodes.Status500InternalServerError, exception.Message);
         }
     }
-    
+
     [HttpGet]
     public async Task<IActionResult> GetTopTenUsersAsync()
     {
@@ -38,7 +38,7 @@ public class PositionsController(IPositionsHandler positionsHandler, ILogger<Pos
             return StatusCode(StatusCodes.Status500InternalServerError, exception.Message);
         }
     }
-    
+
     [HttpGet]
     public async Task<IActionResult> GetUserPositionsHistoryAsync(string userId)
     {
@@ -66,6 +66,21 @@ public class PositionsController(IPositionsHandler positionsHandler, ILogger<Pos
         catch (Exception exception)
         {
             logger.LogError(exception, "Error entering position {@position}", enterPositionRequest);
+            return StatusCode(StatusCodes.Status500InternalServerError, exception.Message);
+        }
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> EditStopLimitAsync(EditStopLimitRequest editStopLimitRequest)
+    {
+        try
+        {
+            await positionsHandler.EditStopLimitAsync(editStopLimitRequest);
+            return StatusCode(StatusCodes.Status200OK);
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Error editing stop limit {@position}", editStopLimitRequest);
             return StatusCode(StatusCodes.Status500InternalServerError, exception.Message);
         }
     }
