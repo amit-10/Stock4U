@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Investments from './Pages/Investments/Investments';
 import Leaderboard from './Pages/Leaderboard/Leaderboard';
 import Statistics from './Pages/Statistics/Statistics';
+import Home from './Pages/Home/Home';
 import AuthProvider from './Context/auth.context';
 import { styled } from '@mui/material';
 
@@ -24,7 +25,7 @@ function App() {
               </div>
               <div>
                 <Routes>
-                  <Route path="" element={<></>} />
+                  <Route path="" element={<Home />} />
                   <Route path="statistics" element={<Statistics />} />
                   <Route path="investments" element={<Investments />} />
                   <Route path="leaderboard" element={<Leaderboard />} />
