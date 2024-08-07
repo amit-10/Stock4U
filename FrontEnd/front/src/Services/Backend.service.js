@@ -26,6 +26,8 @@ export const enterPosition = async (enterPositionData) => await axios.post(`${ba
 
 export const closePosition = async (closePositionData) => await axios.post(`${backendUrl}${positionsPath}/ClosePosition`, closePositionData);
 
+export const editStopLimit = async (stopLimitData) => await axios.put(`${backendUrl}${positionsPath}/EditStopLimit`, stopLimitData);
+
 // Investing Advisor
 
 export const getStockRiskLevel = async (symbol) => await axios.get(`${backendUrl}${investingAdvisorPath}/GetStockRiskLevel?symbol=${symbol}`);

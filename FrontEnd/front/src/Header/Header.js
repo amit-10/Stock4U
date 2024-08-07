@@ -67,159 +67,161 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 
 function Header() {
-    const [open, setOpen] = useState(false);
-    const [openSignUp, setOpenSignUp] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [openSignUp, setOpenSignUp] = useState(false);
 
-    const [auth,setAuth] = useContext(authContext);
+  const [auth, setAuth] = useContext(authContext);
 
-    const [anchorEl, setAnchorEl] = useState(null);
-    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
-  
-    const isMenuOpen = Boolean(anchorEl);
-    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-  
-    const handleProfileMenuOpen = (event) => {
-      setAnchorEl(event.currentTarget);
-    };
-  
-    const handleMobileMenuClose = () => {
-      setMobileMoreAnchorEl(null);
-    };
-  
-    const handleMenuClose = () => {
-      setAnchorEl(null);
-      handleMobileMenuClose();
-    };
-  
-    const handleMobileMenuOpen = (event) => {
-      setMobileMoreAnchorEl(event.currentTarget);
-    };
-  
-    const menuId = 'primary-search-account-menu';
-    const renderMenu = (
-      <Menu
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        id={menuId}
-        keepMounted
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        open={isMenuOpen}
-        onClose={handleMenuClose}
-      >
-        <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-        <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-      </Menu>
-    );
-  
-    const mobileMenuId = 'primary-search-account-menu-mobile';
-    const renderMobileMenu = (
-      <Menu
-        anchorEl={mobileMoreAnchorEl}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        id={mobileMenuId}
-        keepMounted
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        open={isMobileMenuOpen}
-        onClose={handleMobileMenuClose}
-      >
-        <MenuItem>
-          <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-            <Badge badgeContent={4} color="error">
-              <MailIcon />
-            </Badge>
-          </IconButton>
-          <p>Messages</p>
-        </MenuItem>
-        <MenuItem>
-          <IconButton
-            size="large"
-            aria-label="show 17 new notifications"
-            color="inherit"
-          >
-            <Badge badgeContent={17} color="error">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-          <p>Notifications</p>
-        </MenuItem>
-        <MenuItem onClick={handleProfileMenuOpen}>
-          <IconButton
-            size="large"
-            aria-label="account of current user"
-            aria-controls="primary-search-account-menu"
-            aria-haspopup="true"
-            color="inherit"
-          >
-            <AccountCircle />
-          </IconButton>
-          <p>Profile</p>
-        </MenuItem>
-      </Menu>
-    );
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
 
-    const handleClickOpen = () => {
-      setOpen(true);
-    };
-  
-    const handleClose = () => {
-      setOpen(false);
-      setOpenSignUp(false);
-    };
+  const isMenuOpen = Boolean(anchorEl);
+  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-    const handleSignUp = () => {
-      setOpen(false);
-      setOpenSignUp(true);
-    };
+  const handleProfileMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-    const signOut = () => {
-      setAuth({});
+  const handleMobileMenuClose = () => {
+    setMobileMoreAnchorEl(null);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    handleMobileMenuClose();
+  };
+
+  const handleMobileMenuOpen = (event) => {
+    setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const menuId = 'primary-search-account-menu';
+  const renderMenu = (
+    <Menu
+      anchorEl={anchorEl}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      id={menuId}
+      keepMounted
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      open={isMenuOpen}
+      onClose={handleMenuClose}
+    >
+      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+    </Menu>
+  );
+
+  const mobileMenuId = 'primary-search-account-menu-mobile';
+  const renderMobileMenu = (
+    <Menu
+      anchorEl={mobileMoreAnchorEl}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      id={mobileMenuId}
+      keepMounted
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      open={isMobileMenuOpen}
+      onClose={handleMobileMenuClose}
+    >
+      <MenuItem>
+        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+          <Badge badgeContent={4} color="error">
+            <MailIcon />
+          </Badge>
+        </IconButton>
+        <p>Messages</p>
+      </MenuItem>
+      <MenuItem>
+        <IconButton
+          size="large"
+          aria-label="show 17 new notifications"
+          color="inherit"
+        >
+          <Badge badgeContent={17} color="error">
+            <NotificationsIcon />
+          </Badge>
+        </IconButton>
+        <p>Notifications</p>
+      </MenuItem>
+      <MenuItem onClick={handleProfileMenuOpen}>
+        <IconButton
+          size="large"
+          aria-label="account of current user"
+          aria-controls="primary-search-account-menu"
+          aria-haspopup="true"
+          color="inherit"
+        >
+          <AccountCircle />
+        </IconButton>
+        <p>Profile</p>
+      </MenuItem>
+    </Menu>
+  );
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setOpenSignUp(false);
+  };
+
+  const handleSignUp = () => {
+    setOpen(false);
+    setOpenSignUp(true);
+  };
+
+  const signOut = () => {
+    localStorage.removeItem("Stock4UCredentials");
+    window.location.reload();
+    setAuth({});
+  }
+
+  const logIn = async (userId, password) => {
+    try {
+      await login(userId, password);
+      const credentials = { userId, password };
+      localStorage.setItem("Stock4UCredentials", JSON.stringify(credentials));
+      setAuth({ userId, password });
     }
-
-    const logIn = async (userId, password) => {
-      try {
-        await login(userId, password);
-        setAuth({userId,password});
-      }
-      catch (e)
-      {
-        console.log('login failed', e);
-      }
+    catch (e) {
+      console.log('login failed', e);
     }
+  }
 
-    const signUp = async (userId, firstName, lastName, riskLevel, email, password) => {
-      try {
-        await register({ userId, email, password, firstName, lastName, riskLevel });
-        setAuth({ userId, email, password, firstName, lastName, riskLevel });
-      }
-      catch (e)
-      {
-        console.log('Sign up failed', e);
-      }
+  const signUp = async (userId, firstName, lastName, riskLevel, email, password) => {
+    try {
+      await register({ userId, email, password, firstName, lastName, riskLevel });
+      setAuth({ userId, email, password, firstName, lastName, riskLevel });
     }
+    catch (e) {
+      console.log('Sign up failed', e);
+    }
+  }
 
   return (
     <div>
       <header className="Header-Styles">
         <Box sx={{ flexGrow: 1 }}>
-          <AppBar position="static" enableColorOnDark color="transparent" sx={{boxShadow: 'none'}}>
+          <AppBar position="static" enableColorOnDark color="transparent" sx={{ boxShadow: 'none' }}>
             <Toolbar>
-              <Typography variant="h6" noWrap component="div" sx={{ display: { xs: 'none', sm: 'block' } }} > Stock4U 
-                   {(auth && auth.userId) ? `      Hello ${auth.userId}!`: ''}
-                   {(auth && auth.userId) ? <Button onClick={signOut}> Sign Out </Button>: ''}
+              <Typography variant="h6" noWrap component="div" sx={{ display: { xs: 'none', sm: 'block' } }} > Stock4U
+                {(auth && auth.userId) ? `      Hello ${auth.userId}!` : ''}
+                {(auth && auth.userId) ? <Button onClick={signOut}> Sign Out </Button> : ''}
 
-               </Typography>
+              </Typography>
 
               <Box sx={{ flexGrow: 1 }} />
               <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
@@ -256,138 +258,138 @@ function Header() {
 
       <div class="Dialog">
         <Dialog
-            open={open}
-            onClose={handleClose}
-            PaperProps={{
+          open={open}
+          onClose={handleClose}
+          PaperProps={{
             component: 'form',
             onSubmit: (event) => {
-                event.preventDefault();
-                const formData = new FormData(event.currentTarget);
-                const formJson = Object.fromEntries((formData).entries());
-                logIn(formJson.userId, formJson.password);
-                handleClose();
+              event.preventDefault();
+              const formData = new FormData(event.currentTarget);
+              const formJson = Object.fromEntries((formData).entries());
+              logIn(formJson.userId, formJson.password);
+              handleClose();
             },
-            }}
+          }}
         >
-            <DialogTitle>Sign In</DialogTitle>
-            <DialogContent>
+          <DialogTitle>Sign In</DialogTitle>
+          <DialogContent>
             <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="name"
-                name="userId"
-                label="User ID"
-                type="text"
-                fullWidth
-                variant="standard"
+              autoFocus
+              required
+              margin="dense"
+              id="name"
+              name="userId"
+              label="User ID"
+              type="text"
+              fullWidth
+              variant="standard"
             />
             <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="name"
-                name="password"
-                label="Password"
-                type="password"
-                fullWidth
-                variant="standard"
+              autoFocus
+              required
+              margin="dense"
+              id="name"
+              name="password"
+              label="Password"
+              type="password"
+              fullWidth
+              variant="standard"
             />
-            </DialogContent>
-            <DialogActions>
+          </DialogContent>
+          <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
             <Button type="submit">Sign In</Button>
             <Button onClick={handleSignUp}>Sign Up</Button>
-            </DialogActions>
+          </DialogActions>
         </Dialog>
 
         <Dialog
-            open={openSignUp}
-            onClose={handleClose}
-            PaperProps={{
+          open={openSignUp}
+          onClose={handleClose}
+          PaperProps={{
             component: 'form',
             onSubmit: (event) => {
-                event.preventDefault();
-                const formData = new FormData(event.currentTarget);
-                const formJson = Object.fromEntries((formData).entries());
-                signUp(formJson.userId, formJson.firstName, formJson.lastName, formJson.riskLevel, formJson.email, formJson.password);
-                handleClose();
+              event.preventDefault();
+              const formData = new FormData(event.currentTarget);
+              const formJson = Object.fromEntries((formData).entries());
+              signUp(formJson.userId, formJson.firstName, formJson.lastName, formJson.riskLevel, formJson.email, formJson.password);
+              handleClose();
             },
-            }}
-          >
-            <DialogTitle>Sign Up</DialogTitle>
-            <DialogContent>
+          }}
+        >
+          <DialogTitle>Sign Up</DialogTitle>
+          <DialogContent>
             <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="userId"
-                name="userId"
-                label="User ID"
-                type="text"
-                fullWidth
-                variant="standard"
-            />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="firstName"
-                name="firstName"
-                label="First Name"
-                type="text"
-                fullWidth
-                variant="standard"
+              autoFocus
+              required
+              margin="dense"
+              id="userId"
+              name="userId"
+              label="User ID"
+              type="text"
+              fullWidth
+              variant="standard"
             />
             <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="lastName"
-                name="lastName"
-                label="Last Name"
-                type="text"
-                fullWidth
-                variant="standard"
-            />     
-            <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="riskLevel"
-                name="riskLevel"
-                label="Risk Level"
-                type="text"
-                fullWidth
-                variant="standard"
-            />              
-            <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="name"
-                name="email"
-                label="Email Address"
-                type="email"
-                fullWidth
-                variant="standard"
+              autoFocus
+              required
+              margin="dense"
+              id="firstName"
+              name="firstName"
+              label="First Name"
+              type="text"
+              fullWidth
+              variant="standard"
             />
             <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="name"
-                name="password"
-                label="Password"
-                type="password"
-                fullWidth
-                variant="standard"
+              autoFocus
+              required
+              margin="dense"
+              id="lastName"
+              name="lastName"
+              label="Last Name"
+              type="text"
+              fullWidth
+              variant="standard"
             />
-            </DialogContent>
-            <DialogActions>
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              id="riskLevel"
+              name="riskLevel"
+              label="Risk Level"
+              type="text"
+              fullWidth
+              variant="standard"
+            />
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              id="name"
+              name="email"
+              label="Email Address"
+              type="email"
+              fullWidth
+              variant="standard"
+            />
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              id="name"
+              name="password"
+              label="Password"
+              type="password"
+              fullWidth
+              variant="standard"
+            />
+          </DialogContent>
+          <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
             <Button type="submit">Sign Up</Button>
-            </DialogActions>
+          </DialogActions>
         </Dialog>
       </div>
     </div>

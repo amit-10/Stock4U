@@ -5,6 +5,7 @@ using Backend.Bl.Lib.Achievements;
 using Backend.Common.Interfaces.Achievements;
 using Backend.Common.Interfaces.InvestingAdvisor;
 using Backend.Common.Interfaces.Positions;
+using Backend.Bl.Lib.OrderCommands;
 using Backend.Common.Interfaces.Stocks;
 using Backend.Common.Interfaces.Users;
 using Backend.Dal.Configuration;
@@ -38,7 +39,8 @@ public static class DependencyInjectionExtensions
             .AddSingleton<IUsersUpdater, UsersUpdater>()
             .AddSingleton<IUsersRetriever, UsersRetriever>()
             .AddHostedService<UserToAchievementService>()
-            .AddHostedService<ClassifyPositionsService>();
+            .AddHostedService<ClassifyPositionsService>()
+            .AddHostedService<OrderCommandsService>();
 
         return serviceCollection;
     }
@@ -59,7 +61,8 @@ public static class DependencyInjectionExtensions
             .AddConfiguration<RealTimeStocksApiConfiguration>(configuration, "RealTimeStocksApi")
             .AddConfiguration<HistoryStocksApiConfiguration>(configuration, "HistoryStocksApi")
             .AddConfiguration<PositionsFeedbackConfiguration>(configuration, "PositionsFeedback")
-            .AddConfiguration<UserToAchievementConfiguration>(configuration, "UserToAchievement");
+            .AddConfiguration<UserToAchievementConfiguration>(configuration, "UserToAchievement")
+            .AddConfiguration<OrderCommandsConfiguration>(configuration, "OrderCommands");
         
         return serviceCollection;
     }

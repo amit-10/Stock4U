@@ -47,6 +47,11 @@ public class PositionsHandler(
         await positionsUpdater.EnterPositionAsync(enterPositionRequest.UserId, enterPositionRequest.Position);
     }
 
+    public async Task EditStopLimitAsync(EditStopLimitRequest editStopLimitRequest)
+    {
+        await positionsUpdater.EditStopLimitAsync(editStopLimitRequest.UserId, editStopLimitRequest.PositionId, editStopLimitRequest.StopLimitPrice);
+    }
+
     public async Task ClosePositionAsync(ClosePositionRequest closePositionRequest)
     {
         await positionsUpdater.ClosePositionAsync(closePositionRequest.UserId, closePositionRequest.PositionId,

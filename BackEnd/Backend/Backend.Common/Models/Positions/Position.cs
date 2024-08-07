@@ -19,4 +19,6 @@ public class Position
     public PositionType PositionType { get; set; }
     
     public DateTime EntryTime { get; set; }
+
+    public decimal StopLimitPrice { get; set; }
 }
