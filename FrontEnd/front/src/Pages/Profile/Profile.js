@@ -88,7 +88,7 @@ function Profile() {
         <div className="App">
             <Typography color="#405D72" variant="h4" gutterBottom> Profile \ {auth.userId} </Typography>
             <div style={{display: 'flex', justifyContent: 'space-evenly', width: '100%'}}>
-                <div class="Card">
+                <div className="Card">
                     <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ flex: '1 0 auto' }}>
@@ -105,7 +105,7 @@ function Profile() {
                     </Card>
                 </div>
 
-                <div class="Card">
+                <div className="Card">
                     <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ flex: '1 0 auto' }}>
@@ -122,7 +122,7 @@ function Profile() {
                     </Card>
                 </div>
               
-                <div class="Card">
+                <div className="Card">
                     <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', minWidth: '250px',  justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ flex: '1 0 auto' }}>

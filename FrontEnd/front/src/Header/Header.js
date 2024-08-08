@@ -256,7 +256,7 @@ function Header() {
         </Box>
       </header>
 
-      <div class="Dialog">
+      <div className="Dialog">
         <Dialog
           open={open}
           onClose={handleClose}

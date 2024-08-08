@@ -4,6 +4,7 @@ import { useState, useEffect, useContext } from 'react';
 import { authContext } from '../Context/auth.context';
 import { getUserAchievements } from '../Services/Backend.service';
 import { styled } from '@mui/material';
+import { Stars } from '@mui/icons-material';
 
 function SidePanel() {
 
@@ -33,51 +34,7 @@ function SidePanel() {
 
   return (
     <Container>
-      <div>
-        <UsefullInfo>
-            <Typography variant="h6" gutterBottom> Usefull Info </Typography>
-
-            <Item>
-              <Avatar sx={{ width: 30, height: 30, marginRight: '10px' }}/>
-              <div>
-                <Typography variant="h8" gutterBottom> A share jumped in 5% </Typography>
-                <UpdateDate>
-                  <Typography sx={{ width: 10, height: 10, marginRight: '10px' }}  variant="h10" gutterBottom> 5 minutes ago </Typography>
-                </UpdateDate>
-              </div>
-            </Item>
-
-            <Item>
-              <Avatar sx={{ width: 30, height: 30, marginRight: '10px' }}/>
-              <div>
-                <Typography variant="h8" gutterBottom>A share jumped in 2.5% </Typography>
-                <UpdateDate>
-                  <Typography sx={{ width: 10, height: 10, marginRight: '10px' }}  variant="h10" gutterBottom> 16 minutes ago </Typography>
-                </UpdateDate>
-              </div>
-            </Item>
-
-            <Item>
-              <Avatar sx={{ width: 30, height: 30, marginRight: '10px' }}/>
-              <div>
-                <Typography variant="h8" gutterBottom>Jeff Bezos said "..." </Typography>
-                <UpdateDate>
-                  <Typography sx={{ width: 10, height: 10, marginRight: '10px' }}  variant="h10" gutterBottom> 8 hours ago </Typography>
-                </UpdateDate>
-              </div>
-            </Item>
-
-            <Item>
-              <Avatar sx={{ width: 30, height: 30, marginRight: '10px' }}/>
-              <div>
-                <Typography variant="h8" gutterBottom>You've completed </Typography>
-                <UpdateDate>
-                  <Typography sx={{ width: 10, height: 10, marginRight: '10px' }}  variant="h10" gutterBottom> 12 hours ago</Typography>
-                </UpdateDate>
-              </div>
-            </Item>
-        </UsefullInfo>
-
+      <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', height: '100vh'}}>
         <div style={{paddingTop: '30px'}}>
             <Typography variant="h6" gutterBottom> Leaderboard </Typography>
 
@@ -128,7 +85,7 @@ function SidePanel() {
             <Typography variant="h6" gutterBottom> Achievements </Typography>
 
             {achievements.map((achivement, index) =>  <Item key={index}>
-              <Avatar sx={{ width: 30, height: 30, marginRight: '10px' }}/>
+              <Stars sx={{ width: 35, height: 35, marginRight: '10px', color: '#bdbdbd' }}/>
               <div>
                 <Typography variant="h8" gutterBottom> {achivement.achievementType} </Typography>
                 <UpdateDate>
@@ -146,13 +103,6 @@ const Container = styled('div')`
   text-align: center;
   border-left: solid 2px #F7E7DC;
   height: 100%;
-`
-
-const UsefullInfo = styled('div')`
-  padding-top: 30px;
-  flex-direction: column;
-  display: flex;
-  font-size: 15px;
 `
 
 const Item = styled('div')`

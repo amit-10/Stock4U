@@ -51,29 +51,29 @@ function Statistics() {
             const newLineDate = [];
     
             Object.keys(historyPrice).forEach(key => {
-                console.log(key);
                 newLineDate.push({
                     date: key,
                     shareProfit: historyPrice[key].closePrice
                 })
             });
+
     
             const newOptions = {
                 title: {
-                  text: `Share ${shareSymbol} Over Time`,
+                    text: `Share ${shareSymbol} Over Time`,
                 },
                 data: newLineDate,
                 series: [
-                  {
-                    type: "line",
-                    xKey: "date",
-                    yKey: "shareProfit",
-                    yName: "profit"
-                  }
+                    {
+                        type: "line",
+                        xKey: "date",
+                        yKey: "shareProfit",
+                        yName: "profit"
+                    }
                 ],
-              }
+            }
     
-              setOptions(newOptions);
+            setOptions(newOptions);
         } catch (e) {
             console.log('failed getting history', e);
         }
@@ -171,7 +171,7 @@ function Statistics() {
         <div className="App">
             <Typography color="#405D72" variant="h4" gutterBottom> Statistics </Typography>
             <div style={{display: 'flex', justifyContent: 'space-evenly', width: '100%'}}>
-                <div class="Card">
+                <div className="Card">
                     <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ flex: '1 0 auto' }}>
@@ -188,7 +188,7 @@ function Statistics() {
                     </Card>
                 </div>
 
-                <div class="Card">
+                <div className="Card">
                     <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ flex: '1 0 auto' }}>
@@ -205,7 +205,7 @@ function Statistics() {
                     </Card>
                 </div>
               
-                <div class="Card">
+                <div className="Card">
                     <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', minWidth: '250px',  justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ flex: '1 0 auto' }}>
@@ -224,16 +224,16 @@ function Statistics() {
 
             </div>
 
-            <div class="charts-sections1">
-                {positions.map(position => <Button onClick={() => handleOnButtonClick(position.shareSymbol)}>{position.shareSymbol}</Button>)}
+            <div className="charts-sections1">
+                {positions.map(position => <Button key={position.positionId} onClick={async () => await handleOnButtonClick(position.shareSymbol)}>{position.shareSymbol}</Button>)}
                 <AgChartsReact options={options} />
             </div>
-            <div class="graphs">
-                <div class="charts-sections2">
+            <div className="graphs">
+                <div className="charts-sections2">
                     <AgChartsReact options={chartOptions} />
                 </div>
-                <div class="charts-sections3">
-                        <AgChartsReact options={donutOptions} />
+                <div className="charts-sections3">
+                    <AgChartsReact options={donutOptions}/>
                 </div>
             </div>
         </div>

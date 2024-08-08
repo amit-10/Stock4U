@@ -75,7 +75,7 @@ function Leaderboard() {
         <div className="App">
             <Typography color="#405D72" variant="h4" gutterBottom> Leaderboard </Typography>
             <div style={{display: 'flex', justifyContent: 'space-evenly', width: '100%'}}>
-                <div class="Card">
+                <div className="Card">
                     <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ flex: '1 0 auto' }}>
@@ -92,7 +92,7 @@ function Leaderboard() {
                     </Card>
                 </div>
 
-                <div class="Card">
+                <div className="Card">
                     <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ flex: '1 0 auto' }}>
@@ -109,7 +109,7 @@ function Leaderboard() {
                     </Card>
                 </div>
               
-                <div class="Card">
+                <div className="Card">
                     <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', minWidth: '250px',  justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ flex: '1 0 auto' }}>
@@ -127,7 +127,7 @@ function Leaderboard() {
                 </div>
 
             </div>
-            <div class="LeaderBoard">
+            <div className="LeaderBoard">
                 <TableContainer component={Paper} sx={{marginTop: '20px'}}>
                     <Table sx={{backgroundColor: '#F7E7DC'}}>
                         <TableHead>
