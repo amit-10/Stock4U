@@ -6,9 +6,9 @@ public class StockClassificationData
     
     public decimal Roe { get; set; }
 
-    public decimal PeRatio { get; set; }
+    public decimal? PeRatio { get; set; }
 
     public decimal PbRatio { get; set; }
     
-    public decimal DividendYield { get; set; }
+    public decimal? DividendYield { get; set; }
 }

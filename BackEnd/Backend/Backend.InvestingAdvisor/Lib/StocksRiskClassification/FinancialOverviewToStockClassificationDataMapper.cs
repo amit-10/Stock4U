@@ -12,9 +12,9 @@ public static class FinancialOverviewToStockClassificationDataMapper
         config.ForType<FinancialOverview, StockClassificationData>()
             .Map(dest => dest.Beta, src => src.Beta)
             .Map(dest => dest.Roe, src => src.ReturnOnEquityTTM)
-            .Map(dest => dest.PeRatio, src => src.PERatio)
+            .Map(dest => dest.PeRatio, src => src.PERatio == "None" ? null : src.PERatio)
             .Map(dest => dest.PbRatio, src => src.PriceToBookRatio)
-            .Map(dest => dest.DividendYield, src => src.DividendYield);
+            .Map(dest => dest.DividendYield, src => src.DividendYield == "None" ? null : src.DividendYield);
 
         return config;
     }

@@ -9,6 +9,7 @@ namespace Backend.Api.Controllers;
 public class InvestingAdvisorController(
     IRecommendedStocksRetriver recommendedStocksRetriver,
     IInvestingAdvisorHandler investingAdvisorHandler,
+    
     ILogger<InvestingAdvisorController> logger) : ControllerBase
 {
     [HttpGet]
@@ -22,6 +23,21 @@ public class InvestingAdvisorController(
         catch (Exception exception)
         {
             logger.LogError(exception, "Error classifying stock {symbol}", symbol);
+            return StatusCode(StatusCodes.Status500InternalServerError, exception.Message);
+        }
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetClassificationPrecisionAsync()
+    {
+        try
+        {
+            var riskLevelComparisonPercentage = await investingAdvisorHandler.GetRiskLevelClassificationPrecisionAsync();
+            return StatusCode(StatusCodes.Status200OK, riskLevelComparisonPercentage);
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Error getting risk level classification precision");
             return StatusCode(StatusCodes.Status500InternalServerError, exception.Message);
         }
     }

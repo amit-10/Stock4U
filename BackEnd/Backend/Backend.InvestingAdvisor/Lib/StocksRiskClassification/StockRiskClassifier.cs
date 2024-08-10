@@ -1,13 +1,17 @@
 using Backend.Common.Interfaces.InvestingAdvisor;
 using Backend.Common.Interfaces.Stocks;
 using Backend.Common.Models.InvestingAdvisor;
+using Backend.InvestingAdvisor.Interfaces;
 using Backend.InvestingAdvisor.Lib.Utils;
 using Backend.InvestingAdvisor.Models;
 using Mapster;
 
 namespace Backend.InvestingAdvisor.Lib.StocksRiskClassification;
 
-public class StockRiskClassifier(IStockPriceRetriever stockPriceRetriever) : IStockRiskClassifier
+public class StockRiskClassifier(
+    IStockPriceRetriever stockPriceRetriever,
+    IRiskGradesStockRiskClassifier riskGradesStockRiskClassifier,
+    IRiskLevelUpdater riskLevelUpdater) : IStockRiskClassifier
 {
     public async Task<RiskLevel> GetStockRiskLevelAsync(string symbol, int daysBack)
     {
@@ -31,17 +35,20 @@ public class StockRiskClassifier(IStockPriceRetriever stockPriceRetriever) : ISt
             riskLevel = ClassifyStock(volatility, averageReturn, maxDrawdown, stockClassificationData);
         }
 
+        var riskGradesRiskLevel = await riskGradesStockRiskClassifier.GetStockRiskGradesRiskLevelAsync(symbol);
+        await riskLevelUpdater.InsertRiskLevelComparisonAsync(symbol, riskLevel, riskGradesRiskLevel);
+
         return riskLevel;
     }
 
     private static RiskLevel ClassifyEtf(decimal volatility, decimal averageReturn, decimal maxDrawdown)
     {
-        if (volatility > 0.3m || maxDrawdown > 0.4m)
+        if (volatility > 1 || maxDrawdown > 0.5m)
         {
             return RiskLevel.High;
         }
 
-        if (volatility > 0.2m || maxDrawdown > 0.3m || averageReturn < 0.05m)
+        if (volatility > 0.7m || maxDrawdown > 0.4m || averageReturn < 0.1m)
         {
             return RiskLevel.Medium;
         }
@@ -52,16 +59,16 @@ public class StockRiskClassifier(IStockPriceRetriever stockPriceRetriever) : ISt
     private static RiskLevel ClassifyStock(decimal volatility, decimal averageReturn, decimal maxDrawdown,
         StockClassificationData stockClassificationData)
     {
-        if (volatility > 0.3m || maxDrawdown > 0.4m || stockClassificationData.Beta > 1.5m ||
-            stockClassificationData.Roe < 10 || stockClassificationData.PeRatio > 25 ||
-            stockClassificationData.PbRatio > 3 || stockClassificationData.DividendYield < 1 || averageReturn < 0.05m)
+        if (volatility > 1 || maxDrawdown > 0.5m || stockClassificationData.Beta > 2.5m ||
+            stockClassificationData.Roe < 0 || stockClassificationData.PeRatio > 60 ||
+            stockClassificationData.PbRatio > 60 || averageReturn < 0.05m)
         {
             return RiskLevel.High;
         }
 
-        if (volatility > 0.2m || maxDrawdown > 0.3m || stockClassificationData.Beta > 1.0m ||
-            stockClassificationData.Roe < 15 || stockClassificationData.PeRatio > 20 ||
-            stockClassificationData.PbRatio > 2 || stockClassificationData.DividendYield < 2 || averageReturn < 0.10m)
+        if (volatility > 0.7m || maxDrawdown > 0.4m || stockClassificationData.Beta > 1.5m ||
+            stockClassificationData.Roe < 0.1m || stockClassificationData.PeRatio > 50 ||
+            stockClassificationData.PbRatio > 50 || averageReturn < 0.10m)
         {
             return RiskLevel.Medium;
         }

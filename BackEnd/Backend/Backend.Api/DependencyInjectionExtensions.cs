@@ -13,6 +13,7 @@ using Backend.Dal.Configuration;
 using Backend.Dal.Interfaces;
 using Backend.Dal.Lib;
 using Backend.InvestingAdvisor.Configuration;
+using Backend.InvestingAdvisor.Interfaces;
 using Backend.InvestingAdvisor.Lib.PositionsFeedback;
 using Backend.InvestingAdvisor.Lib.StocksRiskClassification;
 
@@ -33,6 +34,9 @@ public static class DependencyInjectionExtensions
             .AddSingleton<IStockPriceRetriever, StocksPriceRetriever>()
             .AddSingleton<IInvestingAdvisorHandler, InvestingAdvisorHandler>()
             .AddSingleton<IStockRiskClassifier, StockRiskClassifier>()
+            .AddSingleton<IRiskGradesStockRiskClassifier, RiskGradesStockRiskClassifier>()
+            .AddSingleton<IRiskLevelUpdater, RiskLevelUpdater>()
+            .AddSingleton<IRiskLevelRetriever, RiskLevelRetriever>()
             .AddSingleton<IPositionFeedbackClassifier, PositionFeedbackClassifier>()
             .AddSingleton<IAchievementsHandler, AchievementsHandler>()
             .AddSingleton<IAchievementsRetriever, AchievementsRetriever>()
