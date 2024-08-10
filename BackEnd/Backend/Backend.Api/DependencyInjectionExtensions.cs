@@ -6,6 +6,7 @@ using Backend.Common.Interfaces.Achievements;
 using Backend.Common.Interfaces.InvestingAdvisor;
 using Backend.Common.Interfaces.Positions;
 using Backend.Bl.Lib.OrderCommands;
+using Backend.Bl.Lib.RecommendedStocks;
 using Backend.Common.Interfaces.Stocks;
 using Backend.Common.Interfaces.Users;
 using Backend.Dal.Configuration;
@@ -26,6 +27,8 @@ public static class DependencyInjectionExtensions
             .AddSingleton<IPositionsRetriever, PositionsRetriever>()
             .AddSingleton<IPositionsUpdater, PositionsUpdater>()
             .AddSingleton<IMongoHandler, MongoHandler>()
+            .AddSingleton<IRecommendedStocksRetriver, ReccommendedStocksRetriever>()
+            .AddSingleton<IRecommendedStocksUpdater, RecommendedStocksUpdater>()
             .AddSingleton<IStocksHandler, StocksHandler>()
             .AddSingleton<IStockPriceRetriever, StocksPriceRetriever>()
             .AddSingleton<IInvestingAdvisorHandler, InvestingAdvisorHandler>()
@@ -39,6 +42,7 @@ public static class DependencyInjectionExtensions
             .AddSingleton<IUsersUpdater, UsersUpdater>()
             .AddSingleton<IUsersRetriever, UsersRetriever>()
             .AddHostedService<UserToAchievementService>()
+            .AddHostedService<RecommendedStocksService>()
             .AddHostedService<ClassifyPositionsService>()
             .AddHostedService<OrderCommandsService>();
 
