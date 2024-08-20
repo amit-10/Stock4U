@@ -33,4 +33,20 @@ public class ReccommendedStocksRetriever(
 
         return recommendedStocks;
     }
+
+    public async Task<List<RecommendedStocks>> GetRecommendedStocksByRiskAsync(RiskLevel riskLevel)
+    {
+        List<RecommendedStocks> recommendedStocks;
+        try
+        {
+            recommendedStocks = await Recommended_Stocks.AsQueryable().Where(recommendedStock=> recommendedStock.RiskLevel.Equals(riskLevel)).ToListAsync();
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Error getting Recommended Stocks");
+            throw;
+        }
+
+        return recommendedStocks;
+    }
 }

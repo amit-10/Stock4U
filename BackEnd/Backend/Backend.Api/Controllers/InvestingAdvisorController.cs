@@ -1,4 +1,5 @@
 using Backend.Common.Interfaces.InvestingAdvisor;
+using Backend.Common.Models.InvestingAdvisor;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Api.Controllers;
@@ -6,6 +7,7 @@ namespace Backend.Api.Controllers;
 [ApiController]
 [Route("[controller]/[action]")]
 public class InvestingAdvisorController(
+    IRecommendedStocksRetriver recommendedStocksRetriver,
     IInvestingAdvisorHandler investingAdvisorHandler,
     ILogger<InvestingAdvisorController> logger) : ControllerBase
 {
@@ -23,4 +25,21 @@ public class InvestingAdvisorController(
             return StatusCode(StatusCodes.Status500InternalServerError, exception.Message);
         }
     }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetRecommendedStocksByRiskAsync(RiskLevel riskLevel)
+    {
+        try
+        {
+            var recommendedStocks = await recommendedStocksRetriver.GetRecommendedStocksByRiskAsync(riskLevel
+            );
+            return StatusCode(StatusCodes.Status200OK, recommendedStocks);
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Error by getting stocks rick level ");
+            return StatusCode(StatusCodes.Status500InternalServerError, exception.Message);
+        }
+    }
 }
+
