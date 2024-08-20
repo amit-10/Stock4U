@@ -19,6 +19,16 @@ builder.Services
     .AddConfiguration(builder.Configuration)
     .AddMapping();
 
+var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+if (environment == "Production")
+{
+    Console.WriteLine("Running on production");
+}
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Listen(System.Net.IPAddress.Any, 5267);
+});
+
 var app = builder.Build();
 
 app.UseCors("CorsPolicy");
