@@ -18,11 +18,12 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
+import { List, ListItem, ListItemButton, ListItemText } from '@mui/material';
 import { useDebounce } from 'use-debounce';
 import { TrendingDown, TrendingUp } from '@mui/icons-material';
 import { Switch } from '@mui/material';
 import { authContext } from '../../Context/auth.context';
-import { getStockRiskLevel, getRealTimeStock, getInvestorStatus, enterPosition, closePosition, editStopLimit } from '../../Services/Backend.service';
+import { getStockRiskLevel, getRealTimeStock, getInvestorStatus, enterPosition, closePosition, editStopLimit, getUserRiskLevel, getRecommendedStocks } from '../../Services/Backend.service';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({}));
 
@@ -51,7 +52,16 @@ function NewPositionDialog({ open, handleClose, userRiskLevel }) {
     const [type, setType] = React.useState("Long");
     const [limitIsActive, setLimitIsActive] = React.useState(false);
     const [stopLimitPrice, setstopLimitPrice] = React.useState(-1);
+    const [recommendedStocks, setRecommendedStocks] = React.useState([]);
     const [auth] = React.useContext(authContext);
+
+    React.useEffect(() => { getUserRecommendedStocks() }, [auth])
+
+    async function getUserRecommendedStocks() {
+        let riskLevelRsponse = await getUserRiskLevel(auth.userId);
+        let recommendedStocksResponse = await getRecommendedStocks(riskLevelRsponse.data);
+        setRecommendedStocks(recommendedStocksResponse.data);
+    }
 
     async function applySymbol() {
         if (!!symbol) {
@@ -108,7 +118,6 @@ function NewPositionDialog({ open, handleClose, userRiskLevel }) {
                 }
             };
 
-            console.log({ body })
             await enterPosition(body);
             close();
         }
@@ -122,6 +131,15 @@ function NewPositionDialog({ open, handleClose, userRiskLevel }) {
         <DialogTitle>New Position Parameters</DialogTitle>
         <div className='Dialog-Content'>
             <TextField label="Search Stocks" value={symbolText} onChange={changeSymbol} />
+
+            <List style={{overflowY: 'auto', maxHeight: '144px'}}>
+                {recommendedStocks.map(stock => <ListItem key={stock.symbol} disablePadding>
+                    <ListItemButton onClick={() => setSymbolText(stock.symbol)}>
+                        <ListItemText primary={stock.symbol} />
+                    </ListItemButton>
+                </ListItem>)}
+            </List>
+
             {symbolValid ? <div style={{ height: '20px'}}>Price per share: {price}$</div> : <></> }
             <div style={{ height: '20px', color: symbolValid ? '#333333' : '#df3a3a' }}>{symbolComment}</div>
             <ToggleButtonGroup

@@ -8,6 +8,21 @@ namespace Backend.Api.Controllers;
 [Route("[controller]/[action]")]
 public class UsersController(IUsersHandler usersHandler, ILogger<UsersController> logger) : ControllerBase
 {
+    [HttpGet]
+    public async Task<IActionResult> GetUserRiskLevel(string userId)
+    {
+        try
+        {
+            var riskLevel = await usersHandler.GetUserRiskLevel(userId);
+            return StatusCode(StatusCodes.Status200OK, riskLevel);
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Error getting risk level of user");
+            return StatusCode(StatusCodes.Status500InternalServerError, exception.Message);
+        }
+    }
+
     [HttpPost]
     public async Task<IActionResult> RegisterAsync(RegisterUserRequest registerUserRequest)
     {

@@ -35,12 +35,12 @@ function SidePanel() {
   return (
     <Container>
       <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', height: '100vh'}}>
-        <div style={{paddingTop: '15px'}}>
+        <div style={{paddingTop: '15px', paddingLeft: '6px', paddingRight: '6px'}}>
 
             <Typography variant="h6" gutterBottom> Achievements </Typography>
 
             {achievements.map((achivement, index) =>  <Item key={index}>
-              <Stars sx={{ width: 35, height: 35, marginRight: '10px', color: '#bdbdbd' }}/>
+              <Stars sx={{ width: 35, height: 35, marginRight: '4px', color: '#bdbdbd' }}/>
               <div>
                 <Typography variant="h8" gutterBottom> {achivement.achievementType} </Typography>
                 <UpdateDate>

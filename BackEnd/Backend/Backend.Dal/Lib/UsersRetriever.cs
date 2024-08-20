@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Backend.Common.Interfaces.Users;
+using Backend.Common.Models.InvestingAdvisor;
 using Backend.Common.Models.Users;
 using Backend.Dal.Configuration;
 using Backend.Dal.Interfaces;
@@ -15,6 +16,12 @@ public class UsersRetriever(
 {
     private readonly IMongoCollection<Users> _usersCollection =
         mongoHandler.GetCollection<Users>(mongoConfiguration.UsersCollectionName);
+
+    public async Task<RiskLevel> GetUserRiskLevel(string userId) 
+    {
+        var user = await _usersCollection.Find(u => u.UserId == userId).FirstOrDefaultAsync();
+        return user.RiskLevel;
+    }
 
     public async Task LoginAsync(LoginUserRequest loginUserRequest)
     {

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const backendUrl = `http://${window.location.hostname}:5266`;
+const backendUrl = `http://${window.location.hostname}:5267`;
 
 const usersPath = '/Users';
 const positionsPath = '/Positions';
@@ -9,6 +9,8 @@ const investingAdvisorPath = '/InvestingAdvisor';
 const stocksPath = '/Stocks';
 
 // Users
+
+export const getUserRiskLevel = async (userId) => await axios.get(`${backendUrl}${usersPath}/GetUserRiskLevel?userId=${userId}`);
 
 export const login = async (userId, password) => await axios.post(`${backendUrl}${usersPath}/Login`, { userId, password });
 
@@ -31,6 +33,8 @@ export const editStopLimit = async (stopLimitData) => await axios.put(`${backend
 // Investing Advisor
 
 export const getStockRiskLevel = async (symbol) => await axios.get(`${backendUrl}${investingAdvisorPath}/GetStockRiskLevel?symbol=${symbol}`);
+
+export const getRecommendedStocks = async (riskLevel) => await axios.get(`${backendUrl}${investingAdvisorPath}/GetRecommendedStocksByRisk?riskLevel=${riskLevel}`);
 
 // Stocks
 
