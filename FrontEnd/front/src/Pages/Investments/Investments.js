@@ -16,7 +16,6 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import { useDebounce } from 'use-debounce';
@@ -45,6 +44,7 @@ function createData(id, symbol, shares, type, priceOfShare, difference, stopLimi
 function NewPositionDialog({ open, handleClose, userRiskLevel }) {
     const [symbolText, setSymbolText] = React.useState('');
     const [symbol] = useDebounce(symbolText, 500);
+    const [price, setPrice] = React.useState(undefined);
     const [amount, setAmount] = React.useState(0);
     const [symbolValid, setSymbolValid] = React.useState(false);
     const [symbolComment, setSymbolComment] = React.useState('');
@@ -53,12 +53,15 @@ function NewPositionDialog({ open, handleClose, userRiskLevel }) {
     const [stopLimitPrice, setstopLimitPrice] = React.useState(-1);
     const [auth] = React.useContext(authContext);
 
-    async function checkSymbol() {
+    async function applySymbol() {
         if (!!symbol) {
             try {
                 const symbolRiskLevelResponse = await getStockRiskLevel(symbol);
+                setSymbolValid(true);
+                const symbolRealTimeDataResponse = await getRealTimeStock(symbol);
+                const stockCurrentPrice = symbolRealTimeDataResponse.data.c;
                 const symbolRiskLevel = symbolRiskLevelResponse.data;
-                setSymbolValid(true)
+                setPrice(stockCurrentPrice);
                 if (symbolRiskLevel.toLowerCase() === userRiskLevel.toLowerCase()) {
                     setSymbolComment('Matches your risk management preferences');
                 } else {
@@ -71,7 +74,7 @@ function NewPositionDialog({ open, handleClose, userRiskLevel }) {
         }
     }
 
-    React.useEffect(() => { checkSymbol() }, [symbol]);
+    React.useEffect(() => { applySymbol() }, [symbol]);
 
     function changeSymbol(event) {
         setSymbolValid(false);
@@ -119,6 +122,7 @@ function NewPositionDialog({ open, handleClose, userRiskLevel }) {
         <DialogTitle>New Position Parameters</DialogTitle>
         <div className='Dialog-Content'>
             <TextField label="Search Stocks" value={symbolText} onChange={changeSymbol} />
+            {symbolValid ? <div style={{ height: '20px'}}>Price per share: {price}$</div> : <></> }
             <div style={{ height: '20px', color: symbolValid ? '#333333' : '#df3a3a' }}>{symbolComment}</div>
             <ToggleButtonGroup
                 value={type}
@@ -370,26 +374,24 @@ function Investments() {
             <div>
                 <Typography color="#405D72" variant="h6" gutterBottom>My Positions</Typography>
             </div>
-            <TableContainer component={Paper} sx={{ backgroundColor: '#F7E7DC' }}>
-                <Table>
+            <TableContainer component={Paper} sx={{ backgroundColor: '#F7E7DC', maxHeight: '60vh' }}>
+                <Table stickyHeader>
                     <TableHead>
                         <TableRow>
-                            <StyledTableCell>Id</StyledTableCell>
-                            <StyledTableCell align="right">Symbol</StyledTableCell>
-                            <StyledTableCell align="right">Shares</StyledTableCell>
-                            <StyledTableCell align="right">Entry Price per Share</StyledTableCell>
-                            <StyledTableCell align="right">Type</StyledTableCell>
-                            <StyledTableCell align="right">Difference</StyledTableCell>
-                            <StyledTableCell align="right">Stop Limit Value</StyledTableCell>
-                            <StyledTableCell align="right" sx={{ color: '#405D72' }}>
+                            <StyledTableCell sx={{ backgroundColor: '#F7E7DC'}} align="right">Symbol</StyledTableCell>
+                            <StyledTableCell sx={{ backgroundColor: '#F7E7DC'}} align="right">Shares</StyledTableCell>
+                            <StyledTableCell sx={{ backgroundColor: '#F7E7DC'}} align="right">Entry Price per Share</StyledTableCell>
+                            <StyledTableCell sx={{ backgroundColor: '#F7E7DC'}} align="right">Type</StyledTableCell>
+                            <StyledTableCell sx={{ backgroundColor: '#F7E7DC'}} align="right">Difference</StyledTableCell>
+                            <StyledTableCell sx={{ backgroundColor: '#F7E7DC'}} align="right">Stop Limit Value</StyledTableCell>
+                            <StyledTableCell sx={{ backgroundColor: '#F7E7DC', color: '#405D72'}} align="right">
                                 <Button color='inherit' variant='contained' onClick={() => setNewPositionOpen(true)}>Enter New Position</Button>
                             </StyledTableCell>
                         </TableRow>
                     </TableHead>
-                    <TableBody>
+                    <TableBody sx={{height: '40vh', overflowY: 'auto'}}>
                         {rows.map((row) => (
                             <StyledTableRow key={row.id}>
-                                <StyledTableCell component="th" scope="row"> {row.id} </StyledTableCell>
                                 <StyledTableCell align="right">{row.symbol}</StyledTableCell>
                                 <StyledTableCell align="right">{row.shares}</StyledTableCell>
                                 <StyledTableCell align="right">{row.priceOfShare}$</StyledTableCell>
@@ -405,12 +407,12 @@ function Investments() {
                                 <StyledTableCell align="right">
                                     {row.stopLimitPrice === -1 ?
                                         <>
-                                            <Button size="small" variant='outlined' onClick={() => onConfigureStopLimit(true, row.id)}>Configure a Stop Limit value</Button>
+                                            <Button size="small" variant='outlined' onClick={() => onConfigureStopLimit(true, row.id)}>Configure Stop Limit</Button>
                                         </>
                                         :
                                         <>
-                                            <div>{row.stopLimitPrice}$</div>
-                                            <Button size="small" variant='outlined' onClick={() => onConfigureStopLimit(true, row.id)}>Reonfigure Stop Limit value</Button>
+                                            <span style={{marginRight: '6px'}}>{row.stopLimitPrice}$</span>
+                                            <Button size="small" variant='outlined' onClick={() => onConfigureStopLimit(true, row.id)}>Reonfigure</Button>
                                         </>
                                     }
                                 </StyledTableCell>

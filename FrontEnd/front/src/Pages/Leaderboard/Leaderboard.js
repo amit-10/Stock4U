@@ -132,8 +132,8 @@ function Leaderboard() {
                     <Table sx={{backgroundColor: '#F7E7DC'}}>
                         <TableHead>
                             <TableRow>
-                                <StyledTableCell>Position</StyledTableCell>
-                                <StyledTableCell align="right">Name</StyledTableCell>
+                                <StyledTableCell>Rank</StyledTableCell>
+                                <StyledTableCell>Name</StyledTableCell>
                                 <StyledTableCell align="right">Achievements</StyledTableCell>
                                 <StyledTableCell align="right">Profit</StyledTableCell>
                             </TableRow>
@@ -141,7 +141,7 @@ function Leaderboard() {
                         <TableBody>
                             {rows.map((row) => (
                                 <StyledTableRow key={row.position}>
-                                <StyledTableCell component="th" scope="row"> {row.position} </StyledTableCell>
+                                <StyledTableCell component="th" scope="row"> {row.position + 1} </StyledTableCell>
                                 <StyledTableCell component="th" scope="row"> {row.name} </StyledTableCell>
                                 <StyledTableCell align="right">{row.achievements}</StyledTableCell>
                                 <StyledTableCell align="right">{row.profit}$</StyledTableCell>

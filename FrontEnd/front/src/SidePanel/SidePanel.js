@@ -34,53 +34,8 @@ function SidePanel() {
 
   return (
     <Container>
-      <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', height: '100vh'}}>
-        <div style={{paddingTop: '30px'}}>
-            <Typography variant="h6" gutterBottom> Leaderboard </Typography>
-
-            <Item>
-              <Avatar sx={{ width: 30, height: 30, marginRight: '10px' }}/>
-              <div>
-                <Typography variant="h8" gutterBottom> Amit Cohen </Typography>
-                <UpdateDate>
-                  <Typography sx={{ width: 10, height: 10, marginRight: '10px' }}  variant="h10" gutterBottom> 1256# </Typography>
-                </UpdateDate>
-              </div>
-            </Item>
-
-            <Item>
-              <Avatar sx={{ width: 30, height: 30, marginRight: '10px' }}/>
-              <div>
-                <Typography variant="h8" gutterBottom>Elor Sulimani </Typography>
-                <UpdateDate>
-                  <Typography sx={{ width: 10, height: 10, marginRight: '10px' }}  variant="h10" gutterBottom> 1257# </Typography>
-                </UpdateDate>
-              </div>
-            </Item>
-
-            <Item>
-              <Avatar sx={{ width: 30, height: 30, marginRight: '10px' }}/>
-              <div>
-                <Typography variant="h8" gutterBottom>Lior Zioni </Typography>
-                <UpdateDate>
-                  <Typography sx={{ width: 10, height: 10, marginRight: '10px' }}  variant="h10" gutterBottom> 1258# </Typography>
-                </UpdateDate>
-              </div>
-            </Item>
-
-            <Item>
-              <Avatar sx={{ width: 30, height: 30, marginRight: '10px' }}/>
-              <div>
-                <Typography variant="h8" gutterBottom>Itay Aviran</Typography>
-                <UpdateDate>
-                  <Typography sx={{ width: 10, height: 10, marginRight: '10px' }}  variant="h10" gutterBottom> 1259# </Typography>
-                </UpdateDate>
-              </div>
-            </Item>
-
-        </div>
-          
-        <div style={{paddingTop: '30px'}}>
+      <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', height: '100vh'}}>
+        <div style={{paddingTop: '15px'}}>
 
             <Typography variant="h6" gutterBottom> Achievements </Typography>
 
