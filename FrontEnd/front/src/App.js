@@ -9,6 +9,8 @@ import Statistics from './Pages/Statistics/Statistics';
 import Home from './Pages/Home/Home';
 import AuthProvider from './Context/auth.context';
 import { styled } from '@mui/material';
+import StockPage from './Pages/Stock/Stock';
+import TrendingStocks from './Pages/TrendingStocks/TredningStocks';
 
 function App() {
   return (
@@ -30,6 +32,8 @@ function App() {
                   <Route path="investments" element={<Investments />} />
                   <Route path="leaderboard" element={<Leaderboard />} />
                   <Route path="profile" element={<Profile />} />
+                  <Route path="stock/:symbol" element={<StockPage />} />
+                  <Route path="stocks" element={<TrendingStocks />} />
                 </Routes>
               </div>
             </AppHeader>

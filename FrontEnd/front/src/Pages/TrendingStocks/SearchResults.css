@@ -1,0 +1,33 @@
+.results-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin: 2rem;
+}
+
+.stock-card {
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  width: 250px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.stock-symbol {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.stock-description {
+  font-size: 1rem;
+  color: #666;
+}
+
+.stock-type {
+  font-size: 0.9rem;
+  color: #888;
+}

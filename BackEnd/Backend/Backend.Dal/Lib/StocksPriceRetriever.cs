@@ -35,7 +35,7 @@ public class StocksPriceRetriever(
             logger.LogError(exception, "Error getting real time stock {symbol}", symbol);
             throw;
         }
-        
+
         return response;
     }
 

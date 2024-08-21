@@ -2,6 +2,7 @@ import IconButton from '@mui/material/IconButton';
 import SignalCellularAltRoundedIcon from '@mui/icons-material/SignalCellularAltRounded';
 import PaidOutlinedIcon from '@mui/icons-material/PaidOutlined';
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
+import SearchIcon from '@mui/icons-material/Search';
 import Avatar from '@mui/material/Avatar';
 import { Link } from 'react-router-dom';
 import { styled } from '@mui/material';
@@ -35,6 +36,13 @@ function Menu() {
                 <AssignmentOutlinedIcon/> 
             </IconButton>
             Leaderboard
+          </Button>
+
+          <Button>
+            <IconButton component={Link} to="/stocks"> 
+                <SearchIcon /> 
+            </IconButton>
+            Stocks Lookup
           </Button>
       </Header>
     </Container>
