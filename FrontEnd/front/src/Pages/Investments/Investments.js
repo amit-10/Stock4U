@@ -20,12 +20,14 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import { List, ListItem, ListItemButton, ListItemText } from '@mui/material';
 import { useDebounce } from 'use-debounce';
-import { TrendingDown, TrendingUp } from '@mui/icons-material';
+import { Rowing, TrendingDown, TrendingUp } from '@mui/icons-material';
 import { Switch } from '@mui/material';
 import { authContext } from '../../Context/auth.context';
 import { getStockRiskLevel, getRealTimeStock, getInvestorStatus, enterPosition, closePosition, editStopLimit, getUserRiskLevel, getRecommendedStocks } from '../../Services/Backend.service';
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({}));
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    'fontSize': '15px'
+}));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -37,8 +39,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-function createData(id, symbol, shares, type, priceOfShare, difference, stopLimitPrice) {
-    return { id, symbol, shares, type, priceOfShare, difference, stopLimitPrice };
+function createData(id, symbol, shares, type, priceOfShare, differencePrecent, differenceUSD, stopLimitPrice) {
+    return { id, symbol, shares, type, priceOfShare, differencePrecent, differenceUSD, stopLimitPrice };
 }
 
 
@@ -132,7 +134,7 @@ function NewPositionDialog({ open, handleClose, userRiskLevel }) {
         <div className='Dialog-Content'>
             <TextField label="Search Stocks" value={symbolText} onChange={changeSymbol} />
 
-            <List style={{overflowY: 'auto', maxHeight: '144px'}}>
+            <List style={{ overflowY: 'auto', maxHeight: '144px' }}>
                 {recommendedStocks.map(stock => <ListItem key={stock.symbol} disablePadding>
                     <ListItemButton onClick={() => setSymbolText(stock.symbol)}>
                         <ListItemText primary={stock.symbol} />
@@ -140,7 +142,7 @@ function NewPositionDialog({ open, handleClose, userRiskLevel }) {
                 </ListItem>)}
             </List>
 
-            {symbolValid ? <div style={{ height: '20px'}}>Price per share: {price}$</div> : <></> }
+            {symbolValid ? <div style={{ height: '20px' }}>Price per share: {price}$</div> : <></>}
             <div style={{ height: '20px', color: symbolValid ? '#333333' : '#df3a3a' }}>{symbolComment}</div>
             <ToggleButtonGroup
                 value={type}
@@ -291,9 +293,10 @@ function Investments() {
             for (let { positionId, shareSymbol, entryPrice, sharesCount, positionType, stopLimitPrice } of userInvestmentStatus.positions) {
                 const stockResponse = await getRealTimeStock(shareSymbol);
                 const stockCurrentPrice = stockResponse.data.c;
-                const difference = ((stockCurrentPrice - entryPrice) / entryPrice) * 100;
+                const differencePrecent = ((stockCurrentPrice - entryPrice) / entryPrice) * 100;
+                const differenceUSD = stockCurrentPrice - entryPrice;
 
-                userPositions.push(createData(positionId, shareSymbol, sharesCount, positionType, entryPrice, difference.toFixed(2), stopLimitPrice));
+                userPositions.push(createData(positionId, shareSymbol, sharesCount, positionType, entryPrice, differencePrecent.toFixed(2), differenceUSD.toFixed(2), stopLimitPrice));
             }
 
             setRows(userPositions);
@@ -396,18 +399,19 @@ function Investments() {
                 <Table stickyHeader>
                     <TableHead>
                         <TableRow>
-                            <StyledTableCell sx={{ backgroundColor: '#F7E7DC'}} align="right">Symbol</StyledTableCell>
-                            <StyledTableCell sx={{ backgroundColor: '#F7E7DC'}} align="right">Shares</StyledTableCell>
-                            <StyledTableCell sx={{ backgroundColor: '#F7E7DC'}} align="right">Entry Price per Share</StyledTableCell>
-                            <StyledTableCell sx={{ backgroundColor: '#F7E7DC'}} align="right">Type</StyledTableCell>
-                            <StyledTableCell sx={{ backgroundColor: '#F7E7DC'}} align="right">Difference</StyledTableCell>
-                            <StyledTableCell sx={{ backgroundColor: '#F7E7DC'}} align="right">Stop Limit Value</StyledTableCell>
-                            <StyledTableCell sx={{ backgroundColor: '#F7E7DC', color: '#405D72'}} align="right">
+                            <StyledTableCell sx={{ backgroundColor: '#F7E7DC' }} align="right">Symbol</StyledTableCell>
+                            <StyledTableCell sx={{ backgroundColor: '#F7E7DC' }} align="right">Shares</StyledTableCell>
+                            <StyledTableCell sx={{ backgroundColor: '#F7E7DC' }} align="right">Entry Price per Share</StyledTableCell>
+                            <StyledTableCell sx={{ backgroundColor: '#F7E7DC' }} align="right">Type</StyledTableCell>
+                            <StyledTableCell sx={{ backgroundColor: '#F7E7DC' }} align="right">Difference (%)</StyledTableCell>
+                            <StyledTableCell sx={{ backgroundColor: '#F7E7DC' }} align="right">Difference ($)</StyledTableCell>
+                            <StyledTableCell sx={{ backgroundColor: '#F7E7DC' }} align="right">Stop Limit Value</StyledTableCell>
+                            <StyledTableCell sx={{ backgroundColor: '#F7E7DC', color: '#405D72' }} align="right">
                                 <Button color='inherit' variant='contained' onClick={() => setNewPositionOpen(true)}>Enter New Position</Button>
                             </StyledTableCell>
                         </TableRow>
                     </TableHead>
-                    <TableBody sx={{height: '40vh', overflowY: 'auto'}}>
+                    <TableBody sx={{ height: '40vh', overflowY: 'auto' }}>
                         {rows.map((row) => (
                             <StyledTableRow key={row.id}>
                                 <StyledTableCell align="right">{row.symbol}</StyledTableCell>
@@ -416,11 +420,16 @@ function Investments() {
                                 <StyledTableCell align="right">{row.type}</StyledTableCell>
                                 <StyledTableCell align="right">
                                     <div className='Difference'>
-                                        {Math.abs(row.difference)}%
-                                        {row.difference < 0 ?
+                                        {Math.abs(row.differencePrecent)}%
+                                        {row.differencePrecent < 0 ?
                                             <TrendingDown style={{ color: row.type?.toLowerCase() == 'short' ? 'green' : '#df3a3a' }} /> :
                                             <TrendingUp style={{ color: row.type?.toLowerCase() == 'short' ? '#df3a3a' : 'green' }} />}
                                     </div>
+                                </StyledTableCell>
+                                <StyledTableCell align="right">
+                                {row.differenceUSD < 0 ?
+                                            <span style={{ fontWeight: 'bold', color: row.type?.toLowerCase() == 'short' ? 'green' : '#df3a3a' }}>-{row.differenceUSD}$</span> :
+                                            <span style={{ fontWeight: 'bold', color: row.type?.toLowerCase() == 'short' ? '#df3a3a' : 'green' }}>+{row.differenceUSD}$</span>}
                                 </StyledTableCell>
                                 <StyledTableCell align="right">
                                     {row.stopLimitPrice === -1 ?
@@ -429,7 +438,7 @@ function Investments() {
                                         </>
                                         :
                                         <>
-                                            <span style={{marginRight: '6px'}}>{row.stopLimitPrice}$</span>
+                                            <span style={{ marginRight: '6px' }}>{row.stopLimitPrice}$</span>
                                             <Button size="small" variant='outlined' onClick={() => onConfigureStopLimit(true, row.id)}>Reonfigure</Button>
                                         </>
                                     }

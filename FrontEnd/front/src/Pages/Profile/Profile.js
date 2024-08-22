@@ -16,7 +16,9 @@ import { useState, useEffect, useContext } from 'react';
 import { authContext } from '../../Context/auth.context';
 import { getInvestorStatus, getUserPositionsHistory } from '../../Services/Backend.service';
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({}));
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    'fontSize': '15px'
+}));
   
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {

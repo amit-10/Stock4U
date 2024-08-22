@@ -50,7 +50,7 @@ const Container = styled('div')`
 const Header = styled('header')`
   background-color: #FFF8F3;
   flex-direction: column;
-  font-size: 12px;
+  font-size: 15px;
   color: #405D72;
   margin-left: auto; 
   margin-right: 0;
