@@ -38,7 +38,6 @@ public class RecommendedStocksService(
             foreach (var recommendedStock in await recommendedStocksRetriver.GetAllRecommendedStocksAsync())
             {
                 var risklevel = await stockRiskClassifier.GetStockRiskLevelAsync(recommendedStock.Symbol);
-                var newRecommendedStock = new Common.Models.InvestingAdvisor.RecommendedStocks{Symbol = recommendedStock.Symbol, RiskLevel = risklevel};
                 await recommendedStocksUpdater.AddRecommendedStockAsync(recommendedStock.Symbol,risklevel);
             }
             logger.LogInformation("Successfully risk level assign to symbol");
