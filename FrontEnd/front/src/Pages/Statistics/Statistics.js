@@ -50,107 +50,106 @@ function Statistics() {
     }
 
     useEffect(() => {
-        async function getPositions() {
-            if (!auth || !auth.userId) {
-                return;
-            }
-
-            try {
-                const userInvestmentStatusResponse = await getInvestorStatus(auth.userId);
-                const userInvestmentStatus = userInvestmentStatusResponse.data;
-
-                const newRows = [];
-                userInvestmentStatus.positions.forEach(async position => {
-
-                    if (establishedPositions.includes(position.shareSymbol)) {
-                        return;
-                    }
-
-                    establishedPositions.push(position.shareSymbol)
-                    const realTimeResponse = await getRealTimeStock(position.shareSymbol);
-                    const realTimeValue = realTimeResponse.data;
-
-                    const newLineDate = [];
-
-                    const historyResponse = await getStockHistory(position.shareSymbol, daysBack);
-                    const historyPrice = historyResponse.data;
-
-                    Object.keys(historyPrice).forEach(key => {
-                        newLineDate.push({ date: key, shareProfit: historyPrice[key].closePrice });
-                    });
-
-                    const newOptions = {
-                        title: {
-                            text: `Share ${position.shareSymbol} Over Time`,
-                        },
-                        data: newLineDate,
-                        series: [
-                            {
-                                type: "line",
-                                xKey: "date",
-                                yKey: "shareProfit",
-                                yName: "profit"
-                            }
-                        ],
-                    };
-
-                    const newDonutOptions = {
-                        data: newLineDate,
-                        title: {
-                            text: 'Profits Per Day',
-                        },
-                        series: [
-                            {
-                                type: "donut",
-                                calloutLabelKey: "date",
-                                angleKey: "shareProfit",
-                                innerRadiusRatio: 0.7,
-                            },
-                        ],
-                    };
-
-                    setOptions(newOptions);
-                    setDonutOptions(newDonutOptions);
-
-                    newRows.push({
-                        shareKey: position.shareSymbol,
-                        sharesCount: realTimeValue.c - position.entryPrice
-                    });
-
-                    setChartOptions({
-                        title: {
-                            text: "Profits per share",
-                        }, data: newRows, series: [{ type: 'bar', xKey: 'shareKey', yKey: 'sharesCount' }]
-                    })
-                });
-
-                  const filteredPositions = []
-                  const newPosition = userInvestmentStatus.positions.filter(position => {
-                      if (!filteredPositions.includes(position.shareSymbol)) {
-                        filteredPositions.push(position.shareSymbol);    
-                        return true;
-                    } 
-
-                    return false;
-                  })
-                  
-                setPositions(newPosition);
-            } catch (e) {
-                console.log(e);
-            }
-        };
-
         if (!positions.length) {
             getPositions();
         }
-
     }, [auth]);
 
-    function onDaysBackChange(newDaysBack) {
+    async function getPositions(newDaysBack) {
+        if (!auth || !auth.userId) {
+            return;
+        }
+
+        try {
+            const userInvestmentStatusResponse = await getInvestorStatus(auth.userId);
+            const userInvestmentStatus = userInvestmentStatusResponse.data;
+
+            const newRows = [];
+            userInvestmentStatus.positions.forEach(async position => {
+
+                if (establishedPositions.includes(position.shareSymbol)) {
+                    return;
+                }
+
+                establishedPositions.push(position.shareSymbol)
+                const realTimeResponse = await getRealTimeStock(position.shareSymbol);
+                const realTimeValue = realTimeResponse.data;
+
+                const newLineDate = [];
+
+                const historyResponse = await getStockHistory(position.shareSymbol, newDaysBack ?? daysBack);
+                const historyPrice = historyResponse.data;
+
+                Object.keys(historyPrice).forEach(key => {
+                    newLineDate.push({ date: key, shareProfit: historyPrice[key].closePrice });
+                });
+
+                const newOptions = {
+                    title: {
+                        text: `Share ${position.shareSymbol} Over Time`,
+                    },
+                    data: newLineDate,
+                    series: [
+                        {
+                            type: "line",
+                            xKey: "date",
+                            yKey: "shareProfit",
+                            yName: "profit"
+                        }
+                    ],
+                };
+
+                const newDonutOptions = {
+                    data: newLineDate,
+                    title: {
+                        text: ` ${auth.userId} - Profits Per Day`,
+                    },
+                    series: [
+                        {
+                            type: "donut",
+                            calloutLabelKey: "date",
+                            angleKey: "shareProfit",
+                            innerRadiusRatio: 0.7,
+                        },
+                    ],
+                };
+
+                setOptions(newOptions);
+                setDonutOptions(newDonutOptions);
+
+                newRows.push({
+                    shareKey: position.shareSymbol,
+                    sharesCount: realTimeValue.c - position.entryPrice
+                });
+
+                setChartOptions({
+                    title: {
+                        text: "Profits per share",
+                    }, data: newRows, series: [{ type: 'bar', xKey: 'shareKey', yKey: 'sharesCount' }]
+                })
+            });
+
+              const filteredPositions = []
+              const newPosition = userInvestmentStatus.positions.filter(position => {
+                  if (!filteredPositions.includes(position.shareSymbol)) {
+                    filteredPositions.push(position.shareSymbol);    
+                    return true;
+                } 
+
+                return false;
+              })
+              
+            setPositions(newPosition);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    async function onDaysBackChange(newDaysBack) {
         setDaysBack(newDaysBack);
         handleOnButtonClick(selectedShare, newDaysBack);
+        await getPositions(newDaysBack);
     }
-
 
     return (
         <div className="App">
