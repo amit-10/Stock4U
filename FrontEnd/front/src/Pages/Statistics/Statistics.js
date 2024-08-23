@@ -124,7 +124,17 @@ function Statistics() {
                     })
                 });
 
-                setPositions(userInvestmentStatus.positions);
+                  const filteredPositions = []
+                  const newPosition = userInvestmentStatus.positions.filter(position => {
+                      if (!filteredPositions.includes(position.shareSymbol)) {
+                        filteredPositions.push(position.shareSymbol);    
+                        return true;
+                    } 
+
+                    return false;
+                  })
+                  
+                setPositions(newPosition);
             } catch (e) {
                 console.log(e);
             }
@@ -200,7 +210,6 @@ function Statistics() {
 
 
             <div className="graphs">
-                <div className="charts-sections">
                     {positions.map(position => <Button key={position.positionId} onClick={async () => {
                         try {
                             await handleOnButtonClick(position.shareSymbol, null)
@@ -208,6 +217,7 @@ function Statistics() {
                             console.log(e);
                         }
                     }}>{position.shareSymbol}</Button>)}
+                <div className="charts-sections">
                     <AgChartsReact options={options} />
                 </div>
                 <div className="charts-sections">

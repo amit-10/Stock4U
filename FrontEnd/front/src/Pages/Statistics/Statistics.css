@@ -1,17 +1,20 @@
 .App {
     text-align: center;
+  }
+.charts-sections {
+    justify-content: center;
+    display: inline;
+    width: 70%;
+    height: 35%;
+}
+
+.charts-sections-flex {
+    display: flex;
+    width: 250px;
 }
 
 .graphs {
-    position: relative;
-    /* justify-content: space-evenly; */
-    width: 100%;
-    height: 100%;
-
-    .charts-sections {
-        width: 25%;
-        height: 25%;
-    }
+    height: 500px;
 }
 
 AgChartsReact {
