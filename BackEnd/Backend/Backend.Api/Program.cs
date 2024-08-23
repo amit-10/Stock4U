@@ -26,7 +26,7 @@ if (environment == "Production")
 }
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.Listen(System.Net.IPAddress.Any, 5267);
+    options.Listen(System.Net.IPAddress.Any, 5266);
 });
 
 var app = builder.Build();
