@@ -18,21 +18,21 @@ function Menu() {
 
           <Button>
             <IconButton component={Link} to="/statistics"> 
-                <SignalCellularAltRoundedIcon/> 
+                <SignalCellularAltRoundedIcon fontSize='large'/> 
             </IconButton>
             Statistics
           </Button>
 
           <Button>
             <IconButton component={Link} to="/investments"> 
-                <PaidOutlinedIcon/> 
+                <PaidOutlinedIcon fontSize='large'/> 
             </IconButton>
             Investments
           </Button>
 
           <Button>
             <IconButton component={Link} to="/leaderboard"> 
-                <AssignmentOutlinedIcon/> 
+                <AssignmentOutlinedIcon fontSize='large'/> 
             </IconButton>
             Leaderboard
           </Button>
