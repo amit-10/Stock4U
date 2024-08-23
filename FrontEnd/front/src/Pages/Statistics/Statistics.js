@@ -191,7 +191,7 @@ function Statistics() {
                 </div>
             </div>
             <div>
-                <FormControl sx={{ m: 1, minWidth: 80 }}>
+                <FormControl sx={{ m: 1, minWidth: 300 }}>
                     <InputLabel id="demo-simple-select-autowidth-label">Days Back</InputLabel>
                     <Select
                         labelId="demo-simple-select-autowidth-label"
@@ -199,11 +199,11 @@ function Statistics() {
                         value={daysBack}
                         onChange={(e) => onDaysBackChange(+e.target.value)}
                         autoWidth
-                        label="Age"
+                        label="Days Back"
                     >
-                        <MenuItem value={7}>7</MenuItem>
-                        <MenuItem value={30}>30</MenuItem>
-                        <MenuItem value={50}>50</MenuItem>
+                        <MenuItem value={1}>Day</MenuItem>
+                        <MenuItem value={7}>Week</MenuItem>
+                        <MenuItem value={30}>Month</MenuItem>
                     </Select>
                 </FormControl>
             </div>
