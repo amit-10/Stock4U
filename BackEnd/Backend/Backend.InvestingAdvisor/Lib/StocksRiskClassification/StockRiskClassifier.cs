@@ -30,7 +30,16 @@ public class StockRiskClassifier(
         }
         else
         {
-            var stockClassificationData = financialOverview.Adapt<StockClassificationData>();
+            StockClassificationData stockClassificationData;
+            try
+            {
+                stockClassificationData = financialOverview.Adapt<StockClassificationData>();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
             riskLevel = ClassifyStock(volatility, maxDrawdown, stockClassificationData);
         }
 

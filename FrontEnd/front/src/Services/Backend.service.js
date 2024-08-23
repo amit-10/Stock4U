@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const backendUrl = `http://${window.location.hostname}:5267`;
+const backendUrl = `http://${window.location.hostname}:5266`;
 
 const usersPath = '/Users';
 const positionsPath = '/Positions';

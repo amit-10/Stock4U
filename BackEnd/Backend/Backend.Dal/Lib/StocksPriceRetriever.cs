@@ -114,7 +114,15 @@ public class StocksPriceRetriever(
         }
 
         var jobject = JObject.Parse(response.ToString());
-        var standardDeviation = jobject["payload"]["RETURNS_CALCULATIONS"]["STDDEV"][symbol].Value<decimal>();
+        decimal standardDeviation;
+        try
+        {
+            standardDeviation = jobject["payload"]["RETURNS_CALCULATIONS"]["STDDEV"][symbol].Value<decimal>();
+        }
+        catch (Exception exception)
+        {
+            return 0;
+        }
         return standardDeviation;
     }
 }
