@@ -9,4 +9,6 @@ public interface IStockPriceRetriever
     Task<Dictionary<string, StockDailyData>> GetStockHistoryAsync(string symbol, int daysBack = 100);
 
     Task<FinancialOverview?> GetStockFinancialOverviewAsync(string symbol);
+    
+    Task<decimal> GetStockStandardDeviationAsync(string symbol);
 }

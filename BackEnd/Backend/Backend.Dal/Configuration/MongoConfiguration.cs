@@ -15,6 +15,8 @@ public class MongoConfiguration
     public string UserToAchievementCollectionName { get; set; } = null!;
 
     public string UsersCollectionName { get; set; } = null!;
+
+    public string RiskLevelComparisonCollectionName { get; set; } = null!;
     
     public string RecommendedStocks { get; set; } = null!;
 }

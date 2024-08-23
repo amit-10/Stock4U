@@ -428,7 +428,7 @@ function Investments() {
                                 </StyledTableCell>
                                 <StyledTableCell align="right">
                                 {row.differenceUSD < 0 ?
-                                            <span style={{ fontWeight: 'bold', color: row.type?.toLowerCase() == 'short' ? 'green' : '#df3a3a' }}>-{row.differenceUSD}$</span> :
+                                            <span style={{ fontWeight: 'bold', color: row.type?.toLowerCase() == 'short' ? 'green' : '#df3a3a' }}>{row.differenceUSD}$</span> :
                                             <span style={{ fontWeight: 'bold', color: row.type?.toLowerCase() == 'short' ? '#df3a3a' : 'green' }}>+{row.differenceUSD}$</span>}
                                 </StyledTableCell>
                                 <StyledTableCell align="right">
@@ -439,7 +439,7 @@ function Investments() {
                                         :
                                         <>
                                             <span style={{ marginRight: '6px' }}>{row.stopLimitPrice}$</span>
-                                            <Button size="small" variant='outlined' onClick={() => onConfigureStopLimit(true, row.id)}>Reonfigure</Button>
+                                            <Button size="small" variant='outlined' onClick={() => onConfigureStopLimit(true, row.id)}>Reconfigure</Button>
                                         </>
                                     }
                                 </StyledTableCell>

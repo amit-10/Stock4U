@@ -1,13 +1,17 @@
 using Backend.Common.Interfaces.InvestingAdvisor;
 using Backend.Common.Interfaces.Stocks;
 using Backend.Common.Models.InvestingAdvisor;
+using Backend.InvestingAdvisor.Interfaces;
 using Backend.InvestingAdvisor.Lib.Utils;
 using Backend.InvestingAdvisor.Models;
 using Mapster;
 
 namespace Backend.InvestingAdvisor.Lib.StocksRiskClassification;
 
-public class StockRiskClassifier(IStockPriceRetriever stockPriceRetriever) : IStockRiskClassifier
+public class StockRiskClassifier(
+    IStockPriceRetriever stockPriceRetriever,
+    IRiskGradesStockRiskClassifier riskGradesStockRiskClassifier,
+    IRiskLevelUpdater riskLevelUpdater) : IStockRiskClassifier
 {
     public async Task<RiskLevel> GetStockRiskLevelAsync(string symbol, int daysBack)
     {
@@ -17,31 +21,42 @@ public class StockRiskClassifier(IStockPriceRetriever stockPriceRetriever) : ISt
         var closePriceHistory = ConversionUtils.GetClosePricesDictionary(historyData);
 
         var volatility = StatisticsCalculator.CalculateVolatility(closePriceHistory);
-        var averageReturn = StatisticsCalculator.CalculateAverageReturn(closePriceHistory);
         var maxDrawdown = StatisticsCalculator.CalculateMaxDrawdown(closePriceHistory);
 
         RiskLevel riskLevel;
         if (financialOverview.Symbol is null)
         {
-            riskLevel = ClassifyEtf(volatility, averageReturn, maxDrawdown);
+            riskLevel = ClassifyEtf(volatility, maxDrawdown);
         }
         else
         {
-            var stockClassificationData = financialOverview.Adapt<StockClassificationData>();
-            riskLevel = ClassifyStock(volatility, averageReturn, maxDrawdown, stockClassificationData);
+            StockClassificationData stockClassificationData;
+            try
+            {
+                stockClassificationData = financialOverview.Adapt<StockClassificationData>();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            riskLevel = ClassifyStock(volatility, maxDrawdown, stockClassificationData);
         }
+
+        var riskGradesRiskLevel = await riskGradesStockRiskClassifier.GetStockRiskGradesRiskLevelAsync(symbol);
+        await riskLevelUpdater.InsertRiskLevelComparisonAsync(symbol, riskLevel, riskGradesRiskLevel);
 
         return riskLevel;
     }
 
-    private static RiskLevel ClassifyEtf(decimal volatility, decimal averageReturn, decimal maxDrawdown)
+    private static RiskLevel ClassifyEtf(decimal volatility, decimal maxDrawdown)
     {
-        if (volatility > 0.3m || maxDrawdown > 0.4m)
+        if (volatility > 1 || maxDrawdown > 0.5m)
         {
             return RiskLevel.High;
         }
 
-        if (volatility > 0.2m || maxDrawdown > 0.3m || averageReturn < 0.05m)
+        if (volatility > 0.7m || maxDrawdown > 0.4m)
         {
             return RiskLevel.Medium;
         }
@@ -49,19 +64,19 @@ public class StockRiskClassifier(IStockPriceRetriever stockPriceRetriever) : ISt
         return RiskLevel.Low;
     }
 
-    private static RiskLevel ClassifyStock(decimal volatility, decimal averageReturn, decimal maxDrawdown,
+    private static RiskLevel ClassifyStock(decimal volatility, decimal maxDrawdown,
         StockClassificationData stockClassificationData)
     {
-        if (volatility > 0.3m || maxDrawdown > 0.4m || stockClassificationData.Beta > 1.5m ||
-            stockClassificationData.Roe < 10 || stockClassificationData.PeRatio > 25 ||
-            stockClassificationData.PbRatio > 3 || stockClassificationData.DividendYield < 1 || averageReturn < 0.05m)
+        if (volatility > 1 || maxDrawdown > 0.5m || stockClassificationData.Beta > 3 ||
+            stockClassificationData.Roe < -0.1m || stockClassificationData.PeRatio > 90 ||
+            stockClassificationData.PbRatio > 90)
         {
             return RiskLevel.High;
         }
 
-        if (volatility > 0.2m || maxDrawdown > 0.3m || stockClassificationData.Beta > 1.0m ||
-            stockClassificationData.Roe < 15 || stockClassificationData.PeRatio > 20 ||
-            stockClassificationData.PbRatio > 2 || stockClassificationData.DividendYield < 2 || averageReturn < 0.10m)
+        if (volatility > 0.7m || maxDrawdown > 0.4m || stockClassificationData.Beta > 2 ||
+            stockClassificationData.Roe < 0 || stockClassificationData.PeRatio > 75 ||
+            stockClassificationData.PbRatio > 75)
         {
             return RiskLevel.Medium;
         }

@@ -5,6 +5,7 @@ using Flurl;
 using Flurl.Http;
 using Mapster;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 
 namespace Backend.Dal.Lib;
 
@@ -87,5 +88,41 @@ public class StocksPriceRetriever(
         }
 
         return response;
+    }
+
+    public async Task<decimal> GetStockStandardDeviationAsync(string symbol)
+    {
+        var fullUrl = _historyStocksApiUrl
+            .SetQueryParam("function", "ANALYTICS_FIXED_WINDOW")
+            .SetQueryParam("SYMBOLS", symbol)
+            .SetQueryParam("RANGE", DateTime.Now.ToString("yyyy-MM-dd"))
+            .SetQueryParam("RANGE", DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd"))
+            .SetQueryParam("INTERVAL", "DAILY")
+            .SetQueryParam("OHLC", "close")
+            .SetQueryParam("CALCULATIONS", "STDDEV")
+            .SetQueryParam("apikey", historyStocksApiConfiguration.ApiKey);
+
+        object response;
+        try
+        {
+            response = await fullUrl.GetJsonAsync<object>();
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Error getting stock standard deviation {symbol}", symbol);
+            throw;
+        }
+
+        var jobject = JObject.Parse(response.ToString());
+        decimal standardDeviation;
+        try
+        {
+            standardDeviation = jobject["payload"]["RETURNS_CALCULATIONS"]["STDDEV"][symbol].Value<decimal>();
+        }
+        catch (Exception exception)
+        {
+            return 0;
+        }
+        return standardDeviation;
     }
 }
