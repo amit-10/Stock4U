@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+// In local environment change port to 5267
 const backendUrl = `http://${window.location.hostname}:5266`;
 
 const usersPath = '/Users';
