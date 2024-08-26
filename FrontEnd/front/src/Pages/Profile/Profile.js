@@ -17,22 +17,15 @@ import { authContext } from '../../Context/auth.context';
 import { getInvestorStatus, getUserPositionsHistory } from '../../Services/Backend.service';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    'fontSize': '15px'
+    'fontSize': '15px',
+    borderBottom: '1px solid #6482AD',
+    color: '#fff'
 }));
   
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:nth-of-type(odd)': {
-        backgroundColor: theme.palette.action.hover,
-    },
-    // hide last border
-    '&:last-child td, &:last-child th': {
-        border: 0,
-    },
-  }));
-  
-  function createData(id, company, shares, type, profit, note ) {
+
+function createData(id, company, shares, type, profit, note ) {
     return { id, company, shares, type, profit, note };
-  }
+}
 
 function Profile() {
     const [rows, setRows] = useState([]);
@@ -88,16 +81,16 @@ function Profile() {
 
     return (
         <div className="App">
-            <Typography color="#405D72" variant="h4" gutterBottom> Profile \ {auth.userId} </Typography>
+            <Typography color="#555" variant="h4" gutterBottom> Profile \ {auth.userId} </Typography>
             <div style={{display: 'flex', justifyContent: 'space-evenly', width: '100%'}}>
                 <div className="Card">
-                    <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
+                    <Card sx={{ display: 'flex', backgroundColor: '#7FA1C3', color: '#fff', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ flex: '1 0 auto' }}>
                             <Typography component="div" variant="h5">
                                 Begginner Investor
                             </Typography>
-                            <Typography variant="subtitle1" color="#405D72" component="div">
+                            <Typography variant="subtitle1" color="#fff" component="div">
                                 {risk} Risk Behavior
                             </Typography>
                             </CardContent>
@@ -108,13 +101,13 @@ function Profile() {
                 </div>
 
                 <div className="Card">
-                    <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
+                    <Card sx={{ display: 'flex', backgroundColor: '#7FA1C3', color: '#fff', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ flex: '1 0 auto' }}>
                             <Typography component="div" variant="h5">
                                 Budget
                             </Typography>
-                            <Typography variant="subtitle1" color="#405D72" component="div">
+                            <Typography variant="subtitle1" color="#fff" component="div">
                                 {bank}$
                             </Typography>
                             </CardContent>
@@ -125,13 +118,13 @@ function Profile() {
                 </div>
               
                 <div className="Card">
-                    <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', minWidth: '250px',  justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
+                    <Card sx={{ display: 'flex', backgroundColor: '#7FA1C3', color: '#fff', minWidth: '250px',  justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ flex: '1 0 auto' }}>
                             <Typography component="div" variant="h5">
                                 Shares Profit
                             </Typography>
-                            <Typography variant="subtitle1" color="#405D72" component="div">
+                            <Typography variant="subtitle1" color="#fff" component="div">
                                 {profit}$
                             </Typography>
                             </CardContent>
@@ -144,30 +137,30 @@ function Profile() {
             </div>
             <div style={{padding: '0 20px'}}>
                 <div>
-                    <Typography color="#405D72" variant="h6" gutterBottom> Positions History </Typography>
+                    <Typography color="#555" variant="h6" gutterBottom> Positions History </Typography>
                 </div>
                 <TableContainer component={Paper}>
-                    <Table sx={{backgroundColor: '#F7E7DC'}}>
+                    <Table sx={{backgroundColor: '#7FA1C3'}}>
                         <TableHead>
                             <TableRow>
-                                <StyledTableCell>Id</StyledTableCell>
-                                <StyledTableCell align="right">Company</StyledTableCell>
-                                <StyledTableCell align="right">Shares</StyledTableCell>
-                                <StyledTableCell align="right">Type</StyledTableCell>
-                                <StyledTableCell align="right">Profit</StyledTableCell>
-                                <StyledTableCell align="right">Note</StyledTableCell>
+                                <StyledTableCell sx={{ backgroundColor: '#6482AD' }}>Id</StyledTableCell>
+                                <StyledTableCell sx={{ backgroundColor: '#6482AD' }} align="right">Company</StyledTableCell>
+                                <StyledTableCell sx={{ backgroundColor: '#6482AD' }} align="right">Shares</StyledTableCell>
+                                <StyledTableCell sx={{ backgroundColor: '#6482AD' }} align="right">Type</StyledTableCell>
+                                <StyledTableCell sx={{ backgroundColor: '#6482AD' }} align="right">Profit</StyledTableCell>
+                                <StyledTableCell sx={{ backgroundColor: '#6482AD' }} align="right">Note</StyledTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {rows.map((row) => (
-                                <StyledTableRow key={row.id}>
-                                <StyledTableCell component="th" scope="row"> {row.id} </StyledTableCell>
-                                <StyledTableCell align="right">{row.company}</StyledTableCell>
-                                <StyledTableCell align="right">{row.shares}</StyledTableCell>
-                                <StyledTableCell align="right">{row.type}</StyledTableCell>
-                                <StyledTableCell align="right">{row.profit}$</StyledTableCell>
-                                <StyledTableCell align="right">{feedbacks[row.note]}</StyledTableCell>
-                                </StyledTableRow>
+                                <TableRow key={row.id}>
+                                    <StyledTableCell component="th" scope="row"> {row.id} </StyledTableCell>
+                                    <StyledTableCell align="right">{row.company}</StyledTableCell>
+                                    <StyledTableCell align="right">{row.shares}</StyledTableCell>
+                                    <StyledTableCell align="right">{row.type}</StyledTableCell>
+                                    <StyledTableCell align="right">{row.profit}$</StyledTableCell>
+                                    <StyledTableCell align="right">{feedbacks[row.note]}</StyledTableCell>
+                                </TableRow>
                             ))}
                         </TableBody>
                     </Table>

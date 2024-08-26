@@ -26,17 +26,9 @@ import { authContext } from '../../Context/auth.context';
 import { getStockRiskLevel, getRealTimeStock, getInvestorStatus, enterPosition, closePosition, editStopLimit, getUserRiskLevel, getRecommendedStocks } from '../../Services/Backend.service';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    'fontSize': '15px'
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:nth-of-type(odd)': {
-        backgroundColor: theme.palette.action.hover,
-    },
-    // hide last border
-    '&:last-child td, &:last-child th': {
-        border: 0,
-    },
+    'fontSize': '15px',
+    borderBottom: '1px solid #6482AD',
+    color: '#fff'
 }));
 
 function createData(id, symbol, shares, type, priceOfShare, differencePrecent, differenceUSD, stopLimitPrice) {
@@ -60,9 +52,13 @@ function NewPositionDialog({ open, handleClose, userRiskLevel }) {
     React.useEffect(() => { getUserRecommendedStocks() }, [auth])
 
     async function getUserRecommendedStocks() {
-        let riskLevelRsponse = await getUserRiskLevel(auth.userId);
-        let recommendedStocksResponse = await getRecommendedStocks(riskLevelRsponse.data);
-        setRecommendedStocks(recommendedStocksResponse.data);
+        try {
+            let riskLevelRsponse = await getUserRiskLevel(auth.userId);
+            let recommendedStocksResponse = await getRecommendedStocks(riskLevelRsponse.data);
+            setRecommendedStocks(recommendedStocksResponse.data);
+        } catch (e) {
+            console.error(e);
+        }
     }
 
     async function applySymbol() {
@@ -134,13 +130,16 @@ function NewPositionDialog({ open, handleClose, userRiskLevel }) {
         <div className='Dialog-Content'>
             <TextField label="Search Stocks" value={symbolText} onChange={changeSymbol} />
 
-            <List style={{ overflowY: 'auto', maxHeight: '144px' }}>
-                {recommendedStocks.map(stock => <ListItem key={stock.symbol} disablePadding>
-                    <ListItemButton onClick={() => setSymbolText(stock.symbol)}>
-                        <ListItemText primary={stock.symbol} />
-                    </ListItemButton>
-                </ListItem>)}
-            </List>
+            <div>
+                <Typography sx={{paddingLeft: '6px', fontSize: '12px', color: 'rgba(0, 0, 0, 0.6)'}}>Recommended Stocks:</Typography>
+                <List style={{ overflowY: 'auto', maxHeight: '144px', border: '1px solid #c4c4c4', borderRadius: '6px' }}>
+                    {recommendedStocks.map(stock => <ListItem key={stock.symbol} disablePadding>
+                        <ListItemButton onClick={() => setSymbolText(stock.symbol)}>
+                            <ListItemText primary={stock.symbol} />
+                        </ListItemButton>
+                    </ListItem>)}
+                </List>
+            </div>
 
             {symbolValid ? <div style={{ height: '20px' }}>Price per share: {price}$</div> : <></>}
             <div style={{ height: '20px', color: symbolValid ? '#333333' : '#df3a3a' }}>{symbolComment}</div>
@@ -291,12 +290,16 @@ function Investments() {
             let userPositions = [];
 
             for (let { positionId, shareSymbol, entryPrice, sharesCount, positionType, stopLimitPrice } of userInvestmentStatus.positions) {
-                const stockResponse = await getRealTimeStock(shareSymbol);
-                const stockCurrentPrice = stockResponse.data.c;
-                const differencePrecent = ((stockCurrentPrice - entryPrice) / entryPrice) * 100;
-                const differenceUSD = stockCurrentPrice - entryPrice;
+                try {
+                    const stockResponse = await getRealTimeStock(shareSymbol);
+                    const stockCurrentPrice = stockResponse.data.c;
+                    const differencePrecent = ((stockCurrentPrice - entryPrice) / entryPrice) * 100;
+                    const differenceUSD = stockCurrentPrice - entryPrice;
 
-                userPositions.push(createData(positionId, shareSymbol, sharesCount, positionType, entryPrice, differencePrecent.toFixed(2), differenceUSD.toFixed(2), stopLimitPrice));
+                    userPositions.push(createData(positionId, shareSymbol, sharesCount, positionType, entryPrice, differencePrecent.toFixed(2), differenceUSD.toFixed(2), stopLimitPrice));
+                } catch (e) {
+                    console.error(e);
+                }
             }
 
             setRows(userPositions);
@@ -338,16 +341,16 @@ function Investments() {
     }
 
     return <div className="App">
-        <Typography color="#405D72" variant="h4" gutterBottom> Investments </Typography>
+        <Typography color="#555555" variant="h4" gutterBottom> Investments </Typography>
         <div style={{ display: 'flex', justifyContent: 'space-evenly', width: '100%' }}>
             <div className="Card">
-                <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
+                <Card sx={{ display: 'flex', backgroundColor: '#7FA1C3', color: '#fff', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         <CardContent sx={{ flex: '1 0 auto' }}>
-                            <Typography component="div" variant="h5">
+                            <Typography component="div" color="#fff" variant="h5">
                                 Budget
                             </Typography>
-                            <Typography variant="subtitle1" color="#405D72" component="div">
+                            <Typography variant="subtitle1" color="#fff" component="div">
                                 {bank}$
                             </Typography>
                         </CardContent>
@@ -357,13 +360,13 @@ function Investments() {
                 </Card>
             </div>
             <div className="Card">
-                <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
+                <Card sx={{ display: 'flex', backgroundColor: '#7FA1C3', color: '#fff', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         <CardContent sx={{ flex: '1 0 auto' }}>
-                            <Typography component="div" variant="h5">
+                            <Typography component="div" color="#fff" variant="h5">
                                 Shares Profit
                             </Typography>
-                            <Typography variant="subtitle1" color="#405D72" component="div">
+                            <Typography variant="subtitle1" color="#fff" component="div">
                                 {profit}$
                             </Typography>
                         </CardContent>
@@ -374,13 +377,13 @@ function Investments() {
             </div>
 
             <div className="Card">
-                <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
+                <Card sx={{ display: 'flex', backgroundColor: '#7FA1C3', color: '#fff', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         <CardContent sx={{ flex: '1 0 auto' }}>
-                            <Typography component="div" variant="h5">
+                            <Typography component="div" color="#fff" variant="h5">
                                 Achievements
                             </Typography>
-                            <Typography variant="subtitle1" color="#405D72" component="div">
+                            <Typography variant="subtitle1" color="#fff" component="div">
                                 {achievements}
                             </Typography>
                         </CardContent>
@@ -393,27 +396,27 @@ function Investments() {
         </div>
         <div style={{ padding: '0 20px' }}>
             <div>
-                <Typography color="#405D72" variant="h6" gutterBottom>My Positions</Typography>
+                <Typography color="#555" variant="h6" gutterBottom>My Positions</Typography>
             </div>
-            <TableContainer component={Paper} sx={{ backgroundColor: '#F7E7DC', maxHeight: '60vh' }}>
+            <TableContainer component={Paper} sx={{ backgroundColor: '#7FA1C3', maxHeight: '60vh' }}>
                 <Table stickyHeader>
                     <TableHead>
                         <TableRow>
-                            <StyledTableCell sx={{ backgroundColor: '#F7E7DC' }} align="right">Symbol</StyledTableCell>
-                            <StyledTableCell sx={{ backgroundColor: '#F7E7DC' }} align="right">Shares</StyledTableCell>
-                            <StyledTableCell sx={{ backgroundColor: '#F7E7DC' }} align="right">Entry Price per Share</StyledTableCell>
-                            <StyledTableCell sx={{ backgroundColor: '#F7E7DC' }} align="right">Type</StyledTableCell>
-                            <StyledTableCell sx={{ backgroundColor: '#F7E7DC' }} align="right">Difference (%)</StyledTableCell>
-                            <StyledTableCell sx={{ backgroundColor: '#F7E7DC' }} align="right">Difference ($)</StyledTableCell>
-                            <StyledTableCell sx={{ backgroundColor: '#F7E7DC' }} align="right">Stop Limit Value</StyledTableCell>
-                            <StyledTableCell sx={{ backgroundColor: '#F7E7DC', color: '#405D72' }} align="right">
+                            <StyledTableCell sx={{ backgroundColor: '#6482AD' }} align="right">Symbol</StyledTableCell>
+                            <StyledTableCell sx={{ backgroundColor: '#6482AD' }} align="right">Shares</StyledTableCell>
+                            <StyledTableCell sx={{ backgroundColor: '#6482AD' }} align="right">Entry Price per Share</StyledTableCell>
+                            <StyledTableCell sx={{ backgroundColor: '#6482AD' }} align="right">Type</StyledTableCell>
+                            <StyledTableCell sx={{ backgroundColor: '#6482AD' }} align="right">Difference (%)</StyledTableCell>
+                            <StyledTableCell sx={{ backgroundColor: '#6482AD' }} align="right">Difference ($)</StyledTableCell>
+                            <StyledTableCell sx={{ backgroundColor: '#6482AD' }} align="right">Stop Limit Value</StyledTableCell>
+                            <StyledTableCell sx={{ backgroundColor: '#6482AD', color: '#555' }} align="right">
                                 <Button color='inherit' variant='contained' onClick={() => setNewPositionOpen(true)}>Enter New Position</Button>
                             </StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody sx={{ height: '40vh', overflowY: 'auto' }}>
                         {rows.map((row) => (
-                            <StyledTableRow key={row.id}>
+                            <TableRow key={row.id}>
                                 <StyledTableCell align="right">{row.symbol}</StyledTableCell>
                                 <StyledTableCell align="right">{row.shares}</StyledTableCell>
                                 <StyledTableCell align="right">{row.priceOfShare}$</StyledTableCell>
@@ -434,19 +437,19 @@ function Investments() {
                                 <StyledTableCell align="right">
                                     {row.stopLimitPrice === -1 ?
                                         <>
-                                            <Button size="small" variant='outlined' onClick={() => onConfigureStopLimit(true, row.id)}>Configure Stop Limit</Button>
+                                            <Button size="small" variant='outlined' sx={{border: '1px solid #526b8f', color: '#526b8f'}} onClick={() => onConfigureStopLimit(true, row.id)}>Configure Stop Limit</Button>
                                         </>
                                         :
                                         <>
                                             <span style={{ marginRight: '6px' }}>{row.stopLimitPrice}$</span>
-                                            <Button size="small" variant='outlined' onClick={() => onConfigureStopLimit(true, row.id)}>Reconfigure</Button>
+                                            <Button size="small" variant='outlined' sx={{border: '1px solid #526b8f', color: '#526b8f'}} onClick={() => onConfigureStopLimit(true, row.id)}>Reconfigure</Button>
                                         </>
                                     }
                                 </StyledTableCell>
                                 <StyledTableCell align="right">
-                                    <Button sx={{ backgroundColor: '#405D72' }} variant='contained' onClick={() => onClosePosition(row.id, row.symbol)}>Exit Position</Button>
+                                    <Button sx={{ backgroundColor: '#526b8f' }} variant='contained' onClick={() => onClosePosition(row.id, row.symbol)}>Exit Position</Button>
                                 </StyledTableCell>
-                            </StyledTableRow>
+                            </TableRow>
                         ))}
                     </TableBody>
                 </Table>

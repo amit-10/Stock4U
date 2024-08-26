@@ -16,21 +16,14 @@ import { useState, useEffect, useContext } from 'react';
 import { authContext } from '../../Context/auth.context';
 import { getTopTenUsers, getInvestorStatus } from '../../Services/Backend.service';
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({}));
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    borderBottom: '1px solid #6482AD',
+    color: '#fff'
+}));
   
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:nth-of-type(odd)': {
-        backgroundColor: theme.palette.action.hover,
-    },
-    // hide last border
-    '&:last-child td, &:last-child th': {
-        border: 0,
-    },
-  }));
-  
-  function createData(position, name, achievements, profit) {
+function createData(position, name, achievements, profit) {
     return { position, name, achievements, profit };
-  }
+}
 
 function Leaderboard() {
     const [rows, setRows] = useState([]);
@@ -73,16 +66,16 @@ function Leaderboard() {
 
     return (
         <div className="App">
-            <Typography color="#405D72" variant="h4" gutterBottom> Leaderboard </Typography>
+            <Typography color="#555" variant="h4" gutterBottom> Leaderboard </Typography>
             <div style={{display: 'flex', justifyContent: 'space-evenly', width: '100%'}}>
                 <div className="Card">
-                    <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
+                    <Card sx={{ display: 'flex', backgroundColor: '#7FA1C3', color: '#fff', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ flex: '1 0 auto' }}>
                             <Typography component="div" variant="h5">
                                 Achievements
                             </Typography>
-                            <Typography variant="subtitle1" color="#405D72" component="div">
+                            <Typography variant="subtitle1" color="#fff" component="div">
                                 {achievements} Points
                             </Typography>
                             </CardContent>
@@ -93,13 +86,13 @@ function Leaderboard() {
                 </div>
 
                 <div className="Card">
-                    <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
+                    <Card sx={{ display: 'flex', backgroundColor: '#7FA1C3', color: '#fff', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ flex: '1 0 auto' }}>
                             <Typography component="div" variant="h5">
                                 Rank
                             </Typography>
-                            <Typography variant="subtitle1" color="#405D72" component="div">
+                            <Typography variant="subtitle1" color="#fff" component="div">
                                 {position}#
                             </Typography>
                             </CardContent>
@@ -110,13 +103,13 @@ function Leaderboard() {
                 </div>
               
                 <div className="Card">
-                    <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', minWidth: '250px',  justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
+                    <Card sx={{ display: 'flex', backgroundColor: '#7FA1C3', color: '#fff', minWidth: '250px',  justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ flex: '1 0 auto' }}>
                             <Typography component="div" variant="h5">
                                 Shares Profit
                             </Typography>
-                            <Typography variant="subtitle1" color="#405D72" component="div">
+                            <Typography variant="subtitle1" color="#fff" component="div">
                                 {profit}$
                             </Typography>
                             </CardContent>
@@ -129,23 +122,23 @@ function Leaderboard() {
             </div>
             <div className="LeaderBoard">
                 <TableContainer component={Paper} sx={{marginTop: '20px'}}>
-                    <Table sx={{backgroundColor: '#F7E7DC'}}>
+                    <Table sx={{backgroundColor: '#7FA1C3'}}>
                         <TableHead>
                             <TableRow>
-                                <StyledTableCell>Rank</StyledTableCell>
-                                <StyledTableCell>Name</StyledTableCell>
-                                <StyledTableCell align="right">Achievements</StyledTableCell>
-                                <StyledTableCell align="right">Profit</StyledTableCell>
+                                <StyledTableCell sx={{ backgroundColor: '#6482AD' }}>Rank</StyledTableCell>
+                                <StyledTableCell sx={{ backgroundColor: '#6482AD' }}>Name</StyledTableCell>
+                                <StyledTableCell sx={{ backgroundColor: '#6482AD' }} align="right">Achievements</StyledTableCell>
+                                <StyledTableCell sx={{ backgroundColor: '#6482AD' }} align="right">Profit</StyledTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {rows.map((row) => (
-                                <StyledTableRow key={row.position}>
+                                <TableRow key={row.position}>
                                 <StyledTableCell component="th" scope="row"> {row.position + 1} </StyledTableCell>
                                 <StyledTableCell component="th" scope="row"> {row.name} </StyledTableCell>
                                 <StyledTableCell align="right">{row.achievements}</StyledTableCell>
                                 <StyledTableCell align="right">{row.profit}$</StyledTableCell>
-                                </StyledTableRow>
+                                </TableRow>
                             ))}
                         </TableBody>
                     </Table>

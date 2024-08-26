@@ -43,15 +43,15 @@ function Menu() {
 
 const Container = styled('div')`
   text-align: center;
-  border-right: solid 2px #F7E7DC;
+  border-right: solid 2px #E2DAD6;
   height: 100%;
 `
 
 const Header = styled('header')`
-  background-color: #FFF8F3;
+  background-color: #F5EDED;
   flex-direction: column;
   font-size: 15px;
-  color: #405D72;
+  color: #555;
   margin-left: auto; 
   margin-right: 0;
 `

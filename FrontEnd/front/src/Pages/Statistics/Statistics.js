@@ -72,61 +72,65 @@ function Statistics() {
                 }
 
                 establishedPositions.push(position.shareSymbol)
-                const realTimeResponse = await getRealTimeStock(position.shareSymbol);
-                const realTimeValue = realTimeResponse.data;
+                try {
+                    const realTimeResponse = await getRealTimeStock(position.shareSymbol);
+                    const realTimeValue = realTimeResponse.data;
 
-                const newLineDate = [];
+                    const newLineDate = [];
 
-                const historyResponse = await getStockHistory(position.shareSymbol, newDaysBack ?? daysBack);
-                const historyPrice = historyResponse.data;
+                    const historyResponse = await getStockHistory(position.shareSymbol, newDaysBack ?? daysBack);
+                    const historyPrice = historyResponse.data;
 
-                Object.keys(historyPrice).forEach(key => {
-                    newLineDate.push({ date: key, shareProfit: historyPrice[key].closePrice });
-                });
+                    Object.keys(historyPrice).forEach(key => {
+                        newLineDate.push({ date: key, shareProfit: historyPrice[key].closePrice });
+                    });
 
-                const newOptions = {
-                    title: {
-                        text: `Share ${position.shareSymbol} Over Time`,
-                    },
-                    data: newLineDate,
-                    series: [
-                        {
-                            type: "line",
-                            xKey: "date",
-                            yKey: "shareProfit",
-                            yName: "profit"
-                        }
-                    ],
-                };
-
-                const newDonutOptions = {
-                    data: newLineDate,
-                    title: {
-                        text: ` ${auth.userId} - Profits Per Day`,
-                    },
-                    series: [
-                        {
-                            type: "donut",
-                            calloutLabelKey: "date",
-                            angleKey: "shareProfit",
-                            innerRadiusRatio: 0.7,
+                    const newOptions = {
+                        title: {
+                            text: `Share ${position.shareSymbol} Over Time`,
                         },
-                    ],
-                };
+                        data: newLineDate,
+                        series: [
+                            {
+                                type: "line",
+                                xKey: "date",
+                                yKey: "shareProfit",
+                                yName: "profit"
+                            }
+                        ],
+                    };
 
-                setOptions(newOptions);
-                setDonutOptions(newDonutOptions);
+                    const newDonutOptions = {
+                        data: newLineDate,
+                        title: {
+                            text: ` ${auth.userId} - Profits Per Day`,
+                        },
+                        series: [
+                            {
+                                type: "donut",
+                                calloutLabelKey: "date",
+                                angleKey: "shareProfit",
+                                innerRadiusRatio: 0.7,
+                            },
+                        ],
+                    };
 
-                newRows.push({
-                    shareKey: position.shareSymbol,
-                    sharesCount: realTimeValue.c - position.entryPrice
-                });
+                    setOptions(newOptions);
+                    setDonutOptions(newDonutOptions);
 
-                setChartOptions({
-                    title: {
-                        text: "Profits per share",
-                    }, data: newRows, series: [{ type: 'bar', xKey: 'shareKey', yKey: 'sharesCount' }]
-                })
+                    newRows.push({
+                        shareKey: position.shareSymbol,
+                        sharesCount: realTimeValue.c - position.entryPrice
+                    });
+
+                    setChartOptions({
+                        title: {
+                            text: "Profits per share",
+                        }, data: newRows, series: [{ type: 'bar', xKey: 'shareKey', yKey: 'sharesCount' }]
+                    })
+                } catch (e) {
+                    console.error(e);
+                }
             });
 
               const filteredPositions = []
@@ -141,7 +145,7 @@ function Statistics() {
               
             setPositions(newPosition);
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     };
 
@@ -153,16 +157,16 @@ function Statistics() {
 
     return (
         <div className="App">
-            <Typography color="#405D72" variant="h4" gutterBottom> Statistics </Typography>
+            <Typography color="#555" variant="h4" gutterBottom> Statistics </Typography>
             <div style={{ display: 'flex', justifyContent: 'space-evenly', width: '100%' }}>
                 <div className="Card">
-                    <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
+                    <Card sx={{ display: 'flex', backgroundColor: '#7FA1C3', color: '#fff', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ flex: '1 0 auto' }}>
                                 <Typography component="div" variant="h5">
                                     Begginner Investor
                                 </Typography>
-                                <Typography variant="subtitle1" color="#405D72" component="div">
+                                <Typography variant="subtitle1" color="#fff" component="div">
                                     {risk} Risk Behavior
                                 </Typography>
                             </CardContent>
@@ -173,13 +177,13 @@ function Statistics() {
                 </div>
 
                 <div className="Card">
-                    <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
+                    <Card sx={{ display: 'flex', backgroundColor: '#7FA1C3', color: '#fff', minWidth: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ flex: '1 0 auto' }}>
                                 <Typography component="div" variant="h5">
                                     Budget
                                 </Typography>
-                                <Typography variant="subtitle1" color="#405D72" component="div">
+                                <Typography variant="subtitle1" color="#fff" component="div">
                                     {bank}$
                                 </Typography>
                             </CardContent>

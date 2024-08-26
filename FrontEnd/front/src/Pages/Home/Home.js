@@ -6,7 +6,6 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { useState, useContext } from 'react';
 import { authContext } from '../../Context/auth.context';
-import { IconButton } from '@mui/material';
 import { Login } from '@mui/icons-material';
 import {Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button} from '@mui/material';
 import { login, register } from '../../Services/Backend.service';
@@ -54,13 +53,19 @@ function Home() {
       }
 
     return <div className="App">
-        <Typography color="#405D72" variant="h2" gutterBottom> Welcome to STOCK4U! </Typography>
-        <div style={{ display: 'flex', justifyContent: 'space-evenly', width: '100%' }}>
-            <div className="Card">
-                <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', width: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
+        <Typography color="#555555" variant="h2" gutterBottom> Welcome to STOCK4U! </Typography>
+        <Typography component="div" variant="h3">
+            Join over a million customers
+        </Typography>      
+        <Typography component="div" variant="h3">
+            All over the world!
+        </Typography>
+        <div>
+            <div className="Card-home">
+                <Card sx={{ display: 'flex', backgroundColor: '#6482AD', color: '#fff', justifyContent: 'flex-end', alignItems: 'center', borderRadius: '0 8px 8px 0', minHeight: '120px', width: '40vw' }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         <CardContent sx={{ flex: '1 0 auto' }}>
-                            <Typography component="div" variant="h5">
+                            <Typography component="div" variant="h4">
                                 Follow your profits!
                             </Typography>
                         </CardContent>
@@ -69,11 +74,11 @@ function Home() {
                     </Box>
                 </Card>
             </div>
-            <div className="Card">
-                <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', width: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <div className="Card-home" style={{display: 'flex', justifyContent: 'flex-end'}}>
+                <Card sx={{ display: 'flex', backgroundColor: '#6482AD', color: '#fff', justifyContent: 'flex-start', alignItems: 'center', borderRadius: '8px 0 0 8px', minHeight: '120px', width: '40vw' }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column'}}>
                         <CardContent sx={{ flex: '1 0 auto' }}>
-                            <Typography component="div" variant="h5">
+                            <Typography component="div" variant="h4">
                                 Invest without Risk!
                             </Typography>
                         </CardContent>
@@ -83,11 +88,11 @@ function Home() {
                 </Card>
             </div>
 
-            <div className="Card">
-                <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', width: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
+            <div className="Card-home">
+                <Card sx={{ display: 'flex', backgroundColor: '#6482AD', color: '#fff', justifyContent: 'flex-end', alignItems: 'center', borderRadius: '0 8px 8px 0', minHeight: '120px', width: '40vw' }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         <CardContent sx={{ flex: '1 0 auto' }}>
-                            <Typography component="div" variant="h5">
+                            <Typography component="div" variant="h4">
                                 Learn With ease!
                             </Typography>
                         </CardContent>
@@ -96,14 +101,11 @@ function Home() {
                     </Box>
                 </Card>
             </div>
-
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-evenly', width: '100%' }}>
-            <div className="Card">
-                <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', width: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
+            <div className="Card-home" style={{display: 'flex', justifyContent: 'flex-end'}}>
+                <Card sx={{ display: 'flex', backgroundColor: '#6482AD', color: '#fff', justifyContent: 'flex-start', alignItems: 'center', borderRadius: '8px 0 0 8px', minHeight: '120px', width: '40vw' }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         <CardContent sx={{ flex: '1 0 auto' }}>
-                            <Typography component="div" variant="h5">
+                            <Typography component="div" variant="h4">
                                 Compete against your friends!
                             </Typography>
                         </CardContent>
@@ -112,11 +114,11 @@ function Home() {
                     </Box>
                 </Card>
             </div>
-            <div className="Card">
-                <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', width: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
+            <div className="Card-home">
+                <Card sx={{ display: 'flex', backgroundColor: '#6482AD', color: '#fff', justifyContent: 'flex-end', alignItems: 'center', borderRadius: '0 8px 8px 0', minHeight: '120px', width: '40vw' }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         <CardContent sx={{ flex: '1 0 auto' }}>
-                            <Typography component="div" variant="h5">
+                            <Typography component="div" variant="h4">
                                 Earn achievements
                             </Typography>
                         </CardContent>
@@ -126,11 +128,11 @@ function Home() {
                 </Card>
             </div>
 
-            <div className="Card">
-                <Card sx={{ display: 'flex', backgroundColor: '#F7E7DC', color: '#405D72', width: '250px', justifyContent: 'center', borderRadius: '8px', minHeight: '120px' }}>
+            <div className="Card-home" style={{display: 'flex', justifyContent: 'flex-end'}}>
+                <Card sx={{ display: 'flex', backgroundColor: '#6482AD', color: '#fff', justifyContent: 'flex-start', alignItems: 'center', borderRadius: '8px 0 0 8px', minHeight: '120px', width: '40vw' }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         <CardContent sx={{ flex: '1 0 auto' }}>
-                            <Typography component="div" variant="h5">
+                            <Typography component="div" variant="h4">
                                 Gain knowledge!
                             </Typography>
                         </CardContent>
@@ -142,21 +144,17 @@ function Home() {
 
         </div>  
 
-        <Typography component="div" variant="h2">
-            Join over a million customers
-        </Typography>      
-        <Typography component="div" variant="h2">
-            All over the world!
-        </Typography>
-
-        <IconButton
+        <Button
             size="large"
             edge="end"
+            variant='contained'
             onClick={handleClickOpen}
             color="inherit"
+            style={{margin: '30px 0'}}
         >
-            <Login />
-        </IconButton>
+            <Typography variant='h4' style={{paddingRight: '6px'}}>Enter</Typography>
+            <Login fontSize='large'/>
+        </Button>
 
         <div className="Dialog">
         <Dialog

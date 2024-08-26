@@ -42,7 +42,7 @@ function Panels() {
 }
 
 const AppHeader = styled('div')`
-  background-color: #FFF8F3;
+  background-color: #F5EDED;
   display: flex;
   flex-direction: column;
   width: 100%;

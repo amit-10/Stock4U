@@ -56,7 +56,7 @@ function SidePanel() {
 
 const Container = styled('div')`
   text-align: center;
-  border-left: solid 2px #F7E7DC;
+  border-left: solid 2px #E2DAD6;
   height: 100%;
 `
 
