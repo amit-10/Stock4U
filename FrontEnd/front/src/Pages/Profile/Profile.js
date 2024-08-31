@@ -32,6 +32,7 @@ function Profile() {
     const [bank, setBank] = useState(0);
     const [profit, setProfit] = useState(0);
     const [risk, setRisk] = useState('');
+    const initialBalance = 1_000_000;
 
     const [auth] = useContext(authContext);
 
@@ -65,8 +66,8 @@ function Profile() {
                 const userInvestmentStatusResponse = await getInvestorStatus(auth.userId);
                 const userInvestmentStatus = userInvestmentStatusResponse.data;
     
-                setBank(userInvestmentStatus.accountBalance);
-                setProfit(userInvestmentStatus.totalWorth);
+                setBank(userInvestmentStatus.accountBalance.toFixed(2));
+                setProfit((userInvestmentStatus.totalWorth - initialBalance).toFixed(2));
                 setRisk(userInvestmentStatus.riskLevel);
             } catch (e) {
                 console.log(e);
