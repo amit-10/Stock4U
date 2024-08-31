@@ -12,7 +12,7 @@ import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
 function Statistics() {
     const [bank, setBank] = useState(0);
-    const [risk] = useState('');
+    const [risk, setRisk] = useState('');
     const [positions, setPositions] = useState([]);
     const [auth] = useContext(authContext);
     const [chartOptions, setChartOptions] = useState({});
@@ -127,7 +127,13 @@ function Statistics() {
                         title: {
                             text: "Profits per share",
                         }, data: newRows, series: [{ type: 'bar', xKey: 'shareKey', yKey: 'sharesCount' }]
-                    })
+                    });
+
+                    const userInvestmentStatusResponse = await getInvestorStatus(auth.userId);
+                    const userInvestmentStatus = userInvestmentStatusResponse.data;
+
+                    setBank(userInvestmentStatus.accountBalance);
+                    setRisk(userInvestmentStatus.riskLevel);
                 } catch (e) {
                     console.error(e);
                 }

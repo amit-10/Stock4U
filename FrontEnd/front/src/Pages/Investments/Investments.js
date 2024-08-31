@@ -20,10 +20,10 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import { List, ListItem, ListItemButton, ListItemText } from '@mui/material';
 import { useDebounce } from 'use-debounce';
-import { Rowing, TrendingDown, TrendingUp } from '@mui/icons-material';
+import { TrendingDown, TrendingUp } from '@mui/icons-material';
 import { Switch } from '@mui/material';
 import { authContext } from '../../Context/auth.context';
-import { getStockRiskLevel, getRealTimeStock, getInvestorStatus, enterPosition, closePosition, editStopLimit, getUserRiskLevel, getRecommendedStocks } from '../../Services/Backend.service';
+import { getRealTimeStock, getInvestorStatus, enterPosition, closePosition, editStopLimit, getUserRiskLevel, getRecommendedStocks } from '../../Services/Backend.service';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     'fontSize': '15px',
@@ -42,7 +42,6 @@ function NewPositionDialog({ open, handleClose, userRiskLevel }) {
     const [price, setPrice] = React.useState(undefined);
     const [amount, setAmount] = React.useState(0);
     const [symbolValid, setSymbolValid] = React.useState(false);
-    const [symbolComment, setSymbolComment] = React.useState('');
     const [type, setType] = React.useState("Long");
     const [limitIsActive, setLimitIsActive] = React.useState(false);
     const [stopLimitPrice, setstopLimitPrice] = React.useState(-1);
@@ -64,20 +63,12 @@ function NewPositionDialog({ open, handleClose, userRiskLevel }) {
     async function applySymbol() {
         if (!!symbol) {
             try {
-                const symbolRiskLevelResponse = await getStockRiskLevel(symbol);
-                setSymbolValid(true);
                 const symbolRealTimeDataResponse = await getRealTimeStock(symbol);
+                setSymbolValid(true);
                 const stockCurrentPrice = symbolRealTimeDataResponse.data.c;
-                const symbolRiskLevel = symbolRiskLevelResponse.data;
                 setPrice(stockCurrentPrice);
-                if (symbolRiskLevel.toLowerCase() === userRiskLevel.toLowerCase()) {
-                    setSymbolComment('Matches your risk management preferences');
-                } else {
-                    setSymbolComment('Symbol does not match your risk preferences');
-                }
             } catch (e) {
                 setSymbolValid(false);
-                setSymbolComment('Symbol does not exist in our system');
             }
         }
     }
@@ -86,13 +77,11 @@ function NewPositionDialog({ open, handleClose, userRiskLevel }) {
 
     function changeSymbol(event) {
         setSymbolValid(false);
-        setSymbolComment('');
         setSymbolText(event.target.value);
     }
 
     function close() {
         setType("Long");
-        setSymbolComment('');
         setLimitIsActive(false);
         handleClose();
     }
@@ -142,7 +131,7 @@ function NewPositionDialog({ open, handleClose, userRiskLevel }) {
             </div>
 
             {symbolValid ? <div style={{ height: '20px' }}>Price per share: {price}$</div> : <></>}
-            <div style={{ height: '20px', color: symbolValid ? '#333333' : '#df3a3a' }}>{symbolComment}</div>
+            {!symbolValid && !!symbol ? <div style={{ height: '20px', color: '#df3a3a' }}>Symbol does not exist in our system</div> : <></>}
             <ToggleButtonGroup
                 value={type}
                 exclusive
@@ -278,6 +267,7 @@ function Investments() {
     const [auth] = React.useContext(authContext);
     const [selectedPositionId, setSelectedPositionId] = React.useState('');
     const [selectedSymbol, setSelectedSymbol] = React.useState('');
+    const initialBalance = 1_000_000;
 
     async function getData() {
         if (!auth || !auth.userId) {
@@ -304,7 +294,7 @@ function Investments() {
 
             setRows(userPositions);
             setBank(userInvestmentStatus.accountBalance);
-            setProfit(userInvestmentStatus.totalWorth);
+            setProfit((userInvestmentStatus.totalWorth - initialBalance).toFixed(2));
             setAchievements(userInvestmentStatus.achievementsCount);
             setRiskLevel(userInvestmentStatus.riskLevel)
         } catch (e) {
@@ -431,8 +421,8 @@ function Investments() {
                                 </StyledTableCell>
                                 <StyledTableCell align="right">
                                 {row.differenceUSD < 0 ?
-                                            <span style={{ fontWeight: 'bold', color: row.type?.toLowerCase() == 'short' ? 'green' : '#df3a3a' }}>{row.differenceUSD}$</span> :
-                                            <span style={{ fontWeight: 'bold', color: row.type?.toLowerCase() == 'short' ? '#df3a3a' : 'green' }}>+{row.differenceUSD}$</span>}
+                                            <span style={{ fontWeight: 'bold', color: row.type?.toLowerCase() == 'short' ? 'green' : '#df3a3a' }}>{(row.differenceUSD * row.shares).toFixed(2)}$</span> :
+                                            <span style={{ fontWeight: 'bold', color: row.type?.toLowerCase() == 'short' ? '#df3a3a' : 'green' }}>+{(row.differenceUSD * row.shares).toFixed(2)}$</span>}
                                 </StyledTableCell>
                                 <StyledTableCell align="right">
                                     {row.stopLimitPrice === -1 ?

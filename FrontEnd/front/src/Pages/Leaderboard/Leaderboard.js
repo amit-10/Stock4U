@@ -27,10 +27,10 @@ function createData(position, name, achievements, profit) {
 
 function Leaderboard() {
     const [rows, setRows] = useState([]);
-    const [bank, setBank] = useState(0);
     const [profit, setProfit] = useState(0);
     const [position, setPosition] = useState(0);
     const [achievements, setAchievements] = useState(0);
+    const initialBalance = 1_000_000;
 
     const [auth,setAuth] = useContext(authContext);
 
@@ -45,13 +45,14 @@ function Leaderboard() {
                     return createData(index, userId, achievementsPoints, totalWorth);
                 });
 
+                setPosition((leaderboardRows.find(data => auth.userId === data.userId)?.index ?? 0) + 1);
+
     
                 setRows(leaderboardRows);
     
                 const userInvestmentStatusResponse = await getInvestorStatus(auth.userId);
     
-                setBank(userInvestmentStatusResponse.data.accountBalance);
-                setProfit(userInvestmentStatusResponse.data.totalWorth);
+                setProfit((userInvestmentStatusResponse.data.totalWorth - initialBalance).toFixed(2));
                 setAchievements(userInvestmentStatusResponse.data.achievementsPoints);
             } catch (e) {
                 console.log(e);
